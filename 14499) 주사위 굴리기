@@ -1,0 +1,133 @@
+#include <stdio.h>
+
+int map[20][20];
+int dice[7];
+int ndice[7];
+int n, m;
+int x, y;
+int k;
+int order[1000];
+
+int main(void)
+{
+	scanf("%d %d %d %d %d", &n, &m, &y, &x, &k);
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			scanf("%d", &map[i][j]);
+
+	for (int i = 0; i < k; i++)
+		scanf("%d", &order[i]);
+
+	for (int i = 0; i < k; i++)
+	{
+		int nx = x, ny = y;
+		if (order[i] == 1)
+		{
+			int temp = dice[1];
+			ndice[1] = dice[3];
+			ndice[3] = dice[6];
+			ndice[6] = dice[4];
+			ndice[4] = temp;
+			ndice[2] = dice[2];
+			ndice[5] = dice[5];
+			nx++;
+
+		}
+		else if (order[i] == 2)
+		{
+			int temp = dice[1];
+			ndice[1] = dice[4];
+			ndice[4] = dice[6];
+			ndice[6] = dice[3];
+			ndice[3] = temp;
+			ndice[2] = dice[2];
+			ndice[5] = dice[5];
+			nx--;
+		}
+		else if (order[i] == 3)
+		{
+			int temp = dice[1];
+			ndice[1] = dice[5];
+			ndice[5] = dice[6];
+			ndice[6] = dice[2];
+			ndice[2] = temp;
+			ndice[4] = dice[4];
+			ndice[3] = dice[3];
+			ny--;
+		}
+		else if (order[i] == 4)
+		{
+			int temp = dice[1];
+			ndice[1] = dice[2];
+			ndice[2] = dice[6];
+			ndice[6] = dice[5];
+			ndice[5] = temp;
+			ndice[4] = dice[4];
+			ndice[3] = dice[3];
+			ny++;
+		}
+
+		if (nx < 0 || ny < 0 || nx >= m || ny >= n)
+			continue;
+
+		if (map[ny][nx] == 0)
+		{
+			map[ny][nx] = ndice[6];
+		}
+		else
+		{
+			ndice[6] = map[ny][nx];
+			map[ny][nx] = 0;
+		}
+		printf("%d\n", ndice[1]);
+
+		
+		if (order[i] == 1)
+		{
+			dice[1] = ndice[1];
+			dice[3] = ndice[3];
+			dice[6] = ndice[6];
+			dice[4] = ndice[4];
+			dice[2] = ndice[2];
+			dice[5] = ndice[5];
+			x = nx;
+
+		}
+		else if (order[i] == 2)
+		{
+			dice[1] = ndice[1];
+			dice[3] = ndice[3];
+			dice[6] = ndice[6];
+			dice[4] = ndice[4];
+			dice[2] = ndice[2];
+			dice[5] = ndice[5];
+			x = nx;
+		}
+		else if (order[i] == 3)
+		{
+			dice[1] = ndice[1];
+			dice[3] = ndice[3];
+			dice[6] = ndice[6];
+			dice[4] = ndice[4];
+			dice[2] = ndice[2];
+			dice[5] = ndice[5];
+			y = ny;
+		}
+		else if (order[i] == 4)
+		{
+			dice[1] = ndice[1];
+			dice[3] = ndice[3];
+			dice[6] = ndice[6];
+			dice[4] = ndice[4];
+			dice[2] = ndice[2];
+			dice[5] = ndice[5];
+			y = ny;
+		}
+
+
+	}
+
+
+	return 0;
+}
