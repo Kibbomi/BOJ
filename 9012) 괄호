@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++)
+	{
+		string str;
+		stack<char> s;
+		cin >> str;
+
+		int len = str.length();
+		bool pass = true;
+
+		for (int k = 0; k < len; k++)
+		{
+			if (str[k] == '(')
+				s.push('(');
+			else
+			{// ) 인 경우
+				if (s.size() == 0)
+				{
+					pass = false;
+					break;
+				}
+				else if (s.size() > 0 && s.top() == ')')
+				{
+					pass = false;
+					break;
+				}
+				if (s.size() > 0 && s.top() == '(')
+				{
+					s.pop();
+				}
+			}
+		}
+		if (!pass || s.size() > 0)
+			printf("NO\n");
+		else
+			printf("YES\n");
+	}
+	
+	return 0;
+}
