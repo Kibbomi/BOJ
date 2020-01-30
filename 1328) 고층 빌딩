@@ -1,0 +1,23 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+//빌딩수가 증가할 때, 가장 큰 빌딩을 놓기보다는 가장작은 빌딩이 추가된다는 느낌으로 접근할 것.
+long long int dp[101][101][101];
+int N, L, R;
+
+int main(void)
+{
+	scanf("%d %d %d", &N, &L, &R);
+
+	dp[1][1][1] = 1;
+
+	for (int n = 2; n <= N; n++)
+		for (int l = 1; l <= N; l++)
+			for (int r = 1; r <= N; r++)
+				dp[n][l][r] = (dp[n - 1][l][r] * (n - 2) + dp[n - 1][l - 1][r] + dp[n - 1][l][r - 1])% 1000000007;
+
+	printf("%lld", dp[N][L][R]);
+
+	return 0;
+}
