@@ -1,0 +1,8 @@
+#include <stdio.h>
+int main(void)
+{
+	char cache;
+	scanf("%c", &cache);
+	printf("%d", cache);
+	return 0;
+}
