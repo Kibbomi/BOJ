@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int map[20][20], n;
+int order[20];
+int ret = 0x7fffffff;
+
+void dfs(int depth, int start)
+{
+	if (depth == n / 2)
+	{
+		int team1[10], team2[10];
+		int index1 = 0, index2 = 0;
+		for (int i = 0; i < n; i++)
+		{
+			if (order[i] == 1)
+				team1[index1++] = i;
+
+			else
+				team2[index2++] = i;
+		}
+
+		int sum1 = 0, sum2 = 0;
+
+		
+
+		for (int i = 0; i < index1; i++)
+		{
+			for (int j = i + 1; j < index1; j++)
+			{
+				sum1 += map[team1[i]][team1[j]] + map[team1[j]][team1[i]];
+				sum2 += map[team2[i]][team2[j]] + map[team2[j]][team2[i]];
+			}
+		}
+
+		ret = min(ret, abs(sum1 - sum2));
+	}
+
+	for (int i = start; i < n; i++)
+	{
+		order[i] = 1;
+		dfs(depth + 1, i + 1);
+		order[i] = 0;
+	}
+	return;
+}
+int  main(void)
+{
+	scanf("%d", &n);
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			scanf("%d", &map[i][j]);
+		
+//combination..
+	dfs(0,0);
+
+	printf("%d", ret);
+	return 0;
+}
