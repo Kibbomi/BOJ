@@ -1,0 +1,21 @@
+#include <stdio.h>
+
+
+int main(void)
+{
+	long long int s;
+
+	scanf("%lld", &s);
+
+	long long int ret = 1;
+	long long int t = 1;
+	while (t++)
+	{
+		ret += t;
+
+		if (ret > s)
+			break;
+	}
+	printf("%lld", t-1);
+	return 0;
+}
