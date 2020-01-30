@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int main(void)
+{	
+	int a, b, c, d, p;
+	scanf("%d", &a);
+	scanf("%d", &b);
+	scanf("%d", &c);
+	scanf("%d", &d);
+	scanf("%d", &p);
+
+	int x = p * a;
+	int y;
+
+	if (p <= c)	y = b;
+	else
+	{
+		int over = p - c;
+		y = b + over*d;
+	}
+
+	printf("%d", min(x, y));
+	return 0;
+}
