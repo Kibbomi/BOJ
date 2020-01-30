@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+	int val, money;
+	scanf("%d %d", &val, &money);
+
+	int have = 10;
+	have = pow(have, money);
+
+	int pivot = val% have;
+	if (pivot >= have / 2)
+	{
+		//올림
+		val += have - pivot;
+	}
+	else
+	{
+		//내림
+		val -= pivot;
+
+	}
+	printf("%d", val);
+	return 0;
+}
