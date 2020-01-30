@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+int map[101][101];
+int start;
+int endval;
+int n;
+int maxval = -987654321;
+int minval = 987654321;
+
+struct COORD {
+	int y, x;
+};
+
+bool bfs(int mid)
+{
+	queue<COORD> q;
+	//mid과 같거나 작게 탐색이 가능한지,
+	for(int k=minval; k <=maxval;k++)
+	{
+		bool visited[101][101] = { false, };
+
+		for (int i = 1; i <= n; i++)
+			for (int j = 1; j <= n; j++)
+				visited[i][j] = true;
+
+		for (int i = 1; i <= n; i++)
+			for (int j = 1; j <= n; j++) {
+				//최소값을 k로 두겠다.
+				if (map[i][j] >= k && map[i][j] - k <= mid)
+					visited[i][j] = false;
+			}
+				COORD begin;
+				begin.y = 1, begin.x = 1;
+
+				if (visited[begin.y][begin.x])
+					continue;
+				else
+				{
+					q.push(begin);
+					visited[begin.y][begin.x] = true;
+				}
+				while (!q.empty())
+				{
+					COORD cur = q.front(); q.pop();
+
+					if (cur.x == n && cur.y == n)
+						return true;
+
+					for (int dir = 0; dir < 4; dir++)
+					{
+						COORD next;
+						next.y = cur.y + dy[dir];
+						next.x = cur.x + dx[dir];
+
+						//맵 벗어나면 취소
+						if (next.x < 1 || next.y < 1 || next.x > n || next.y > n)
+							continue;
+
+						if (visited[next.y][next.x] == false)
+						{
+							q.push(next);
+							visited[next.y][next.x] = true;
+						}
+
+					}
+				}
+			}
+	return false;
+}
+
+int main(void)
+{
+	
+	scanf("%d", &n);
+	
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= n; j++){
+			scanf("%d", &map[i][j]);
+			maxval = max(map[i][j], maxval);
+			minval = min(map[i][j], minval);
+		}
+	start = 0;
+	endval = maxval - minval;
+
+	int ret = 0;
+
+	while (start <= endval)
+	{
+		bool isok = false;
+		int mid = (start + endval) / 2;
+
+		//탐색이 성공하면,
+		isok = bfs(mid);
+		//값을 기억하고 한번 낮춰보기..
+		if (isok)
+		{
+			ret = mid;
+			endval = mid - 1;
+		}
+		else
+		{
+			start = mid + 1;
+		}
+	}
+
+	printf("%d", ret);
+
+
+	return 0;
+}
