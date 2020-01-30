@@ -1,0 +1,48 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+
+//dp로 값 대신에 0과 1이 몇번 호출되는지 기억. 답은 몰라도 괜찮음.
+
+// pair<0, 1>임. dp[n]으로 n에서 0과 1이 몇번 발생하는지
+pair<int, int> dp[41];
+
+pair<int,int> fibo(int n)
+{
+	if (n == 0) return make_pair(1, 0);
+	if (n == 1) return make_pair(0, 1);
+
+	//memoization
+	if (dp[n].first != 0 && dp[n].second != 0)	return dp[n];
+
+
+	pair<int, int> left = fibo(n - 1);
+	pair<int, int> right = fibo(n - 2);
+	return dp[n] = make_pair(left.first + right.first, left.second + right.second);
+
+}
+
+
+int main(void)
+{
+	//초기값
+	dp[0].first = 1;
+	dp[1].second = 1;
+
+	//40까지 그냥 계산해버리기
+	fibo(40);
+
+	int t;
+	scanf("%d", &t);
+	
+	while (t--)
+	{
+		int n;
+		scanf("%d", &n);
+
+		printf("%d %d\n", dp[n].first, dp[n].second);
+	}
+
+	return 0;
+}
