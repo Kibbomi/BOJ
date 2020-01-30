@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int map[301][301];
+
+int main(void)
+{
+	int x,y;
+	scanf("%d %d", &x, &y);
+	
+	for (int i = 1; i <= x; i++)
+		for (int j = 1; j <= y; j++)	
+			scanf("%d", &map[i][j]);
+		
+
+	int t;
+	scanf("%d", &t);
+
+	for (int a = 0; a < t; a++)
+	{
+		int sx, sy, ex, ey;
+
+		scanf("%d %d %d %d", &sx, &sy, &ex, &ey);
+
+		int ret = 0;
+
+		for (int i = sx; i <= ex; i++)
+		{
+			for (int j = sy; j <= ey; j++)
+			{
+				ret += map[i][j];
+			}
+		}
+
+		printf("%d\n",ret);
+	}
+	
+
+
+	return 0;
+}
