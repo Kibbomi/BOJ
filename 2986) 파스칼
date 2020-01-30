@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+
+	int counter = 1;
+
+	for (int i = 2; i*i <= n; i++)
+	{
+		if (n % i == 0)
+		{
+			//counter와 n/counter가 약수임.
+			counter = n - n / i;
+			break;
+		}
+	}
+	//소수라면?
+	if (counter == 1)
+		counter = n-1;
+	
+
+	printf("%d", counter);
+	return 0;
+}
