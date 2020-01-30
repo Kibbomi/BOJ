@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int cost[1001];
+int super[1001];
+int ret[1001];
+
+int main(void)
+{
+	int n, m;
+	scanf("%d %d", &n, &m);
+
+	for (int i = 1; i <= n; i++)
+		scanf("%d", &cost[i]);
+	for (int i = 1; i <= m; i++)
+		scanf("%d", &super[i]);
+
+	for (int i = 1; i <= m; i++)
+	{
+		int most = 0;
+		//x을 넘지않는 가장 재미있는.
+		for (int j = 1; j <= n; j++)
+		{
+			if (cost[j] <= super[i])
+			{
+				most = j;
+				break;
+			}
+		}
+		ret[most]++;
+	}
+
+	int sol = -1;
+	int val = -1;
+	for (int i = 1; i <= n; i++)
+	{
+		if (ret[i] > val)
+		{
+			val = ret[i];
+			sol = i;
+		}
+	}
+
+	printf("%d", sol);
+
+	return 0;
+}
