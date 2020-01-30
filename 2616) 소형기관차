@@ -1,0 +1,37 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+//dp[i][j],, i번째 열차가 1~j까지 끌 수 있는 최대
+int dp[4][50001];
+
+//m칸을 끌 수 있을 때, 그 m칸을 조금 편하게 계산하고자 누적값을 저장함.
+int sum[50001];
+
+int main(void)
+{
+	int n, m;
+	scanf("%d", &n);
+
+	for (int i = 1; i <= n; i++)
+	{
+		int tmp;
+		scanf("%d ", &tmp);
+		sum[i] = sum[i - 1] + tmp;
+	}
+	
+	scanf("%d", &m);
+
+	//table을 그려보면됨.
+	//첫번째, i == 1 일 때는 그냥 선형적으로 더한 값이나옴.
+	// i == 2일때는 max(기존의 값, 나를 포함했을때의 연산이 됨)
+	// 나를 포함했을때는 m칸만큼 이전열차의 값  + m칸만큼의 현재 열차에서 sum값.
+	for (int i = 1; i <= 3; i++)
+		for (int j = i*m; j <= n; j++)
+			dp[i][j] = max(dp[i][j - 1], dp[i - 1][j - m] + (sum[j] - sum[j - m]));
+		
+	
+	printf("%d", dp[3][n]);
+
+	return 0;
+}
