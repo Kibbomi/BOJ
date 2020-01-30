@@ -1,0 +1,21 @@
+#include <stdio.h>
+
+int rev(int val)
+{
+	int ret = 0;
+	while (val != 0)
+	{
+		ret += val%10;
+		val /= 10;
+		if(val!=0)
+			ret *= 10;
+	}
+	return ret;
+}
+int main()
+{
+	int n, m;
+	scanf("%d %d", &n, &m);
+	printf("%d", rev(rev(n) + rev(m)));
+	return 0;
+}
