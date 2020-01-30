@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+int time[3][2];
+
+int main(void)
+{
+	
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 2; j++)
+		{
+			int h, m, s;
+			scanf("%d %d %d", &h, &m, &s);
+
+			time[i][j] = h * 3600 + m * 60 + s;
+
+		}
+	
+	for (int i = 0; i < 3; i++)
+	{
+		int ret = time[i][1] - time[i][0];
+		//h
+		printf("%d ", ret / 3600);
+		ret = ret % 3600;
+		//m
+		printf("%d ", ret / 60);
+		ret = ret % 60;
+		//s
+		printf("%d\n", ret);
+	}
+
+
+	return 0;
+}
