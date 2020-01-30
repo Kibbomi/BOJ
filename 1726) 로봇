@@ -1,0 +1,152 @@
+#include <stdio.h>
+#include <algorithm>
+#include <queue>
+using namespace std;
+
+const int dx[] = { 0,1,-1,0,0 };
+const int dy[] = { 0,0,0,1,-1 };
+
+struct coord {
+	int y, x;
+	int time;
+	int dir;
+};
+
+int map[101][101];
+bool visited[101][101][5];
+
+int main(void)
+{
+	int n, m;
+
+	scanf("%d %d", &n, &m);
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+			scanf("%d", &map[i][j]);
+
+	coord src, dest;
+	scanf("%d %d %d", &src.y, &src.x, &src.dir);
+	scanf("%d %d %d", &dest.y, &dest.x, &dest.dir);
+
+
+	
+
+	queue <coord> q;
+	src.time = 0;
+	
+	q.push(src);
+	visited[src.y][src.x][src.dir] = true;
+
+	while (!q.empty())
+	{
+		coord cur = q.front(); q.pop();
+		if (cur.y == dest.y && cur.x == dest.x && cur.dir == dest.dir)
+		{
+			printf("%d", cur.time);
+			break;
+		}
+		
+		coord next;
+
+		//Go 1
+		next.y = cur.y + dy[cur.dir];
+		next.x = cur.x + dx[cur.dir];
+		next.dir = cur.dir;
+		next.time = cur.time + 1;
+
+		if (!(next.y <= 0 || next.x <= 0 || next.x > m || next.y > n))
+		if (map[next.y][next.x] == 0 && visited[next.y][next.x][next.dir] == false)
+		{
+			visited[next.y][next.x][next.dir] = true;
+			q.push(next);
+		}
+
+		//Go 2
+		next.y = cur.y + 2*dy[cur.dir];
+		next.x = cur.x + 2*dx[cur.dir];
+		next.dir = cur.dir;
+		next.time = cur.time + 1;
+
+		if (!(next.y <= 0 || next.x <= 0 || next.x > m || next.y > n))
+		if(map[cur.y+dy[cur.dir]][cur.x+dx[cur.dir]] == 0)
+		if (map[next.y][next.x] == 0 && visited[next.y][next.x][next.dir] == false)
+		{
+			visited[next.y][next.x][next.dir] = true;
+			q.push(next);
+		}
+
+		//Go 3
+		next.y = cur.y + 3*dy[cur.dir];
+		next.x = cur.x + 3*dx[cur.dir];
+		next.dir = cur.dir;
+		next.time = cur.time + 1;
+
+		if (!(next.y <= 0 || next.x <= 0 || next.x > m || next.y > n))
+		if (map[cur.y + dy[cur.dir]][cur.x + dx[cur.dir]] == 0 && map[cur.y + 2*dy[cur.dir]][cur.x + 2*dx[cur.dir]] == 0)
+		if (map[next.y][next.x] == 0 && visited[next.y][next.x][next.dir] == false)
+		{
+			visited[next.y][next.x][next.dir] = true;
+			q.push(next);
+		}
+
+		//Turn dir (left)
+		next.y = cur.y;
+		next.x = cur.x;
+		next.time = cur.time + 1;
+		if (cur.dir == 1)
+		{//East -> North
+			next.dir = 4;
+		}
+		else if (cur.dir == 2)
+		{//West -> South
+			next.dir = 3;
+		}
+		else if (cur.dir == 3)
+		{//South -> East
+			next.dir = 1;
+		}
+		else
+		{//North -> West
+			next.dir = 2;
+		}
+		if (!(next.y <= 0 || next.x <= 0 || next.x > m || next.y > n))
+		if (map[next.y][next.x] == 0 && visited[next.y][next.x][next.dir] == false)
+		{
+			visited[next.y][next.x][next.dir] = true;
+			q.push(next);
+		}
+
+
+		//Turn dir (right)
+		next.y = cur.y;
+		next.x = cur.x;
+		next.time = cur.time + 1;
+		if (cur.dir == 1)
+		{//East -> South
+			next.dir = 3;
+		}
+		else if (cur.dir == 2)
+		{//West -> North
+			next.dir = 4;
+		}
+		else if (cur.dir == 3)
+		{//South -> West
+			next.dir = 2;
+		}
+		else
+		{//North -> East
+			next.dir = 1;
+		}
+		if (!(next.y <= 0 || next.x <= 0 || next.x > m || next.y > n))
+		if (map[next.y][next.x] == 0 && visited[next.y][next.x][next.dir] == false)
+		{
+			visited[next.y][next.x][next.dir] = true;
+			q.push(next);
+		}
+
+	}
+
+
+	return 0;
+}
