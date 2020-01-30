@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+int height[9];
+int select[9];
+
+int flag = true;
+void dfs(int start, int count)
+{
+	//종료 조건
+	if (count == 7)
+	{
+		int ret = 0;
+		int temp[7] = { 0 };
+		int size = 0;
+		//select배열에 선택한것들 저장.
+		for (int i = 0; i < 9; i++)
+		{
+			if (select[i] == 1)
+			{
+				ret += height[i];
+				temp[size++] = height[i];
+			}
+		}
+
+		if (ret == 100 && flag)
+		{
+			flag = false;
+			for (int i = 0; i < 6; i++)
+			{
+				for (int j = i + 1; j < 7; j++)
+				{
+					if (temp[i] > temp[j])
+					{
+						int t = temp[j];
+						temp[j] = temp[i];
+						temp[i] = t;
+					}
+				}
+			}
+
+
+			for (int i = 0; i < 7; i++)
+			{
+				printf("%d\n", temp[i]);
+			}
+		}
+	}
+	//반복
+	for (int i = start; i < 9; i++)
+	{
+		select[i] = 1;
+		//조합..  이미 선택한 다음은 생각하지마라.
+		dfs(i+1,count + 1);
+		select[i] = 0;
+	}
+}
+
+
+
+int main(void)
+{
+	for (int i = 0; i < 9; i++)
+		scanf("%d", &height[i]);
+
+	dfs(0,0);
+
+	return 0;
+}
