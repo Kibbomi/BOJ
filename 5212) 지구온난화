@@ -1,0 +1,73 @@
+#include <stdio.h>
+
+char map[12][12];
+char ret[12][12];
+
+int main(void)
+{
+	int r, c;
+	scanf("%d %d ", &r, &c);
+	int num = 0;
+	for (int i = 0; i <= r + 1; i++)
+		for (int j = 0; j <= c + 1; j++)
+			map[i][j] = '.';
+		
+	for (int i = 1; i <= r; i++)
+	{
+		for (int j = 1; j <= c; j++)
+		{
+			scanf("%c", &map[i][j]);
+			if (map[i][j] == '\n')
+				j--;
+		}
+	}
+
+
+	for (int i = 0; i <= r+1; i++) {
+		for (int j = 0; j <= c+1; j++)
+		{
+			int cnt = 0;
+			if (map[i][j] == 'X')
+			{
+				if (map[i+1][j] == '.')	cnt++;
+				if (map[i-1][j] == '.')	cnt++;
+				if (map[i][j+1] == '.')	cnt++;
+				if (map[i][j-1] == '.')	cnt++;
+
+				if (cnt >= 3)
+					ret[i][j] = '.';
+				else
+					ret[i][j] = 'X';
+			}
+			else
+				ret[i][j] = map[i][j];
+		}
+	}
+
+	int up=-1, down=-1, left=-1, right=-1;
+	for (int i = 1; i <= r; i++)
+	{
+		for (int j = 1; j <= c; j++)
+		{
+			if (ret[i][j] == 'X' && up == -1) up = i;
+			if (ret[i][j] == 'X')down = i;
+		}
+	}
+	for (int j = 1; j <= c; j++)
+	{
+		for (int i = 1; i <= c; i++)
+		{
+			if (ret[i][j] == 'X' && left == -1) left = j;
+			if (ret[i][j] == 'X')right = j;
+		}
+	}
+
+	for (int i = up; i <= down; i++)
+	{
+		for (int j = left; j <= right; j++)
+			printf("%c", ret[i][j]);
+		printf("\n");
+	}
+
+	return 0;
+}
