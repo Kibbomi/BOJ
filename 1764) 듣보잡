@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+vector<string> v;
+vector<string> retv;
+
+int main(void)
+{
+	int n, m;
+	scanf("%d %d", &n, &m);
+
+	for (int i = 0; i < n; i++)
+	{
+		string str;
+		cin >> str;
+		v.push_back(str);
+	}
+	sort(v.begin(), v.end());
+
+	int ret = 0;
+	
+	for (int i = 0; i < m; i++)
+	{
+		string str;
+		cin >> str;
+		if (binary_search(v.begin(), v.end(), str))
+		{
+			ret++;
+			retv.push_back(str);
+		}
+	}
+	sort(retv.begin(), retv.end());
+	int len = retv.size();
+	cout << ret << '\n';
+	for (int i = 0; i < len; i++)
+		cout << retv[i] << '\n';
+	
+	return 0;
+}
