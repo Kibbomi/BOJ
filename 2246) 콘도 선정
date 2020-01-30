@@ -1,0 +1,50 @@
+#include <stdio.h>
+
+struct HOUSE {
+	int d, c;
+};
+HOUSE h[10000];
+bool candi[10000];
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++)
+		scanf("%d %d", &h[i].d, &h[i].c);
+
+	int ret = 0;
+
+	for (int x = 0; x < n; x++){
+		bool pass = true;
+		for (int j = 0; j < n; j++){
+
+			if (x == j)
+				continue;
+
+			//x보다 j가 가까운데,
+			//x보다 숙박비가 싸다면?
+			if (h[x].d > h[j].d && h[x].c >= h[j].c)
+			{
+				pass = false;
+				break;
+			}
+			
+			//x보다 j가 더 싼데..
+			//x보다 더 가깝다면?!
+			if (h[x].c > h[j].c && h[x].d >= h[j].d)
+			{
+				pass = false;
+				break;
+			}
+		}
+		if (pass)
+			ret++;
+	}
+
+	printf("%d", ret);
+
+
+
+	return 0;
+}
