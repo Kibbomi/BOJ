@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int line[1001];
+int cache[1001];
+//본인을 선택하느냐 안하느냐
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+
+
+	for (int i = 1; i <= n; i++)
+	{
+		scanf("%d", &line[i]);
+		cache[i] = 1;
+	}
+	int ret = 1;
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j < i; j++)
+		{
+			if (line[i] > line[j])
+				cache[i] = max(cache[i], cache[j] + 1);
+		}
+		ret = max(ret, cache[i]);
+	}
+
+	printf("%d", ret);
+
+
+	return 0;
+}
