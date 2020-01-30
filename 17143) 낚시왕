@@ -1,0 +1,199 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+const int dx[] = { 0,0,0,1,-1};
+const int dy[] = { 0,-1,1,0,0 };
+
+int map[101][101];
+int y,x,m;
+struct COORD {
+	int r, c;
+	int s, d, z;
+	bool isdead;
+}fish[10001];
+int ret = 0;
+int maxweight = -1;
+int  main(void)
+{
+	scanf("%d %d %d", &y, &x, &m);
+
+	for (int i = 0; i < m; i++)
+	{
+		int r, c, s, d, z;
+		scanf("%d %d %d %d %d", &r, &c, &s, &d, &z);
+		fish[z].r = r, fish[z].c = c,fish[z].d = d;
+		fish[z].z = z, fish[z].isdead = false;
+		map[r][c] = z;
+		maxweight = max(maxweight, z);
+		//불필요한 이동 제거.
+		fish[z].s = s;
+	}
+	
+	for (int j = 1; j <= x; j++)
+	{
+		//물고기 사냥
+		for (int i = 1; i <= y; i++)
+		{
+			if (map[i][j] != 0)
+			{
+				fish[map[i][j]].isdead = true;
+				fish[map[i][j]].r = fish[map[i][j]].c = -1;
+				ret += map[i][j];
+				map[i][j] = 0;
+				break;
+			}
+		}
+
+		//상어 이동
+		for (int i = 1; i <= maxweight; i++)
+		{
+			if (!fish[i].isdead)
+			{
+				map[fish[i].r][fish[i].c] = 0;
+
+
+				int nx, ny, ndir;
+
+				if (fish[i].d == 1)
+				{
+					int cals = fish[i].s % (2 * (y - 1));
+					ny = fish[i].r - cals;
+					if (1 <= ny && ny <= y)
+					{
+						fish[i].r = ny;
+					}
+					else
+					{
+						if (ny < 1)
+						{
+							int temp = 1 - ny;
+							ny = 1 + temp;
+							ndir = 2;
+						}
+						if (ny > y)
+						{
+							int temp = ny - y;
+							ny = y - temp;
+							ndir = 1;
+						}
+						fish[i].d = ndir;
+						fish[i].r = ny;
+					}
+
+				}
+				else if (fish[i].d == 2)
+				{
+					int cals = fish[i].s % (2 * (y - 1));
+					ny = fish[i].r + cals;
+					if (1 <= ny && ny <= y)
+					{
+						fish[i].r = ny;
+					}
+					else
+					{
+						if (ny > y)
+						{
+							int temp = ny - y;
+							ny = y - temp;
+							ndir = 1;
+						}
+						if (ny < 1)
+						{
+							int temp = 1 - ny;
+							ny = 1 + temp;
+							ndir = 2;
+						}
+						fish[i].d = ndir;
+						fish[i].r = ny;
+					}
+
+				}
+				else if (fish[i].d == 3)
+				{
+					int cals = fish[i].s % (2 * (x - 1));
+					nx = fish[i].c + cals;
+
+					if (1 <= nx && nx <= x)
+					{
+						fish[i].c = nx;
+					}
+					else
+					{
+						if (nx > x)
+						{
+							int temp = nx - x;
+							nx = x - temp;
+							ndir = 4;
+						}
+						if (nx < 1)
+						{
+							int temp = 1 - nx;
+							nx = 1 + temp;
+							ndir = 3;
+						}
+						fish[i].d = ndir;
+						fish[i].c = nx;
+					}
+
+				}
+				else
+				{
+					int cals = fish[i].s % (2 * (x - 1));
+					nx = fish[i].c - cals;
+					if (1 <= nx && nx <= x)
+					{
+						fish[i].c = nx;
+					}
+					else
+					{
+						if (nx < 1)
+						{
+							int temp = 1 - nx;
+							nx = 1 + temp;
+							ndir = 3;
+						}
+						if (nx > x)
+						{
+							int temp = nx - x;
+							nx = x - temp;
+							ndir = 4;
+						}
+						fish[i].d = ndir;
+						fish[i].c = nx;
+					}
+
+				}
+			}
+		}
+		//맵에 그리기
+		for (int i = 1; i <= maxweight; i++)
+		{
+			if (!fish[i].isdead)
+			{
+				if (map[fish[i].r][fish[i].c] != 0)
+				{
+					if (map[fish[i].r][fish[i].c] > fish[i].z)
+					{
+						//내가죽어
+						fish[i].r = fish[i].c = -1;
+						fish[i].isdead = true;
+					}
+					else
+					{
+						//걔가 죽어
+						fish[map[fish[i].r][fish[i].c]].r = fish[map[fish[i].r][fish[i].c]].c = -1;
+						fish[map[fish[i].r][fish[i].c]].isdead = true;
+						map[fish[i].r][fish[i].c] = fish[i].z;
+					}
+				}
+				else
+				{
+					map[fish[i].r][fish[i].c] = fish[i].z;
+				}
+			}
+		}
+		
+	}
+	printf("%d", ret);
+	return 0;
+}
