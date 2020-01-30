@@ -1,0 +1,77 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#define INF 0x1f1f1f1f
+using namespace std;
+
+int n;
+vector<char> v;
+vector<int>maxval, minval;
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; ++i)
+	{
+		char temp;
+		cin >> temp;
+		v.push_back(temp);
+	}
+
+	int stackval = 0;
+	int num = 9;
+
+	maxval.resize(n + 1);
+	minval.resize(n + 1);
+
+	//solve max
+	for (int i = 0; i < n; ++i)
+	{
+		if (v[i] == '<')
+		{
+			++stackval;
+		}
+		else
+		{
+			for (int j = 0; j <= stackval; ++j)
+				maxval[i - j] = num--;
+			stackval = 0;
+			//temp
+			maxval[i + 1] = num;
+		}
+	}
+	if(stackval != 0)
+		for (int j = 0; j <= stackval; ++j)
+			maxval[ n - j] = num--;
+
+	//init
+	num = n;
+	stackval = 0;
+
+	//solve min
+	for (int i = n - 1; i >=0; --i)
+	{
+		if (v[i] == '>')
+		{
+			++stackval;
+		}
+		else
+		{
+			for (int j = 0; j <= stackval; ++j)
+				minval[i+ 1 + j] = num--;
+			stackval = 0;
+		}
+	}
+
+	if (stackval != 0)
+		for (int j = 0; j <= stackval; ++j)
+			minval[j] = num--;
+	for (int i = 0; i <= n; ++i)
+		cout << maxval[i];
+
+	cout << '\n';
+
+	for (int i = 0; i <= n; ++i)
+		cout << minval[i];
+	return 0;
+}
