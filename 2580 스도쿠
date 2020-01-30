@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int map[9][9];
+bool flag = true;
+
+bool itisok(int row, int col,int val)
+{
+	for (int i = 0; i < 9; i++)
+	{
+		if (map[row][i] == val)
+			return false;
+	}
+	
+	for (int j = 0; j < 9; j++)
+	{
+		if (map[j][col] == val)
+			return false;
+	}
+
+	//3x3검사 구현
+	int x = col / 3;
+	int y = row / 3;
+	
+	
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+			if (map[y * 3 + i][x * 3 + j] == val)
+				return false;
+	}
+
+	return true;
+
+}
+
+void dfs(int count)
+{
+	if (!flag) return;
+
+	if (count == 81 && flag)
+	{
+		for (int i = 0; i < 9; i++){
+			for (int j = 0; j < 9; j++)
+				printf("%d ",map[i][j]);
+			printf("\n");
+		}
+		flag = false;
+		return;
+	}
+	
+	int i = count / 9;
+	int j = count % 9;
+	if (map[i][j] == 0 && flag)
+	{
+		for (int k = 1; k <= 9; k++)
+		{
+			if (itisok(i, j, k))
+			{
+				map[i][j] = k;
+				dfs(count + 1);
+				map[i][j] = 0;
+			}
+		}
+	}
+	else if (map[i][j] != 0 && flag)
+		dfs(count + 1);
+		
+	return;
+}
+
+int main(void)
+{
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++) {
+			scanf("%d", &map[i][j]);
+		}
+	dfs(0);
+	return 0;
+}
