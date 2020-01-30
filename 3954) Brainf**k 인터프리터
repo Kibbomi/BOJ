@@ -1,0 +1,174 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int t;
+	scanf("%d", &t);
+		
+	while (t--)
+	{
+		int maxlen = -100;
+		//program data
+		int mem[100000] = { 0 };
+		char code[4096] = { 0 };
+		char inputdata[4096] = { 0 };
+		int cptr=0, wptr = 0, mptr = 0;
+		int loopleft = -1, loopright = -1;
+
+		int memsize, codelen, inputlen;
+		scanf("%d %d %d", &memsize, &codelen, &inputlen);
+		scanf("%s", code);
+		scanf("%s", inputdata);
+
+		int runtime = 0;
+
+		while(cptr < codelen)
+		{
+			//end check.
+			if (runtime >= 50000000)
+			{
+				//maxlen -> 빠져나가본적없는 루프.
+				//이 루프를 기준으로 왼쪽을 찾음.
+				int w = 1;
+				//s.push(']');
+				for (int i = maxlen - 1; i >= 0; i--)
+				{
+					if (code[i] == ']')
+					{
+						//s.push(']');
+						w++;
+					}
+					else if (code[i] == '[')
+					{
+						//s.pop();
+						w--;
+						//if (s.size() == 0)
+						if (w == 0)
+						{
+							loopleft = i;
+							loopright = maxlen;
+							break;
+						}
+					}
+				}
+
+				printf("Loops %d %d\n", loopleft, loopright);
+				break;
+			}
+
+			//=================   start  ================
+
+			if (code[cptr] == '-')
+			{
+				mem[mptr]--;
+				if (mem[mptr] < 0)
+					mem[mptr] = 255;
+				cptr++;
+			}
+			else if (code[cptr] == '+')
+			{
+				mem[mptr]++;
+				if (mem[mptr] > 255)
+					mem[mptr] = 0;
+				cptr++;
+			}
+			else if (code[cptr] == '<')
+			{
+				mptr--;
+				if (mptr < 0)
+					mptr = memsize - 1;
+				cptr++;
+			}
+			else if (code[cptr] == '>')
+			{
+				mptr++;
+				if (mptr > memsize - 1)
+					mptr = 0;
+				cptr++;
+			}
+			else if (code[cptr] == '[')
+			{
+				//lets find ']'
+				if (mem[mptr] == 0)
+				{
+					int w = 1;
+					//s.push('[');
+					for (int i = cptr + 1; i <codelen; i++)
+					{
+						if (code[i] == '[')
+						{
+							//s.push('[');
+							w++;
+						}
+						else if (code[i] == ']')
+						{
+							//s.pop();
+							w--;
+
+							//if (s.size() == 0)
+							if(w == 0)
+							{
+								cptr = i;
+								break;
+							}
+						}
+					}
+				}
+				else
+					cptr++;
+					
+
+			}
+			else if (code[cptr] == ']')
+			{
+				if (maxlen < cptr)
+					maxlen = cptr;
+				//lets find '['
+				if (mem[mptr] != 0)
+				{
+					int w = 1;
+					for (int i = cptr - 1; i >= 0; i--)
+					{
+						if (code[i] == ']')
+						{
+							w++;
+						}
+						else if (code[i] == '[')
+						{
+							w--;
+							if (w == 0)
+							{
+								cptr = i;
+								break;
+							}
+						}
+					}
+				}
+				else
+					cptr++;
+				
+			}
+			else if (code[cptr] == '.')
+			{
+				//ignore output
+				cptr++;
+			}
+			else if (code[cptr] == ',')
+			{
+				if (wptr < inputlen)
+					mem[mptr] = inputdata[wptr++];
+				else if (wptr == inputlen)
+				{
+					mem[mptr] = 255;
+				}
+				cptr++;
+			}
+			runtime++;
+		}
+
+		if (cptr == codelen)
+			printf("Terminates\n");
+		
+	}
+	return 0;
+}
