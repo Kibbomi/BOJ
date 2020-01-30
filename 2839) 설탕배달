@@ -1,0 +1,81 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+
+	if (n < 5 && (n == 1 || n == 2 || n == 4))
+	{
+		printf("-1\n");
+		return 0;
+	}
+
+	int ret = n / 5;
+	int rest = n % 5;
+
+	
+	if (rest % 3 == 0)
+	{
+		ret += (rest / 3);
+		printf("%d\n", ret);
+	}
+	else
+	{
+		rest += 5;
+		ret -= 1;
+		if (ret < 0)
+		{
+			printf("-1\n");
+			return 0;
+		}
+		if (rest % 3 == 0)
+		{
+			ret += (rest / 3);
+			printf("%d\n", ret);
+		}
+		else
+		{
+			rest += 5;
+			ret -= 1;
+			if (ret < 0)
+			{
+				printf("-1\n");
+				return 0;
+			}
+			if (rest % 3 == 0)
+			{
+				ret += (rest / 3);
+				printf("%d\n", ret);
+			}
+			else
+			{
+				rest += 5;
+				ret -= 1;
+				if (ret < 0)
+				{
+					printf("-1\n");
+					return 0;
+				}
+				if (rest % 3 == 0)
+				{
+					ret += (rest / 3);
+					printf("%d\n", ret);
+				}
+				else
+				{
+					printf("-1\n");
+					return 0;
+				}
+
+			}
+
+		}
+	}
+
+	
+	
+	
+
+	return 0;
+}
