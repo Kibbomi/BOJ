@@ -1,0 +1,49 @@
+#include <stdio.h>
+
+int n, s, m;
+int v[101];
+
+bool dp[101][1001];
+//100개 최대 1000개.
+//n단계에서 s크기의 노래가 있는지?
+
+int main(void)
+{
+	scanf("%d %d %d", &n, &s, &m);
+	
+	for (int i = 1; i <= n; i++)
+		scanf("%d", &v[i]);
+	
+	dp[0][s] = true;
+
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 0; j <= m; j++)
+		{
+			if (dp[i - 1][j] == false)
+				continue;
+
+			if (j + v[i] <= m)
+				dp[i][j + v[i]] = true;
+
+			if (j - v[i] >= 0)
+				dp[i][j - v[i]] = true;
+		}
+	}
+	//dp table complete
+
+	int ret = -1;
+	for (int i = m; i >= 0; i--)
+	{
+		if (dp[n][i] == true)
+		{
+			ret = i;
+			break;
+		}
+	}
+	if (ret == -1)
+		printf("-1");
+	else
+		printf("%d", ret);
+	return 0;
+}
