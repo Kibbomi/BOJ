@@ -1,0 +1,34 @@
+#include <stdio.h>
+using namespace std;
+
+int main(void)
+{
+	int count;
+	int w, h, n;
+
+	scanf("%d", &count);
+	
+	for (int i = 0; i < count; i++)
+	{
+		scanf("%d %d %d", &w, &h, &n);
+
+		int floor;
+		int room;
+		floor = n % w;
+		room = n / w + 1;
+		if (floor == 0)
+		{
+			printf("%d", w);
+			printf("%02d\n", room - 1);
+		}
+		else
+		{
+			printf("%d", floor);
+			printf("%02d\n", room);
+		}
+		
+	}
+
+
+	return 0;
+}
