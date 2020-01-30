@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int map[4][4000];
+long long int ret;
+int a[16000000];
+int index = 0;
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+
+	for (int i = 0; i < n; i++)
+		scanf("%d %d %d %d", &map[0][i], &map[1][i], &map[2][i], &map[3][i]);
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			a[index++] = map[2][i] + map[3][j];
+	
+	sort(a,a+index);
+	for(int i=0;i<n;i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+
+			long long candi;
+			candi = map[0][i] + map[1][j];
+
+			//상대방 후보 찾기on
+			long long int oppnum;
+			oppnum = upper_bound(a, a+index, -candi) - lower_bound(a, a+index, -candi);
+
+			if (oppnum != 0)
+				ret += oppnum;
+		}
+	}
+
+	printf("%lld", ret);
+
+	return 0;
+}
