@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <deque>
+#include <vector>
+using namespace std;
+
+struct COORD {
+	int y, x;
+	int time;
+};
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+
+int main(void)
+{
+	int t;
+	scanf("%d", &t);
+
+	while (t--)
+	{
+		int ret = 0x7fffffff;
+
+		char map[102][102] = { 0 };
+		int val[3][102][102] = { 0 };
+		vector<pair<int,int>> v;	// y, x
+		int r, c;
+		scanf("%d %d", &r, &c);
+
+		for (int i = 1; i <= r; i++)
+			for (int j = 1; j <= c; j++)
+			{
+				scanf("%c", &map[i][j]);
+				if (map[i][j] == '\n')
+				{
+					j--;
+					continue;
+				}
+				if (map[i][j] == '$')
+					v.push_back(make_pair(i, j));
+			}
+		v.push_back(make_pair(0, 0));
+
+		for (int i = 0; i < 3; i++)
+		{
+			deque<COORD> q;
+			bool visited[102][102] = { false, };
+
+			COORD start;
+			start.y = v[i].first, start.x = v[i].second, start.time = 0;
+			visited[start.y][start.x] = true;
+			q.push_back(start);
+
+			while (!q.empty())
+			{
+				COORD cur = q.front(); q.pop_front();
+				val[i][cur.y][cur.x] = cur.time;
+				for (int dir = 0; dir < 4; dir++)
+				{
+					COORD next;
+					next.y = cur.y + dy[dir];
+					next.x = cur.x + dx[dir];
+
+					if (next.y < 0 || next.x <0 || next.y >r + 1 || next.x >c + 1 || map[next.y][next.x] == '*')
+						continue;
+
+					if (visited[next.y][next.x] == false)
+					{
+						if (map[next.y][next.x] == '#')
+						{
+							next.time = cur.time + 1;
+							visited[next.y][next.x] = true;
+							q.push_back(next);
+						}
+						else
+						{
+							next.time = cur.time;
+							visited[next.y][next.x] = true;
+							q.push_front(next);
+						}
+						
+					}
+				}
+			}
+		}
+		//val[0]에 더하기
+		for (int i = 0; i <= r+1; i++)
+			for (int j = 0; j <= c+1; j++)
+			{
+				if (map[i][j] == '*')continue;
+
+				int k = val[0][i][j] + val[1][i][j] + val[2][i][j];
+				if (map[i][j] == '#')
+					k -= 2;
+
+				if (k < ret)
+					ret = k;
+				
+			}
+		printf("%d\n", ret);
+		}
+	
+	return 0;
+}
