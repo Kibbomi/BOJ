@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int map[3];
+int oldmin[3], newmin[3];
+int oldmax[3], newmax[3];
+
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+	scanf("%d %d %d", &map[0], &map[1], &map[2]);
+
+	oldmin[0] = oldmax[0] = map[0];
+	oldmin[1] = oldmax[1] = map[1];
+	oldmin[2] = oldmax[2] = map[2];
+
+	for (int i = 2; i <= n; i++) {
+		scanf("%d %d %d", &map[0], &map[1], &map[2]);
+		newmax[0] = map[0] + max(oldmax[0], oldmax[1]);
+		newmax[1] = map[1] + max(oldmax[0], max(oldmax[1],oldmax[2]));
+		newmax[2] = map[2] + max(oldmax[1], oldmax[2]);
+		
+		newmin[0] = map[0] + min(oldmin[0], oldmin[1]);
+		newmin[1] = map[1] + min(oldmin[0], min(oldmin[1],oldmin[2]));
+		newmin[2] = map[2] + min(oldmin[1], oldmin[2]);
+
+
+		oldmin[0] = newmin[0];
+		oldmin[1] = newmin[1];
+		oldmin[2] = newmin[2];
+
+		oldmax[0] = newmax[0];
+		oldmax[1] = newmax[1];
+		oldmax[2] = newmax[2];
+	}
+
+	printf("%d %d\n", max(oldmax[0], max(oldmax[1], oldmax[2])), min(oldmin[0], min(oldmin[1], oldmin[2])));
+	return 0;
+}
