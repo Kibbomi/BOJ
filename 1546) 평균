@@ -1,0 +1,29 @@
+#include <stdio.h>
+
+int main(void)
+{
+	
+	
+	double average = 0;
+	
+	int n;
+	scanf("%d", &n);
+	int max = -150;
+	int score=0;
+
+	for (int i = 0; i < n; i++)
+	{
+		int temp;
+		scanf("%d", &temp);
+		if (max < temp)
+			max = temp;
+
+		score += temp;
+	}
+	average = (double)score / (double)max * 100 / (double)n;
+
+	printf("%lf", average);
+
+
+	return 0;
+}
