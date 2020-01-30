@@ -1,0 +1,18 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int main(void)
+{
+	int x, y, w, h;
+	scanf("%d %d %d %d", &x, &y, &w, &h);
+
+	int minval = 0x7fffffff;
+
+	minval = min(minval, x);
+	minval = min(minval, y);
+	minval = min(minval, w-x);
+	minval = min(minval, h-y);
+	printf("%d", minval);
+	return 0;
+}
