@@ -1,0 +1,19 @@
+#include <stdio.h>
+int base,exp, mod;
+long long int power(int n)
+{
+	if (n == 0) return 1;
+	else{
+		long long int temp = power(n/2) % mod;
+		if (n % 2 == 0)
+			return (temp*temp) % mod;
+		else
+			return	((temp*temp)%mod*base) % mod;
+	}
+}
+int main(void)
+{
+	scanf("%d %d %d", &base, &exp, &mod);
+	printf("%lld\n",power(exp));
+	return 0;
+}
