@@ -1,0 +1,31 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int main(void)
+{
+	int t;
+	scanf("%d", &t);
+
+	while (t--)
+	{
+		int dp[10001] = { 0 };
+		int coin[20] = { 0 };
+		dp[0] = 1;
+
+		int n;
+		scanf("%d", &n);
+		for (int i = 0; i < n; i++)
+			scanf("%d", &coin[i]);
+		int m;
+		scanf("%d", &m);
+
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = coin[i]; j <= m; j++)
+				dp[j] += dp[j - coin[i]];
+		}
+		printf("%d\n", dp[m]);
+	}
+	return 0;
+}
