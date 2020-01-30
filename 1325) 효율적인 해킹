@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <vector>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+vector <int> v[10001];
+int time[10001];
+int n, e;
+int ret = -0x7fffffff;
+int sortarr[10001];
+
+int compare(const void* a, const void* b)
+{
+	int aa = *(int*)a;
+	int bb = *(int*)b;
+
+	return aa - bb;
+}
+void bfs(int start)
+{
+	queue <int> q;
+	bool visited[10001] = { false, };
+	
+	q.push(start);
+	visited[start] = true;
+
+	while (!q.empty())
+	{
+		int cur = q.front(); q.pop();
+		int len = v[cur].size();
+		for (int i = 0; i < len; i++)
+		{
+			if (visited[v[cur][i]] == false)
+			{
+				visited[v[cur][i]] = true;
+				q.push(v[cur][i]);
+			}
+		}
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		if(visited[i] == true)
+			time[start]++;
+	}
+	if (time[start] > ret)
+		ret = time[start];
+
+	return;
+}
+int main(void)
+{
+	scanf("%d %d", &n, &e);
+
+	for (int i = 1; i <= e; i++)
+	{
+		int to,from;
+		scanf("%d %d", &to, &from);
+		v[from].push_back(to);
+	}
+
+	for (int i = 1; i <= n; i++)
+		bfs(i);
+	
+	int num = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		if (time[i] == ret)
+		{
+			sortarr[num++] = i;
+		}
+	}
+
+	qsort(sortarr, num, sizeof(int), compare);
+
+	for (int i = 0; i < num; i++)
+		printf("%d ", sortarr[i]);
+	return 0;
+}
