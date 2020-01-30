@@ -1,0 +1,45 @@
+#include <stdio.h>
+
+//maximun 3x2^10 ,, 2x 3x2^10범위.
+bool arr[3073][6145] = { false, };
+
+void star(int len,int y, int x)
+{
+	int next = len / 2;
+
+	if (len == 3)
+	{
+		//삼각형 그리기
+		arr[y - 2][x] = true;
+		arr[y - 1][x - 1] = arr[y - 1][x + 1] = true;
+		arr[y][x - 2] = arr[y][x - 1] = arr[y][x] = arr[y][x + 1]= arr[y][x + 2] = true;
+		return;
+	}
+	star(len / 2, y-next, x ); //up 
+	star(len / 2, y, x +next); // right
+	star(len / 2, y, x - next); //left
+
+	return;
+}
+int main(void)
+{
+	int len;
+	scanf("%d", &len);
+
+	int y, x;
+	y = x = len;//삼각형 밑변의 중심을 잡음.
+
+	star(len, y, x);
+
+	for (int i = 1; i <= len; i++) {
+
+		for (int j = 1; j <= 2*len; j++)
+			if (arr[i][j] == true)
+				printf("*");
+			else
+				printf(" ");
+
+		printf("\n");
+	}
+	return 0;
+}
