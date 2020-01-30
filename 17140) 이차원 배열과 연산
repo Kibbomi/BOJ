@@ -1,0 +1,119 @@
+#include <stdio.h>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int r, c, k;
+int map[100][100];
+bool compare(pair<int, int> a, pair<int, int>b)
+{
+	if (a.second == b.second)
+	{
+		return a.first < b.first;
+	}
+	return a.second < b.second;
+
+}
+int main(void)
+{
+	scanf("%d %d %d", &r, &c, &k);
+
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
+			scanf("%d", &map[i][j]);
+		
+
+	int time = 0;
+	int nr = 3, nc = 3;
+	//열의 개수 ,, 행의 개수..
+
+	while (time <=100)
+	{
+		if (map[r-1][c-1] == k)
+		{
+			printf("%d", time);
+			return 0;
+		}
+		else
+		{
+			if (nc >= nr)
+			{
+				//행정렬
+				int nextnr = -1;
+				for (int i = 0; i < nc; i++)
+				{
+					int temp[101] = { 0 };
+					vector<pair<int,int>>v;
+					
+					for (int j = 0; j < nr; j++)
+					{
+						temp[map[i][j]]++;
+						map[i][j] = 0;
+					}
+					//temp완성
+
+					
+					
+					for(int j=1;j<=100;j++)
+						if (temp[j] != 0){
+							v.push_back(make_pair(j,temp[j]));
+						}
+					sort(v.begin(), v.end(), compare);
+					
+					int len = v.size();
+					for (int j = 0; j < len; j++)
+					{
+						map[i][2 * j] = v[j].first;
+						map[i][2 * j + 1] = v[j].second;
+					}
+					nextnr = max(nextnr, (int)v.size()*2);	
+				}
+				nr = nextnr;
+				
+			}
+			else
+			{
+				//열정렬
+				int nextnc = -1;
+				for (int j = 0; j < nr; j++)
+				{
+					int temp[101] = { 0 };
+					vector<pair<int, int>>v;
+
+					for (int i = 0; i < nc; i++)
+					{
+						temp[map[i][j]]++;
+						map[i][j] = 0;
+					}
+					//temp완성
+
+
+
+					for (int i = 1; i <= 100; i++)
+						if (temp[i] != 0) {
+							v.push_back(make_pair(i, temp[i]));
+						}
+					sort(v.begin(), v.end(), compare);
+					int len = v.size();
+					for (int i = 0; i < len; i++)
+					{
+						map[2 * i][j] = v[i].first;
+						map[2 * i + 1][j] = v[i].second;
+					}
+					nextnc = max(nextnc, (int)v.size()*2);
+				}
+				nc = nextnc;
+
+			}
+
+
+		}
+		time++;
+	}
+	if (time == 101)
+		printf("-1");
+	else
+		printf("%d", time);
+	
+	return 0;
+}
