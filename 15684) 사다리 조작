@@ -1,0 +1,86 @@
+#include <stdio.h>
+
+int n, m, h;
+
+int map[31][11];
+
+//0번 행, 열은 안씀..
+//1행 부터 시작
+//마지막열은 색칠x
+//a->b로 갈때 map[][a]열 1
+
+bool end = false;
+
+void dfs(int row, int col, int depth, int limit)
+{
+	if (depth  == limit)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			int k = j;
+
+			for (int i = 1; i <= h; i++)
+			{
+				if (map[i][k] == 1)
+					k++;
+				
+				else if (map[i][k - 1] == 1)
+					k--;
+			}
+			if (k != j)
+				return;
+		}
+
+		end = true;
+
+		return;
+	}
+
+	for (int i = row; i <=h; i++)
+	{
+		for (int j = col; j < n; j++)
+		{
+			if (end) return;
+			if (map[i][j] == 0 &&map[i][j-1] == 0 && map[i][j+1] == 0)
+			{
+				map[i][j] = 1;
+				dfs(i, j + 1, depth + 1, limit);
+				map[i][j] = 0;
+			}
+		}
+		col = 1;
+	}
+	return ;
+}
+
+int main(void)
+{
+	scanf("%d %d %d", &n, &m, &h);
+	
+	int ret = 0;
+
+	for (int i = 0; i < m; i++){
+		int y, x;
+
+		scanf("%d %d", &y, &x);
+
+		map[y][x] = 1;
+	}
+	for (int i = 0; i <= 3; i++)
+	{
+		if (!end)
+			dfs(1, 1, 0, i);
+		if(end)
+		{
+			ret = i;
+			break;
+		}
+	}
+
+	if (end)
+		printf("%d", ret);
+	else
+		printf("-1");
+
+	return 0;
+}
