@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+struct SCORE {
+	int val;
+	int num;
+}val[8];
+bool compare(SCORE a, SCORE b)
+{
+	return a.val > b.val;
+}
+int main(void)
+{
+	
+	
+	for (int i = 0; i < 8; i++)
+	{
+		scanf("%d", &val[i].val);
+		val[i].num = i+1;
+	}
+
+	sort(val, val + 8,compare);
+
+	int ret[5] = { 0 };
+	int sum = 0;
+
+	for (int i = 0; i < 5; i++)
+	{
+		sum += val[i].val;
+		ret[i] = val[i].num;
+	}
+	sort(ret, ret + 5);
+
+	printf("%d\n", sum);
+	for (int i = 0; i < 5; i++)
+		printf("%d ", ret[i]);
+
+
+	return 0;
+}
