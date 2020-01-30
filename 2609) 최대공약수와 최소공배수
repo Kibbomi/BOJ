@@ -1,0 +1,47 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n, m;
+
+	scanf("%d %d", &n, &m);
+
+	int big, small;
+
+	if (n >= m)
+	{
+		big = n;
+		small = m;
+	}
+	else
+	{
+		big = m;
+		small = n;
+	}
+	
+	int a, b,c;
+	bool flag = true;
+	int gcm, lcm;
+	a = big;
+	b = small;
+	c = a%b;
+	while (flag)
+	{
+		if (c == 0)
+		{
+			gcm = b;
+			flag = false;
+		}
+		else
+		{
+			a = b;
+			b = c;
+			c = a%b;
+		}
+	}
+	lcm = (big *small) / gcm;
+
+	printf("%d\n%d\n", gcm, lcm);
+
+	return 0;
+}
