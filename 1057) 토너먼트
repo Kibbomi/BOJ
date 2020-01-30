@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+vector<int>v1,v2;
+int main(void)
+{
+	int n, lim, kim;
+	scanf("%d %d %d", &n, &lim, &kim);
+
+	int ret = 0;
+	for (int i = 2; ;i *= 2)
+	{
+		ret++;
+		int left, right;
+		if (lim % i == 0)
+			left = lim / i;
+		else
+			left = (lim / i) + 1;
+
+		if (kim %i == 0)
+			right = kim / i;
+		else
+			right = (kim / i) + 1;
+
+		if (left == right)
+			break;
+	}
+	printf("%d", ret);
+
+	return 0;
+}
