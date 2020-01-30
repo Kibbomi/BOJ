@@ -1,0 +1,35 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int baby[200];
+int dp[200];
+int n;
+
+int main(void)
+{
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++)
+		scanf("%d", &baby[i]);
+
+	for (int i = 0; i < n; i++)
+		dp[i] = 1;
+
+	int ret = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < i; j++)
+		{
+			if (baby[i] > baby[j])
+			{
+				dp[i] = max(dp[i], dp[j] + 1);
+			}
+		}
+		ret = max(ret, dp[i]);
+	}
+
+	printf("%d", n-ret);
+
+
+	return 0;
+}
