@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <algorithm>
+#include <vector>
+using namespace std;
+//행렬로 구해보자.
+#define INF 0x7fffffff
+vector<pair<int, int>> v[1001];
+int dist[1001];
+bool visited[1001] = { false, };
+
+int main(void)
+{
+	int vertex, edge;
+	scanf("%d", &vertex);
+	scanf("%d", &edge);
+	for (int i = 0; i < edge; i++)
+	{
+		int from, to, val;
+		scanf("%d %d %d", &from, &to, &val);
+		v[from].push_back(make_pair(to, val));
+	}
+	//adj list complete
+	int dep, ari;
+	scanf("%d %d", &dep, &ari);
+
+	//init array dist 
+	for (int k = 1; k <= vertex; k++)
+	{
+		if (k == dep)
+			dist[k] = 0;
+		else
+			dist[k] = INF;
+	}
+
+	for (int k = 1; k <= vertex; k++)
+	{
+		int minval = INF;
+		int index = -1;
+		
+		for (int i = 1; i <= vertex; i++)
+		{
+			if (!visited[i] && minval > dist[i])
+			{
+				minval = dist[i];
+				index = i;
+			}
+		}
+		//find min val.
+
+		visited[index] = true;
+
+		int len = v[index].size();
+		for (int i = 0; i < len; i++)
+		{
+			//first -> target, second -> weight...
+			int nv = v[index][i].first;
+			int nw = v[index][i].second;
+
+			dist[nv] = min(dist[nv], dist[index] + nw);
+		}
+	}
+
+	printf("%d", dist[ari]);
+	return 0;
+}
