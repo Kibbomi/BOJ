@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <iostream>
+#include <map>
+#include <vector>
+#include <algorithm>
+#include <stack>
+#include <string>
+using namespace std;
+
+int n;
+map<string, int>m;
+vector<string> v;
+vector<int>retv;
+stack<int>s;
+int main(void)
+{
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++)
+	{
+		string val;
+		cin >> val;
+		m.insert(make_pair(val, i));
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		string val;
+		cin >> val;
+		v.push_back(val);
+	}
+	int ret = 0;
+
+	map<string, int>::iterator iter;
+	map<string, int>::iterator iter2;
+	int len = v.size();
+	for (int i = 0; i < len; i++)
+	{
+		int val = m.find(v[i])->second;
+		
+		retv.push_back(val);
+	}
+
+	len = retv.size();
+	s.push(retv[0]);
+	for (int i = 1; i < len; i++)
+	{
+		while (s.size() > 0 && s.top() > retv[i])
+			s.pop();
+		s.push(retv[i]);
+	}
+	printf("%d", n - s.size());
+	return 0;
+}
