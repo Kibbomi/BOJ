@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+
+int main(void)
+{
+	char n[8];
+	scanf("%s", n);
+
+	//16,8
+	if (n[0] == '0')
+	{
+		if (n[1] == 'x')
+		{
+			//16
+			int len = strlen(n);
+			int temp = 0;
+
+			for (int i = len - 1; i >= 2; i--)
+			{
+				if(n[i]>='0' && n[i] <='9')
+					temp += (n[i] - '0') * pow(16, (len - 1 - i));
+				else
+					temp += (n[i] - 'a'+10) * pow(16, (len - 1 - i));
+			}
+			
+			printf("%d", temp);
+		}
+		else
+		{
+			//8
+			int len = strlen(n);
+			int temp = 0;
+
+			for (int i = len - 1; i >= 1; i--)
+				temp += (n[i]-'0') * pow(8, (len - 1 - i));
+			
+			printf("%d", temp);
+		}
+	}
+	else
+	{//10
+		printf("%s", n);
+	}
+
+
+
+	
+	return 0;
+}
