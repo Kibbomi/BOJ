@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int cache[1001];
+// n개를 채우는데의 경우의 수 ..
+
+int main(void)
+{
+	int n;
+	scanf("%d",&n);
+	
+	cache[1] = 1;
+	cache[2] = 2;
+	cache[3] = 3;
+	cache[4] = 5;
+	cache[5] = 8;
+
+	for (int i = 3; i <= n; i++)
+		cache[i] = (cache[i - 1] + cache[i - 2])%10007;
+
+	printf("%d", cache[n]);
+
+
+	return 0;
+}
