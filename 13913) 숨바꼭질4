@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+const int dz[] = { 1,-1 };
+
+struct coord {
+	int l;
+	int d;
+};
+
+int n, k;
+bool visited[100001];
+int time[100001];
+int timeret[100001];
+int retmin = 0x7fffffff;
+
+void bfs(coord start)
+{
+	queue<coord> q;
+
+	q.push(start);
+	visited[start.l] = true;
+	
+	while (!q.empty())
+	{
+		coord cur;
+		cur = q.front(); q.pop();
+		
+
+		if (cur.l == k)
+		{
+			
+			printf("%d\n", cur.d);
+			
+			if (n == k)
+			{
+				printf("%d", n);
+				return;
+			}
+			int index = k;
+
+			printf("%d ", n);
+			int i = 0;
+			while (time[index] != n)
+			{
+				timeret[i++]= time[index];
+				index = time[index];
+			}
+
+			for (int i = cur.d-2; i >= 0; i--)
+				printf("%d ", timeret[i]);
+
+			printf("%d ", k);
+				return;
+		}
+			
+		for (int i = 0; i < 3; i++)
+		{
+			coord next;
+			if (i != 2) {
+				next.l = cur.l + dz[i];
+			}
+			else
+			{
+				next.l = cur.l * 2;
+			}
+			next.d = cur.d + 1;
+			
+			if (next.l < 0 || next.l >= 100001)
+				continue;
+
+			if (visited[next.l] == false)
+			{
+				visited[next.l] = true;
+				q.push(next);
+				time[next.l] = cur.l;
+			}
+
+		}
+	}
+
+	return ;
+
+}
+int main(void)
+{
+	scanf("%d %d", &n, &k);
+
+	coord first;
+	first.l = n;
+	first.d = 0;
+
+	bfs(first);
+	
+	return 0;
+}
