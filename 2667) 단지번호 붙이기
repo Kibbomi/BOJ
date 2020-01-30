@@ -1,0 +1,111 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+
+int map[25][25];
+bool visited[25][25];
+
+int ret[26][25];
+
+
+int n;
+
+struct coord {
+	int y, x;
+	int d;
+};
+
+int bfs(coord t)
+{
+	queue<coord> q;
+
+	int num = 0;
+	q.push(t);
+	visited[t.y][t.x] = true;
+
+	while (!q.empty())
+	{
+		coord ct = q.front(); q.pop();
+		num += 1;
+		for (int i = 0; i < 4; i++)
+		{
+			coord nt;
+			nt.x = ct.x + dx[i];
+			nt.y = ct.y + dy[i];
+			nt.d = ct.d + 1;	//사실상 무의미
+
+			if (nt.x <0 || nt.x >=n || nt.y <0 || nt.y>=n)
+				continue;
+
+			if (map[nt.y][nt.x] != 0 && visited[nt.y][nt.x] == false)
+			{
+				q.push(nt);
+				visited[nt.y][nt.x] = true;
+			}
+		}
+
+	}
+	return num;
+}
+
+int main(void)
+{
+	scanf("%d", &n);
+
+	for (int i = 0; i < n; i++)
+	{
+		char temp[100];
+		scanf("%s", temp);
+
+		for (int j = 0; j < n; j++)
+			map[i][j] = temp[j] - '0';
+
+	}
+
+	int sort[625] = { 0 };
+	int size = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (map[i][j] != 0 && visited[i][j] == false)
+			{
+				coord ct;
+				ct.x = j;
+				ct.y = i;
+				ct.d = 1;
+				sort[size++] = bfs(ct);
+			}
+		}
+	}
+
+	//정렬하기
+
+	for (int i = 0; i < size-1; i++)
+	{
+		for (int j = i + 1; j < size; j++)
+		{
+			if (sort[i] > sort[j])
+			{
+				int temp = sort[i];
+				sort[i] = sort[j];
+				sort[j] = temp;
+			}
+		}
+
+	}
+
+	printf("%d\n", size);
+
+	for (int i = 0; i < size; i++)
+		printf("%d\n", sort[i]);
+	
+
+
+
+	return 0;
+}
