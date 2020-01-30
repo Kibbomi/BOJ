@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int gcd(int a, int b)
+{
+	while (b > 0)
+	{
+		int temp = b;
+		b = a % b;
+		a = temp;
+	}
+	return a;
+}
+int lcm(int a, int b)
+{
+	return a * b / gcd(a, b);
+}
+int main(void)
+{
+	
+	int t;
+	scanf("%d", &t);
+
+	int m, n, x, y;
+
+	for (int a = 0; a < t; a++)
+	{
+		scanf("%d %d %d %d", &m, &n, &x, &y);
+		
+		
+		int ret = x;
+		int count;
+		int yt = 0;
+		for(count=0; count<n; count++)
+		{
+
+			yt = ret % n;
+			if (yt == 0)
+				yt = n;
+
+			if (yt == y)
+			{
+				printf("%d\n",ret);
+				break;
+			}
+			ret += m;
+		}
+		if (n <= count)
+		{
+			printf("-1\n");
+		}
+
+	}
+
+
+
+	return 0;
+}
