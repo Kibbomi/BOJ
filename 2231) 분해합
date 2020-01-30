@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+int n;
+
+int main(void)
+{
+	scanf("%d", &n);
+
+	
+	int cycle = n;
+	
+	int ret = 0;
+
+	while (cycle > 0)
+	{
+		int sum = 0;
+		int temp = cycle;
+		while (temp > 0)
+		{
+			sum += temp % 10;
+			temp /= 10;
+		}
+		if (cycle + sum == n)
+		{
+			ret = cycle;
+		}
+
+		cycle--;
+	}
+
+		printf("%d", ret);
+	return 0;
+}
