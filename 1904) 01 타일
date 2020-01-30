@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+int cache[1000001] = { 0 };
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+	
+	for (int i = 1; i <= n; i++)
+	{
+
+		if (i == 1)
+		{
+			cache[1] = 1;
+			continue;
+		}
+		if (i == 2)
+		{
+			cache[2] = 2;
+			continue;
+		}
+			cache[i] = (cache[i - 1] + cache[i - 2])%15746;
+	}
+	
+	printf("%d", cache[n]);
+
+	return 0;
+}
