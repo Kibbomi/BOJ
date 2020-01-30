@@ -1,0 +1,125 @@
+#include <stdio.h>
+#include <algorithm>
+#include <queue>
+#include <vector>
+using namespace std;
+
+int n, m, d;
+int map[15][15];
+int order[3];
+int monster = 0;
+int ret = -1;
+struct COORD {
+	int y, x;
+	int time;
+};
+const int dx[] = { -1,0,1,0 };
+const int dy[] = { 0,-1,0,1 };
+
+void cpmap(int dest[][15], int src[][15])
+{
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			dest[i][j] = src[i][j];
+	return;
+}
+
+void dfs(int depth, int start)
+{
+	if (depth == 3)
+	{
+		int kill = 0;
+		int monsternum = monster;
+		int clone[15][15] = { 0 };
+		cpmap(clone, map);
+
+		while (monsternum != 0)
+		{
+			vector<COORD> target;
+			for (int i = 0; i < 3; i++)
+			{
+				queue<COORD>q;
+				bool visited[15][15] = { false, };
+				COORD s;
+				s.y = n, s.time = 0;
+				s.x = order[i], q.push(s);
+				bool isfind = false;
+				while (!q.empty())
+				{
+					COORD cur = q.front(); q.pop();
+
+					for (int dir = 0; dir < 4; dir++)
+					{
+						COORD next;
+						next.x = cur.x + dx[dir];
+						next.y = cur.y + dy[dir];
+						next.time = cur.time + 1;
+						if (next.x < 0 || next.y < 0 || next.x >= m || next.y >= n
+							|| next.time > d)
+							continue;
+
+						if (visited[next.y][next.x] == false)
+						{
+							if (clone[next.y][next.x] == 1)
+							{
+								target.push_back(next);
+								isfind = true;
+								break;
+							}
+							visited[next.y][next.x] = true;
+							q.push(next);
+						}
+					}
+					if (isfind)break;
+				}
+			}
+			//targeting end.
+			int len = target.size();
+			for (int i = 0; i < len; i++)
+			{
+				if (clone[target[i].y][target[i].x] == 1)
+				{
+					clone[target[i].y][target[i].x] = 0;
+					kill++;
+					monsternum--;
+				}
+			}
+			
+			//monster moving
+			for (int j = 0; j < m; j++) {
+				if (clone[n - 1][j] == 1)
+					monsternum--;
+
+				for (int i = n - 1; i > 0; i--)
+					clone[i][j] = clone[i - 1][j];
+				clone [0][j] = 0;
+			}
+		}
+		ret = max(ret, kill);
+		return;
+	}
+	for (int i = start; i < m; i++)
+	{
+		order[depth] = i;
+		dfs(depth + 1, i + 1);
+	}
+
+	return;
+}
+int main(void)
+{
+	scanf("%d %d %d", &n, &m, &d);
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+		{
+			scanf("%d", &map[i][j]);
+			if (map[i][j] == 1)	monster++;
+		}
+	
+	//combination
+	dfs(0, 0);
+	
+	printf("%d", ret);
+	return 0;
+}
