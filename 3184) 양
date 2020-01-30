@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+char map[250][250];
+int r, c;
+
+//int group[250][250];
+//int groupnum = 0;
+bool visited[250][250];
+
+int reto, retv;
+
+struct COORD {
+	int y, x;
+};
+
+int main(void)
+{
+	scanf("%d %d", &r, &c);
+
+	for (int i = 0; i < r; i++)
+		scanf("%s", map[i]);
+
+	//make district
+	for (int i = 0; i < r; i++){
+		for (int j = 0; j < c; j++){
+
+			if (map[i][j] != '#' && !visited[i][j]){
+				//bfs
+				//assign group number
+
+				//groupnum++;
+				int checko = 0, checkv = 0;
+				queue <COORD> q;
+
+				COORD start;
+				start.x = j, start.y = i;
+				visited[i][j] = true;
+				q.push(start);
+				//group[start.y][start.x] = groupnum;
+
+				if (map[i][j] == 'o')
+					checko++;
+				else if (map[i][j] == 'v')
+					checkv++;
+
+				while (!q.empty())
+				{
+					COORD cur = q.front(); q.pop();
+
+					for (int dir = 0; dir < 4; dir++)
+					{
+						COORD next;
+						next.y = cur.y + dy[dir];
+						next.x = cur.x + dx[dir];
+
+						if (next.y < 0 || next.x < 0 || next.x >= c || next.y >= r)
+							continue;
+
+						if (map[next.y][next.x] != '#' && !visited[next.y][next.x])
+						{
+							//이동
+							q.push(next);
+							visited[next.y][next.x] = true;
+							//group[next.y][next.x] = groupnum;
+							if (map[next.y][next.x] == 'o')
+								checko++;
+							else if (map[next.y][next.x] == 'v')
+								checkv++;
+						}
+					}
+				}
+				//if finish to checking one group
+				if (checkv >= checko)
+					checko = 0;
+				else
+					checkv = 0;
+				retv += checkv;
+				reto += checko;
+
+			}
+		}
+	}
+
+	printf("%d %d", reto, retv);
+	return 0;
+}
