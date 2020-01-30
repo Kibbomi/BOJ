@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+int oven[300001];
+int pizza[300001];
+
+int main(void)
+{
+	int d, n;
+	scanf("%d %d", &d, &n);
+
+	for (int i = 1; i <= d; i++)
+		scanf("%d", &oven[i]);
+	
+
+	for (int i = 1; i <= n; i++)
+		scanf("%d", &pizza[i]);
+	
+	for (int i = 1; i < d; i++)
+		if (oven[i] < oven[i + 1])
+			oven[i + 1] = oven[i];
+
+	int index = 1;
+	int ret = 0;
+	for (int i = d; i >= 1; i--)
+	{
+		if (oven[i] >= pizza[index])
+		{
+			index++;
+			ret = i;
+		}
+		if (index == n+1)
+		{
+			printf("%d", ret);
+			return 0;
+		}
+	}
+		printf("0\n");
+
+	
+	return 0;
+}
