@@ -1,0 +1,64 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int N, L, R;
+int order[21];
+int dp[21][21][21];
+
+int main(void)
+{
+	int num;
+	scanf("%d", &N);
+	scanf("%d %d", &L, &R);
+	scanf("%d", &num);
+
+	for (int i = 1; i <= num; i++)
+		scanf("%d", &order[i]);
+
+	for (int n = 0; n <= num; n++)
+		for (int l = 1; l <= N; l++)
+			for (int r = 1; r <= N; r++)
+				dp[n][l][r] = 0x7f7f7f7f;
+
+	dp[0][L][R] = 0;
+
+	for (int n = 1; n <= num; n++)
+		for (int l = 1; l <= N; l++)
+			for (int r = 1; r <= N; r++)
+				if (dp[n - 1][l][r] != 0x7f7f7f7f)
+				{
+					//l보다 같거나 왼쪽
+					if (order[n] <= l)
+					{
+						int dist = l - order[n];
+						dp[n][order[n]][r] = min(dp[n][order[n]][r], dp[n - 1][l][r] + dist);
+					}
+					//사이
+					else if (l < order[n] && order[n] < r)
+					{
+						int dist = order[n] - l;
+						dp[n][order[n]][r] = min(dp[n][order[n]][r], dp[n - 1][l][r] + dist);
+						dist = r - order[n];
+						dp[n][l][order[n]] = min(dp[n][l][order[n]], dp[n - 1][l][r] + dist);
+
+					}
+					//r보다 오른쪽
+					else
+					{
+						int dist = order[n] - r;
+						dp[n][l][order[n]] = min(dp[n][l][order[n]], dp[n - 1][l][r] + dist);
+					}
+					
+				}
+			
+	
+	int ret = 0x7fffffff;
+
+	for (int l = 1; l <= N; l++)
+		for (int r = 1; r <= N; r++)
+			ret = min(ret, dp[num][l][r]);
+
+	printf("%d", ret);
+	return 0;
+}
