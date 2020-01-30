@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <queue>
+#include <vector>
+#include <functional>
+using namespace std;
+#define INF 0x7fffffff
+
+priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+//a그 정점까지의 거리 b정점
+vector<pair<int, int>> v[20001];
+int dist[20001];
+
+int main(void)
+{
+	int vertex, edge;
+	scanf("%d %d", &vertex, &edge);
+
+	for (int i = 0; i < edge; i++)
+	{
+		int from, to;
+		int val = 1;
+		scanf("%d %d", &from, &to);
+		v[from].push_back(make_pair(val, to));
+		v[to].push_back(make_pair(val, from));
+	}
+	for (int i = 1; i <= vertex; i++)
+		dist[i] = INF;
+	dist[1] = 0;
+
+	for (int i = 1; i <= vertex; i++)
+		pq.push(make_pair ( dist[i], i));
+
+	while (!pq.empty())
+	{
+		int d = pq.top().first;
+		int vertex = pq.top().second;
+		pq.pop();
+
+		if (d > dist[vertex])
+			continue;
+		
+		int len = v[vertex].size();
+
+		for (int i = 0; i < len; i++)
+		{
+			int nv = v[vertex][i].second;
+			int nw = v[vertex][i].first;
+
+			if (dist[nv] > dist[vertex] + nw)
+			{
+				//갱신
+				dist[nv] = dist[vertex] + nw;
+				pq.push(make_pair(dist[nv], nv));
+			}
+		}
+	}
+
+	int maxval = -1;
+	for (int i = 1; i <= vertex; i++)	
+		maxval = max(maxval, dist[i]);
+
+	int indexval = -1;
+	int limitval = 0;
+	bool isfind = false;
+	for (int i = 1; i <= vertex; i++)
+	{
+		if (!isfind && dist[i] == maxval){
+			indexval = i;
+			isfind = true;
+		}
+		if (dist[i] == maxval)
+			limitval++;
+	}
+	printf("%d %d %d", indexval, dist[indexval], limitval);
+
+	return 0;
+}
