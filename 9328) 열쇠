@@ -1,0 +1,116 @@
+#include <stdio.h>
+#include <queue>
+#include <set>
+#include <string.h>
+using namespace std;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+struct COORD {
+	int y, x;
+};
+int main(void)
+{
+	int t;
+	scanf("%d", &t);
+
+	while (t--)
+	{
+		int ret = 0;
+		char map[102][102] = { 0, };
+		int r, c;
+		scanf("%d %d", &r, &c);
+		set<char> keylist;
+
+		//input the map
+		for (int i = 1; i <= r; i++)
+			for (int j = 1; j <= c; j++)
+			{
+				scanf("%c", &map[i][j]);
+				if (map[i][j] == '\n') {
+					j--;
+					continue;
+				}
+			}
+		
+		//input the key list
+		char key[26] = { 0 };
+		scanf("%s", key);
+
+		if (key[0] != 0)
+		{
+			int len = strlen(key);
+			for (int i = 0; i < len; i++)
+				keylist.insert(key[i]);
+		}
+
+
+		//go to find
+			bool visited[102][102] = { false, };
+			COORD start;
+			start.y = 0, start.x = 0;
+			
+			queue<COORD> q;
+			q.push(start);
+			visited[start.y][start.x] = true;
+
+			while (!q.empty())
+			{
+				COORD cur = q.front(); q.pop();
+				if (map[cur.y][cur.x] >= 'a' && map[cur.y][cur.x] <= 'z')
+				{
+					//열쇠 위에 갔고, 열쇠가 없다면,
+					if (keylist.count(map[cur.y][cur.x]) == 0)
+					{
+						keylist.insert(map[cur.y][cur.x]);
+					
+						for (int i = 0; i <= r + 1; i++)
+							for (int j = 0; j <= c + 1; j++)
+								visited[i][j] = false;
+						queue<COORD> temp;
+						q.swap(temp);
+						visited[cur.y][cur.x] = true;
+						q.push(cur);
+					}
+				}
+				if (map[cur.y][cur.x] == '$')
+				{
+					ret++;
+					map[cur.y][cur.x] = '.';
+					for (int i = 0; i <= r + 1; i++)
+						for (int j = 0; j <= c + 1; j++)
+							visited[i][j] = false;
+					queue<COORD> temp;
+					q.swap(temp);
+					visited[cur.y][cur.x] = true;
+					q.push(cur);
+				}
+				for (int dir = 0; dir < 4; dir++)
+				{
+					COORD next;
+					next.y = cur.y + dy[dir];
+					next.x = cur.x + dx[dir];
+
+					if (next.y < 0 || next.x <0 || next.y > r + 1 || next.x > c + 1
+						||map[next.y][next.x] == '*')
+						continue;
+
+					//문인데, 문을 못열면
+					if (map[next.y][next.x] >= 'A' && map[next.y][next.x] <= 'Z')
+						if (keylist.count(map[next.y][next.x]-'A'+'a') == 0)
+							continue;
+					
+					if (visited[next.y][next.x] == false)
+					{
+						visited[next.y][next.x] = true;
+						q.push(next);
+					}
+				}
+			}
+		
+		printf("%d\n", ret);
+	}
+
+	return 0;
+}
