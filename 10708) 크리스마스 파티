@@ -1,0 +1,44 @@
+#include <stdio.h>
+int target[101];
+int score[101][101];
+int round[101][101];
+
+int main(void)
+{
+	int m, n;
+	scanf("%d", &n);
+	scanf("%d", &m);
+
+	for (int t = 1; t <= m; t++)
+		scanf("%d", &target[t]);
+
+	for (int i = 1; i <= m; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			scanf("%d", &round[i][j]);
+		}
+	}
+	//행 번째 게임에서 열에 있는 사람이 값에있는 사람을 지목
+	for (int t = 1; t <= m; t++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			if (target[t] == round[t][j])
+				score[t][j]++;
+			else
+				score[t][target[t]]++;
+		}
+	}
+	
+	for (int i = 1; i <= n; i++)
+	{
+		int ret = 0;
+		for (int j = 1; j <= m; j++)
+		{
+			ret += score[j][i];
+		}
+		printf("%d\n", ret);
+	}
+	return 0;
+}
