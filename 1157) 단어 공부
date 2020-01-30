@@ -1,0 +1,38 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+//first -> alphabet, second -> number
+vector<pair<char, int>>alpha;
+
+bool compare(pair<char,int> a, pair<char,int> b)
+{
+	return a.second > b.second;
+}
+int main(void)
+{
+	alpha.resize(26);
+	string s;
+	cin >> s;
+
+	int len = s.length();
+
+	for (int i = 0; i < 26; i++)
+		alpha[i].first = 'A' + i;
+	for (int i = 0; i < len; i++)
+	{
+		if ('A' <= s[i] && s[i] <= 'Z')
+			alpha[s[i] - 'A'].second++;
+		else
+			alpha[s[i] - 'a'].second++;
+	}
+	sort(alpha.begin(), alpha.end(), compare);
+
+	if (alpha[0].second == alpha[1].second)
+		printf("?");
+	else
+		printf("%c", alpha[0].first);
+	return 0;
+}
