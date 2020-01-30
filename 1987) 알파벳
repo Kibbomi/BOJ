@@ -1,0 +1,75 @@
+#include <stdio.h>
+
+char map[20][20];
+bool visited[20][20];
+
+int r, c;
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+char route[26] = { 0 };
+int alpha[26] = { 0 };
+
+int ret = -1;
+
+void dfs(int y, int x, int depth)
+{
+	//alphabet duplication check
+	/*
+	for (int i = 0; i <= depth - 2; i++)
+	{
+		if (route[depth - 1] == route[i])
+			return;
+	}*/
+	
+
+
+	if (ret < depth)
+		ret = depth;
+
+	for (int dir = 0; dir < 4; dir++)
+	{
+		int ny = y + dy[dir];
+		int nx = x + dx[dir];
+
+		//boundary check
+		if (ny < 0 || nx < 0 || ny >= r || nx >= c)
+			continue;
+
+
+		if (visited[ny][nx] == false)
+		{
+			
+			//route[depth] = map[ny][nx];
+			if (alpha[map[ny][nx] - 'A'] != 0) 
+				continue;
+
+			visited[ny][nx] = true;
+			alpha[map[ny][nx] - 'A']++;
+			dfs(ny, nx, depth + 1);
+
+			//route[depth] = 0;
+			alpha[map[ny][nx] - 'A']--;
+			visited[ny][nx] = false;
+		}
+	}
+
+}
+
+int main(void)
+{
+	scanf("%d %d", &r, &c);
+
+	for (int i = 0; i < r; i++)
+	{
+		scanf("%s", map[i]);
+	}
+
+	visited[0][0] = true;
+	//route[0] = map[0][0];
+	alpha[map[0][0] - 'A']++;
+	dfs(0, 0, 1);
+
+	printf("%d", ret);
+	return 0;
+}
