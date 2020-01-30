@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <vector>
+#include <algorithm>
+using namespace std;
+vector<vector<int>> v;
+vector<pair<int,int>>node;
+bool hasparents[10001] = { false, };
+vector<vector<int>> ret;
+
+int n,maxdepth;
+
+void dfs(int depth, int start)
+{
+	maxdepth = max(maxdepth, depth);
+
+	if (start == -1)	return;
+
+	dfs(depth + 1, v[start][0]);
+	node.push_back(make_pair(depth, start));
+	dfs(depth + 1, v[start][1]);
+	return;
+}
+
+int main(void)
+{
+	scanf("%d", &n);
+	v.resize(n + 1);
+	int root = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		int p, l, r;
+		scanf("%d %d %d", &p, &l, &r);
+		hasparents[l] = hasparents[r] = true;
+		v[p].push_back(l);
+		v[p].push_back(r);
+	}
+	//finish making graph
+	for(int i=1;i<=n;i++)
+		if (!hasparents[i])
+		{
+			root = i;
+			break;
+		}
+
+	//make tree
+	dfs(1,root);
+	int len = node.size();
+	ret.resize(maxdepth + 1);
+
+	for (int i = 0; i < len; i++)
+	{
+		int level;
+		level = node[i].first;
+		ret[level].push_back(i+1);
+	}
+
+	int retlevel = 0, retval = 0;
+
+	for (int i = 1; i < maxdepth; i++)
+	{
+		int locallen = ret[i].size();
+
+		int temp = ret[i][locallen - 1] - ret[i][0] + 1;
+
+		if (temp > retval) {
+			retval = temp;
+			retlevel = i;
+		}
+	}
+	printf("%d %d", retlevel, retval);
+	return 0;
+}
