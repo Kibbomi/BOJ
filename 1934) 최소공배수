@@ -1,0 +1,51 @@
+#include <stdio.h>
+int ret[1000];
+int main(void)
+{
+	int n, m;
+	int w;
+	scanf("%d", &w);
+	for (int i = 0; i < w; i++)
+	{
+		scanf("%d %d", &n, &m);
+
+		int big, small;
+
+		if (n >= m)
+		{
+			big = n;
+			small = m;
+		}
+		else
+		{
+			big = m;
+			small = n;
+		}
+
+		int a, b, c;
+		bool flag = true;
+		int gcm, lcm;
+		a = big;
+		b = small;
+		c = a%b;
+		while (flag)
+		{
+			if (c == 0)
+			{
+				gcm = b;
+				flag = false;
+			}
+			else
+			{
+				a = b;
+				b = c;
+				c = a%b;
+			}
+		}
+		ret[i] = (big *small) / gcm;
+	}
+
+	for(int i =0;i<w;i++)
+		printf("%d\n", ret[i]);
+	return 0;
+}
