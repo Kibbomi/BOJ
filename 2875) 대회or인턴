@@ -1,0 +1,32 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int woman, man, intern;
+int ret = -1;
+int w_intern, m_intern;
+
+int main()
+{
+	scanf("%d %d %d", &woman, &man, &intern);
+
+	w_intern = intern;
+	m_intern = 0;
+
+	for (m_intern = 0; m_intern <= intern; ++m_intern)
+	{
+		int tmp_woman = woman - w_intern;
+		int tmp_man = man - m_intern;
+
+		int w_cango = tmp_woman / 2;
+		int m_cango = tmp_man;
+
+		int tmp_ret = min(w_cango, m_cango);
+
+		ret = max(ret, tmp_ret);
+		w_intern--;
+	}
+
+	printf("%d", ret);
+	return 0;
+}
