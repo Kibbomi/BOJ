@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+
+int n, m;
+int value[] = { 1,2,3,4,5,6,7,8 };
+int ret[100];
+bool visited[100] = { false, };
+
+void dfs(int count)
+{
+	if (count == m)
+	{
+		for (int i = 0; i < m; i++)
+		{
+			printf("%d ", ret[i]);
+		}
+		printf("\n");
+		return;
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		ret[count] = value[i];
+		dfs(count + 1);
+	}
+}
+
+int main (void)
+{
+	scanf("%d %d", &n, &m);
+
+	dfs( 0);
+	return 0;
+}
