@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <vector>
+#include <queue>
+using namespace std;
+struct GRAPH {
+	int v;
+	int time;
+};
+vector<int> v[501];
+bool visited[501];
+int main(void)
+{	
+	int n;
+	scanf("%d", &n);
+
+	int m;
+	scanf("%d", &m);
+	
+	for (int i = 0; i < m; i++)
+	{
+		int from, to;
+		scanf("%d %d", &from, &to);
+
+		v[from].push_back(to);
+		v[to].push_back(from);
+		//양방향 그래프
+	}
+	GRAPH start;
+	start.v = 1;
+	start.time = 0;
+
+	queue<GRAPH> q;
+	q.push(start);
+	visited[start.v] = true;
+	int ret = -1;
+	while (!q.empty())
+	{
+		GRAPH cur = q.front(); q.pop();
+		if (cur.time > 2)	break;
+		ret++;
+		int len = v[cur.v].size();
+
+		for (int i = 0; i < len; i++)
+		{
+			GRAPH next;
+			next.v = v[cur.v][i];
+			next.time = cur.time + 1;
+
+			if (visited[next.v] == false)
+			{
+				visited[next.v] = true;
+				q.push(next);
+			}
+		}
+	}
+
+
+	printf("%d", ret);
+	return 0;
+}
