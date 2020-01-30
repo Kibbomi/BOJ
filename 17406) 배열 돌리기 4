@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int map[50][50];
+int n, m, s, k;
+int order[6];
+bool pick[6] = { false, };
+int ret = 0x7fffffff;
+
+struct COORD {
+	int y, x, s;
+}r[6];
+void copymap(int dest[][50], int src[][50])
+{
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			dest[i][j] = src[i][j];
+	return;
+}
+void rotate(int clone[][50],COORD cur)
+{
+	cur.x--;
+	cur.y--;
+	for (int s = 1; s <= cur.s; s++)
+	{
+		//오른쪽 위부터 시계방향으로
+		int temp = clone[cur.y - s][cur.x + s];
+
+		for (int j = cur.x + s; j > cur.x - s; j--)
+			clone[cur.y - s][j] = clone[cur.y - s][j - 1];
+
+		for (int i = cur.y - s; i < cur.y + s; i++)
+			clone[i][cur.x - s] = clone[i + 1][cur.x - s];
+
+		for (int j = cur.x - s; j < cur.x + s; j++)
+			clone[cur.y + s][j] = clone[cur.y + s][j + 1];
+
+		for (int i = cur.y + s; i > cur.y - s; i--)
+			clone[i][cur.x + s] = clone[i - 1][cur.x + s];
+
+		clone[cur.y - s + 1][cur.x + s] = temp;
+	}
+}
+void dfs(int depth)
+{
+	if (depth == k)
+	{
+		int clone[50][50];
+		copymap(clone, map);
+		for (int i = 0; i < k; i++)
+			rotate(clone,r[order[i]]);
+		
+		int sum = 0x7fffffff;
+
+		for (int i = 0; i < n; i++)
+		{
+			int temp = 0;
+			for (int j = 0; j < m; j++)
+			{
+				temp += clone[i][j];
+			}
+			sum = min(sum, temp);
+		}
+
+		ret = min(ret, sum);
+		return;
+	}
+	for (int i = 0; i < k; i++)
+	{
+		if (!pick[i])
+		{
+			pick[i] = true;
+			order[depth] = i;
+			dfs(depth + 1);
+			order[depth] = -1;//unnecessary
+			pick[i] = false;
+		}
+	}
+}
+
+int main(void)
+{
+	scanf("%d %d %d", &n, &m, &k);
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			scanf("%d", &map[i][j]);
+
+	for (int i = 0; i < k; i++)
+		scanf("%d %d %d", &r[i].y, &r[i].x, &r[i].s);
+
+	//permutation
+	dfs(0);
+
+	printf("%d", ret);
+	return 0;
+}
