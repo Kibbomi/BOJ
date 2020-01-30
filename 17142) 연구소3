@@ -1,0 +1,138 @@
+#include <stdio.h>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+int n, m;
+int map[50][50];
+
+struct COORD {
+	int y, x;
+	int time;
+}virus[10];
+int virnum = 0;
+int order[10];
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+int minval = 0x7fffffff;
+
+void cpmap(int dest[][50], int src[][50])
+{
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			dest[i][j] = src[i][j];
+	return;
+}
+bool havetogo(int clone[][50])
+{
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			if (clone[i][j] == 0)
+				return true;
+	return false;
+}
+
+void dfs(int depth, int start)
+{
+	if (depth == m)
+	{
+		//bfs
+		queue<COORD> q;
+		bool visited[50][50] = { false, };
+		int clone[50][50];
+		cpmap(clone, map);
+
+		int time = 0;
+		for (int i = 0; i < m; i++)
+		{
+			q.push(virus[order[i]]);
+			visited[virus[order[i]].y][virus[order[i]].x] = true;
+		}
+
+		while (!q.empty())
+		{
+			COORD cur = q.front(); q.pop();
+			time = cur.time;
+			for (int dir = 0; dir < 4; dir++)
+			{
+				COORD next;
+				next.y = cur.y + dy[dir];
+				next.x = cur.x + dx[dir];
+				next.time = cur.time + 1;
+
+				if (next.y < 0 || next.x < 0 || next.x >= n || next.y >= n || clone[next.y][next.x] == 1)
+					continue;
+
+				if (visited[next.y][next.x] == false)
+				{
+					if (clone[next.y][next.x] == 2)
+					{
+						//가야하는지?
+						if (!havetogo(clone))
+							continue;
+						else
+						{
+							visited[next.y][next.x] = true;
+							q.push(next);
+						}
+
+					}
+					else
+					{
+						visited[next.y][next.x] = true;
+						clone[next.y][next.x] = 2;
+						q.push(next);
+					}
+					
+				}
+
+			}
+		}
+		bool isok = true;
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				if (clone[i][j] == 0)
+					isok = false;
+
+		if (isok)
+			minval = min(minval, time);
+		
+
+		return;
+	}
+	for (int i = start; i < virnum; i++)
+	{
+		order[depth] = i;
+		dfs(depth + 1, i + 1);
+		order[depth] = -1; // unecessary
+	}
+	return;
+}
+int main(void)
+{
+	scanf("%d %d", &n, &m);
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+		{
+			scanf("%d", &map[i][j]);
+
+			if (map[i][j] == 2)
+			{
+				virus[virnum].y = i;
+				virus[virnum].x = j;
+				virus[virnum++].time = 0;
+			}
+		}
+			
+	//dfs()
+	//Combination
+	dfs(0, 0);
+	if (minval == 0x7fffffff)
+		printf("-1");
+	else
+		printf("%d", minval);
+
+	return 0;
+}
