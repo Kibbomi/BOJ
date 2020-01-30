@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+const int dx[] = { 1,-1,0,0};
+const int dy[] = { 0,0,1,-1};
+
+struct coord {
+	int y, x;
+	int time;
+	bool wall;
+};
+
+int map[1000][1000];
+bool visited[1000][1000][2];
+//0 이전에 안부수고 
+//1 이전에 부수고 
+
+int n, m;
+int ret = 0x7ffffff;
+
+void bfs()
+{
+	queue<coord> q;
+
+
+	coord now;
+	now.y = 0;
+	now.x = 0;
+	now.time = 1;
+	now.wall = false;
+
+	q.push(now);
+	visited[now.y][now.x][0] = true;
+
+	while (!q.empty())
+	{
+		coord cur = q.front(); q.pop();
+		
+
+		if (cur.x == m - 1 && cur.y == n - 1)
+		{
+			if (ret > cur.time)
+				ret = cur.time;
+			break;
+		}
+
+		for (int dir = 0; dir < 4; dir++)
+		{
+			coord next;
+			next.x = cur.x + dx[dir];
+			next.y = cur.y + dy[dir];
+			next.time = cur.time + 1;
+			next.wall = cur.wall;
+
+			if (next.x < 0 || next.y < 0 || next.x >= m || next.y >= n)
+				continue;
+
+			//벽을 안부수고 0인경우
+			if (next.wall == false && visited[next.y][next.x][0] == false && map[next.y][next.x] == 0)
+			{
+				q.push(next);
+				visited[next.y][next.x][0] = true;
+			}
+			//벽을 안부수고 1일경우.
+			//벽을 부술 수 있음.
+			if (next.wall == false && visited[next.y][next.x][0] == false && map[next.y][next.x] == 1)
+			{
+				next.wall = true;
+				q.push(next);
+				visited[next.y][next.x][0] = true;
+			}
+			//벽을 이미 부순경우
+			if (next.wall == true && visited[next.y][next.x][1] == false && map[next.y][next.x] == 0)
+			{
+				q.push(next);
+				visited[next.y][next.x][1] = true;
+			}
+		}
+	}
+
+}
+
+int main(void)
+{
+	scanf("%d %d", &n, &m);
+
+	for (int i = 0; i < n; i++)
+	{
+		char temp[1000];
+		scanf("%s", temp);
+
+		for (int j = 0; j < m; j++)
+			map[i][j] = temp[j]-'0';
+	}
+	
+	
+	//안 부숴도 될 경우
+	bfs();
+
+	
+	
+
+	if (ret == 0x7ffffff)
+		printf("-1");
+	else
+		printf("%d", ret);
+
+
+
+	return 0;
+}
