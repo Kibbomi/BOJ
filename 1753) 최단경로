@@ -1,0 +1,75 @@
+#include <cstdio>
+#include <algorithm>
+#include <queue>
+#include <vector>
+#include<functional>
+#define INF 0x1f1f1f1f
+using namespace std;
+
+//경로를 나타냄.
+vector <pair<int,int>> w[20001];
+vector<int> dist;
+priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+
+int main()
+{
+	int v, e;
+	scanf("%d %d", &v, &e);
+	int start;
+	scanf("%d", &start);
+
+	//input
+	//w.resize(v + 1);
+	for (int i = 1; i <= e; ++i)
+	{
+		int from, to, val;
+		scanf("%d %d %d", &from, &to, &val);
+		
+		w[from].push_back(make_pair(to,val));
+	}
+
+	//init
+	dist.resize(v + 1);
+	for (int i = 1; i <= v; ++i)
+	{
+		if (i != start) dist[i] = INF;
+		pq.push(make_pair(dist[i], i));
+	}
+
+	while (!pq.empty())
+	{
+		int curv = pq.top().second;
+		int curd = pq.top().first;
+
+		pq.pop();
+
+		if (dist[curv] < curd)	continue;
+		
+		int len = w[curv].size();
+
+		for (int i = 0; i < len; ++i)
+		{
+			int nextv = w[curv][i].first;
+			int nextw = w[curv][i].second;
+
+			int candi = dist[curv] + nextw;
+
+			//바로 nextv로 가는것보다 둘러가는게 빠르면,
+			if (dist[nextv] > candi)
+			{
+				dist[nextv] = candi;
+				pq.push(make_pair(candi, nextv));
+			}
+		}
+	}
+
+
+	for (int i = 1; i <= v; ++i)
+	{
+		if (dist[i] != INF)
+			printf("%d\n", dist[i]);
+		else
+			printf("INF\n");
+	}
+	return 0;
+}
