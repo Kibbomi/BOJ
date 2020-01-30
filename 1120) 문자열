@@ -1,0 +1,43 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+string a, b;
+
+int main()
+{
+	cin >> a;
+	cin >> b;
+
+	int alen = a.length();
+	int blen = b.length();
+
+	int ret = 0x1f1f1f1f;
+	
+	if (alen == blen)
+	{
+		ret = 0;
+		for (int i = 0; i < alen; ++i)
+			if (a[i] != b[i])	++ret;
+	}
+	else
+	{
+		// a < b
+		for (int i = 0; i <= blen - alen; ++i)
+		{
+			int tempval = 0;
+			//1칸씩 옮겨가면서 최소값 연산
+			for (int j = 0; j < alen; ++j)
+				if (a[j] != b[i+j])	++tempval;
+			
+			ret = min(ret, tempval);
+		}
+
+	}
+
+
+	cout << ret;
+
+	return 0;
+}
