@@ -1,0 +1,42 @@
+#include <stdio.h>
+using namespace std;
+
+bool isprime[300001] = { false, };	//false 소수
+
+int main(void)
+{
+	
+	isprime[1] = true;
+
+	for (int i = 2; i <= 123456*2; i++){
+		if (isprime[i] == false)
+		{
+			for (int j = 2; i*j <= 123456*2; j++)
+			{
+					isprime[i*j] = true;
+				
+			}
+		}
+	}
+	
+
+	while (1)
+	{
+		int n;
+		scanf("%d", &n);
+
+		if (n == 0)
+			break;
+
+		int num = 0;
+		for (int i = n+1; i <= 2 * n; i++)
+		{
+			if (!isprime[i])
+				num++;
+		}
+		printf("%d\n", num);
+
+	}
+
+	return 0;
+}
