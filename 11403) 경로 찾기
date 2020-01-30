@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+int map[100][100];
+
+int n;
+
+int visited[100][100];
+
+void dfs(int start,int go)
+{
+	if (start < 0 || start >= n)
+		return;
+
+	for (int i = 0; i < n; i++)
+	{
+		if (visited[start][i] == false && map[go][i] == 1)
+		{
+			visited[start][i] = true;
+			dfs(start, i);
+		}
+	}
+}
+
+
+int main(void)
+{
+	scanf("%d", &n);
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			scanf("%d", &map[i][j]);
+			
+		}
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (map[i][j] == 1)
+			{
+				dfs(i,i);
+			}
+		}
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			printf("%d ", visited[i][j]);
+		}
+		printf("\n");
+	}
+	return 0;
+}
