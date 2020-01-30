@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+char map[50][50];
+int n, ret;
+
+int findlength(int y, int x)
+{
+	int candi = 1;
+	int maxval = 1;
+
+	//row wise
+	for (int i = 0; i < n; i++) {
+		candi = 1;
+		for (int j = 0; j < n - 1; j++) {
+
+			//compare [i][j] to [i][j+1]
+			if (map[i][j] == map[i][j + 1])
+				maxval = max(maxval, ++candi);
+			else
+				candi = 1;
+		}
+	}
+
+	//column wise
+	for (int j = 0; j < n; j++) {
+		candi = 1;
+		for (int i = 0; i < n - 1; i++)
+		{
+			//compare [i][j] to [i+1][j]
+			if (map[i][j] == map[i + 1][j])
+				maxval = max(maxval, ++candi);
+			else
+				candi = 1;
+		}
+	}
+
+
+	return maxval;
+}
+int main(void)
+{
+
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++)
+		scanf("%s", map[i]);
+
+	//if i swap row wise,,
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n - 1; j++)
+		{
+			char temp;
+			// [i][j] <-> [i][j+1]
+			temp = map[i][j];
+			map[i][j] = map[i][j + 1];
+			map[i][j + 1] = temp;
+
+			//find the longest line
+			ret = max(ret, findlength(i, j));
+
+			//restore data
+			map[i][j + 1] = map[i][j];
+			map[i][j] = temp;
+		}
+	}
+
+	//column wise
+	for (int j = 0; j < n; j++)
+	{
+		for (int i = 0; i < n - 1; i++)
+		{
+			char temp;
+			// [i][j] <-> [i+1][j]
+			temp = map[i][j];
+			map[i][j] = map[i+1][j];
+			map[i+1][j] = temp;
+
+			//find the longest line
+			ret = max(ret, findlength(i, j));
+
+			//restore data
+			map[i+1][j] = map[i][j];
+			map[i][j] = temp;
+		}
+	}
+
+	printf("%d", ret);
+
+
+	return 0;
+}
