@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <string.h>
+
+bool alpha[26] = { false, };
+char wordlist[50][16];
+
+int n, k, ret = -1;
+void dfs(int depth, int start)
+{
+	if (depth == k)
+	{
+		int count = 0;
+
+		for (int i = 0; i < n; i++)
+		{
+			int len = strlen(wordlist[i]);
+			
+			bool isok = true;
+			
+			for (int j = 4; j < len-4; j++)
+			{
+				if (alpha[wordlist[i][j]-'a'] == false)
+				{
+					isok = false;
+					break;
+				}
+			}
+
+			if (isok)
+				count++;
+		}
+		if (ret < count)
+			ret = count;
+
+		return;
+	}
+
+	for (int i = start; i < 26; i++)
+	{
+		if (alpha[i] == false)
+		{
+			alpha[i] = true;
+			dfs(depth + 1, i + 1);
+			alpha[i] = false;
+		}
+	}
+	return;
+}
+int main(void)
+{
+	scanf("%d %d", &n, &k);
+
+	//anta---tica -> a,n,t,i,c는 꼭 있어야 함.
+	if (k < 5)
+	{
+		printf("0");
+		return 0;
+	}
+	
+	for (int i = 0; i < n; i++)
+		scanf("%s", wordlist[i]);
+
+	//true 가르쳐준 단어.
+	alpha['a' - 'a'] = alpha['n' - 'a'] = alpha['c' - 'a'] = true;
+	alpha['i' - 'a'] = alpha['t' - 'a'] = true;
+	
+	//combination..
+	dfs(5, 0);
+
+	printf("%d", ret);
+	return 0;
+}
