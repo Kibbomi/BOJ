@@ -1,0 +1,19 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int main(void)
+{
+	int n, f;
+	scanf("%d", &n);
+	scanf("%d", &f);
+	n /= 100;
+	n *= 100;
+	for(int i=n;i<=n+100;i++)
+		if (i%f == 0)
+		{
+			printf("%02d", i % 100);
+			break;
+		}
+	return 0;
+}
