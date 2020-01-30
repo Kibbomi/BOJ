@@ -1,0 +1,17 @@
+#include <stdio.h>
+int main()
+{
+	int n;
+	scanf("%d", &n);
+
+	int val = 64;
+	int ret = 0;
+	while (val != 0)
+	{
+		if ((n & val) != 0)
+			ret++;
+		val /= 2;
+	}
+	printf("%d", ret);
+	return 0;
+}
