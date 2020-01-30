@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{	
+	int w, h;
+	int n;
+	scanf("%d %d %d", &n, &w, &h);
+	float diag = 0;
+	diag = sqrt(w*w + h*h);
+
+	for (int i = 0; i < n; i++)
+	{
+		int temp;
+		scanf("%d", &temp);
+		if (temp <= (int)diag)
+			printf("DA\n");
+		else
+			printf("NE\n");
+	}
+	return 0;
+}
