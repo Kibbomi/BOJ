@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+char seat[50];
+
+int main(void)
+{
+	int n;
+	scanf("%d ", &n);
+
+	int ns=0, nl = 0;
+	for (int i = 0; i < n; i++)
+	{
+		scanf("%c", &seat[i]);
+		if (seat[i] == 'S')
+			ns++;
+		else
+			nl++;
+	}
+	int ret = n - (nl / 2);
+
+	if (nl >= 2)
+		ret++;
+
+	printf("%d", ret);
+
+	return 0;
+}
