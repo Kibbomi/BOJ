@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+int val[100];
+int dif[100];
+vector<int>v;
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+	int minval = 0x7fffffff;
+	for (int i = 0; i < n; i++)
+	{
+		scanf("%d", &val[i]);
+		minval = min(minval, val[i]);
+	}
+
+	for (int i = 0; i < n - 1; i++)
+		dif[i] = abs(val[i] - val[i + 1]);
+
+	//diff -> n-1개
+
+	for (int i = 0; i < n - 2; i++)
+	{
+		//최대공약수 구하기
+		int big, small;
+		if (dif[i] > dif[i + 1])
+		{
+			big = dif[i];
+			small = dif[i + 1];
+		}
+		else
+		{
+			big = dif[i + 1];
+			small = dif[i];
+		}
+		while (small != 0)
+		{
+			int temp;
+			temp = big%small;
+			big = small;
+			small = temp;
+		}
+
+		//big -> GCD...
+		dif[i + 1] = big;
+	}
+	//dif[n-1]이 차이들의 최대공약수,
+	int gcd = dif[n - 2];
+
+	//약수 구하기.
+	int i;
+	for (i = 1; i*i < gcd; i++)
+	{
+		if (gcd % i == 0)
+		{
+			v.push_back(i);
+			v.push_back(gcd / i);
+		}
+	}
+	if (i*i == gcd)
+	{
+		//1개
+		v.push_back(i);
+	}
+
+	sort(v.begin(), v.end());
+
+	int len = v.size();
+	for (int i = 0; i < len; i++)
+	{
+		//if (v[i] != 1 && v[i] <= minval)
+		if(v[i] != 1)
+			printf("%d ", v[i]);
+	}
+
+
+	return 0;
+}
