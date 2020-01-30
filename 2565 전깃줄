@@ -1,0 +1,44 @@
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+vector<pair<int, int>> v;
+int dp[100];
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+
+	for (int i = 0; i < n; i++)
+	{
+		int from, to;
+		scanf("%d %d", &from, &to);
+
+		v.push_back(make_pair(from, to));
+	}
+
+	//첫번째 값 기준으로 정렬됨.
+	sort(v.begin(), v.end());
+
+	//O(n^2)algorithm
+	
+
+	int ret = 0;
+	for (int i = 0; i < n; i++)
+	{
+		dp[i] = 1;
+		for (int j = 0; j < i; j++)
+		{
+			if(v[j].second < v[i].second)
+			{
+				dp[i] = max(dp[i], dp[j] + 1);
+			}
+		}
+		ret = max(ret, dp[i]);
+	}
+	
+	printf("%d", n-ret);
+	return 0;
+}
