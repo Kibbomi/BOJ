@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+int sup, sub;
+int room[1000000];
+int roomnum;
+long long int ret;
+int main(void)
+{
+	scanf("%d", &roomnum);
+	for (int i = 0; i < roomnum; i++)
+		scanf("%d", &room[i]);
+
+	scanf("%d %d", &sup, &sub);
+
+
+	for (int i = 0; i < roomnum; i++)
+	{
+		room[i] -= sup;
+		ret++;
+	}
+	for (int i = 0; i < roomnum; i++)
+	{
+		if (room[i] > 0)
+		{
+			int temp = room[i]/sub;
+
+			if (room[i] % sub == 0)
+			{
+				ret += temp;
+			}
+			else
+			{
+				ret += temp + 1;
+			}
+		}
+	}
+
+	printf("%lld", ret);
+
+	return 0;
+}
