@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int score[300001];
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+	
+	
+	for (int i = 1; i <= n; i++){
+		scanf("%d", &score[i]);
+	}
+	sort(score+ 1, score + n+1);
+
+	int maxval = -987654321;
+	for (int i = n; i >= 1; i--)
+	{
+		if (score[i] + (n - i + 1) > maxval)
+			maxval = score[i] + (n - i + 1);
+	}
+
+
+	int ret = 0;
+	
+	for (int i = 1; i <= n; i++)
+	{
+		if (score[i] + n < maxval)
+			continue;
+		
+		ret++;
+		
+	}
+
+	printf("%d", ret);
+
+	return 0;
+}
