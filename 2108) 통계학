@@ -1,0 +1,108 @@
+#include <stdio.h>
+
+int ret[500000];
+int temp[500000];
+int fre[8001];
+int value[8001];
+int n;
+
+
+void merge(int left, int mid, int right)
+{
+	int low = left;
+	int high = mid + 1;
+
+	int write = left;
+
+	while (low <= mid && high <= right)
+	{
+		if (ret[low] <= ret[high])
+		{
+			temp[write] = ret[low++];
+		}
+		else
+		{
+			temp[write] = ret[high++];
+		}
+		write++;
+	}
+
+	if (low <= mid)
+	{
+		for (int i = low; i <= mid; i++)
+			temp[write++] = ret[i];
+	}
+	else
+	{
+		for (int i = high; i <= right; i++)
+			temp[write++] = ret[i];
+	}
+
+	for (int i = left; i <= right; i++)
+		ret[i] = temp[i];
+}
+
+
+void mergesort(int left, int right)
+{
+	if (left < right)
+	{
+		int mid = (left + right) / 2;
+		mergesort(left, mid);
+		mergesort(mid + 1, right);
+		merge(left, mid, right);
+	}
+}
+int main(void)
+{
+	
+	scanf("%d", &n);
+	
+	int sum = 0;
+
+	for (int i = 0; i < n; i++)
+	{
+		scanf("%d", &ret[i]);
+		sum += ret[i];
+	}
+
+	//average
+	double average = (double)sum / (double)n;
+	
+	printf("%.0f\n",average );
+
+	mergesort(0, n - 1);
+
+	//middle
+	printf("%d\n", ret[n / 2]);
+	
+	int maxret = -0x7fffffff;
+
+	for (int i = 0; i < n; i++)
+	{
+		fre[ret[i] + 4000]++;
+		if (fre[ret[i] + 4000] > maxret)
+			maxret = fre[ret[i] + 4000];
+	}
+	
+	
+	int maxvalnum = 0;
+
+	for (int i = 0; i < 8001; i++) 
+	{
+		if (fre[i] == maxret)
+		{	//1개
+			value[maxvalnum++] = i-4000;
+		}
+	}
+	if (maxvalnum == 1)
+		printf("%d\n", value[0]);
+	else
+		printf("%d\n", value[1]);
+
+	//range
+	printf("%d\n", ret[n-1] - ret[0]);
+	
+
+	return 0;
+}
