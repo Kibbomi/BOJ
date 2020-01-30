@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+int n, m, a, b, k;
+int map[501][501];
+bool visited[501][501] = { false, };
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+struct COORD {
+	int y, x;
+	int time;
+}from,to;
+
+bool icango(COORD cur)
+{
+	//check out of the map.
+	if (cur.x < 1 || cur.y < 1)return false;
+	if ((cur.y + a - 1) > n)return false;
+	if ((cur.x + b - 1) > m)return false;
+
+	//check borderline
+	if (visited[cur.y][cur.x] == true)
+		return false;
+
+	for (int j = cur.x; j < cur.x + b; j++)
+		if (map[cur.y][j] == 1 || map[cur.y + a - 1][j] == 1)
+			return false;
+	for (int i = cur.y; i < cur.y + a; i++)
+		if (map[i][cur.x] == 1 || map[i][cur.x + b - 1] == 1)
+			return false;
+
+	return true;
+}
+int main(void)
+{
+	int ret = 0x7fffffff;
+	scanf("%d %d %d %d %d", &n, &m, &a, &b, &k);
+	for (int i = 0; i < k; i++)
+	{
+		int y, x;
+		scanf("%d %d", &y, &x);
+		map[y][x] = 1;
+	}
+	scanf("%d %d", &from.y, &from.x);
+	scanf("%d %d", &to.y, &to.x);
+
+	queue<COORD>q;
+	visited[from.y][from.x] = true;
+	q.push(from);
+
+	while (!q.empty())
+	{
+		COORD cur = q.front(); q.pop();
+		if (cur.y == to.y && cur.x == to.x)
+		{
+			ret = cur.time;
+			break;
+		}
+		for (int dir = 0; dir < 4; dir++)
+		{
+			COORD next;
+			next.y = cur.y + dy[dir];
+			next.x = cur.x + dx[dir];
+			next.time = cur.time + 1;
+
+			if (!icango(next))
+				continue;
+
+			visited[next.y][next.x] = true;
+			q.push(next);
+
+		}
+	}
+	if (ret == 0x7fffffff)
+		printf("-1\n");
+	else
+		printf("%d", ret);
+
+	return 0;
+}
