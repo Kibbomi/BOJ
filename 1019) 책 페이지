@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+
+int cnt[10];
+void cal(int n,int w)
+{
+	while (n != 0)
+	{
+		cnt[n % 10] += w;
+		n /= 10;
+	}
+	return;
+}
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+	int w = 1;
+	/*for (int i = 1; i <= n; i++)
+		cal(i,1);*/
+
+	//init 
+	int left, right;
+	left = 1; right = n;
+	
+	while (left <= right)
+	{
+		while (left <= right && left % 10 != 0)
+		{
+			cal(left, w);
+			left++;
+		}
+		while (left <= right && right % 10 != 9)
+		{
+			cal(right, w);
+			right--;
+		}
+		if (left <= right)
+		{
+			int l, r;
+			l = left / 10;
+			r = right / 10;
+
+			for (int i = 0; i < 10; i++)
+				cnt[i] += (r - l + 1)*w;
+			w *= 10;
+			left /= 10;
+			right /= 10;
+		}
+	}
+	
+
+	for (int i = 0; i < 10; i++)
+		printf("%d ", cnt[i]);
+	return 0;
+}
