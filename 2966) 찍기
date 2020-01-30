@@ -1,0 +1,71 @@
+#include <stdio.h>
+
+char a[100] = { 0 }, b[100] = { 0 }, g[100] = { 0 };
+char sol[100] = { 0 };
+
+int n;
+int as, bs, gs;
+
+int main(void)
+{
+	scanf("%d", &n);
+
+	//init Adrian, Bruno, Goran
+	for (int i = 0; i < n; i++)
+	{
+		if (i % 3 == 0)
+			a[i] = 'A';
+		else if (i % 3 == 1)
+			a[i] = 'B';
+		else
+			a[i] = 'C';
+	}
+	for (int i = 0; i < n; i++)
+	{
+		if (i % 4 == 0)
+			b[i] = 'B';
+		else if (i % 4 == 1)
+			b[i] = 'A';
+		else if (i % 4 == 2)
+			b[i] = 'B';
+		else
+			b[i] = 'C';
+	}
+	for (int i = 0; i < n; i++)
+	{
+		if (i % 6 == 0 || i % 6 == 1)
+			g[i] = 'C';
+		else if (i % 6 == 2 || i % 6 == 3)
+			g[i] = 'A';
+		else if (i % 6 == 4 || i % 6 == 5)
+			g[i] = 'B';
+	}
+	scanf("%s", sol);
+
+	for (int i = 0; i < n; i++)
+	{
+		if (sol[i] == a[i])
+			as++;
+		if (sol[i] == b[i])
+			bs++;
+		if (sol[i] == g[i])
+			gs++;
+	}
+	int maxval = -1;
+	if (maxval < as)
+		maxval = as;
+	if (maxval < bs)
+		maxval = bs;
+	if (maxval < gs)
+		maxval = gs;
+
+	printf("%d\n", maxval);
+	if (maxval == as)
+		printf("Adrian\n");
+	if (maxval == bs)
+		printf("Bruno\n");
+	if (maxval == gs)
+		printf("Goran\n");
+
+	return 0;
+}
