@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int map[1001][1001];
+int dp[1001][1001][3];
+
+int main(void)
+{
+	int x, y;
+	scanf("%d %d", &x, &y);
+	int ret = 0;
+
+	for (int i = 1; i <= x; i++)
+		for (int j = 1; j <= y; j++)
+			scanf("%d", &map[i][j]);
+
+
+	for (int i = 1; i <= x; i++)
+	{
+		for (int j = 1; j <= y; j++)
+		{
+			if (i == 1)
+			{
+				if (j == 1)
+				{
+					dp[i][j][0]= dp[i][j][1]= dp[i][j][2] = map[i][j];
+					
+				}
+				else
+				{
+					dp[i][j][0] = -100;
+					dp[i][j][1] = max(dp[i][j - 1][0], max(dp[i][j - 1][1], dp[i][j - 1][2])) + map[i][j];
+					dp[i][j][2] = -100;
+				}
+			}
+			else
+			{
+				if (j == 1)
+				{
+					dp[i][j][1] = dp[i][j][2] = -100;
+					dp[i][j][0] = max(dp[i-1][j][0], max(dp[i-1][j][1], dp[i-1][j][2])) + map[i][j];
+				}
+				else
+				{
+					dp[i][j][0] = max(dp[i - 1][j][0], max(dp[i - 1][j][1], dp[i - 1][j][2])) + map[i][j];
+					dp[i][j][1] = max(dp[i][j - 1][0], max(dp[i][j - 1][1], dp[i][j - 1][2])) + map[i][j];
+					dp[i][j][2] = max(dp[i - 1][j - 1][0], max(dp[i - 1][j - 1][1], dp[i - 1][j - 1][2])) + map[i][j];
+				}
+			}
+			
+			if (ret < max(dp[i][j][0], max(dp[i][j][1], dp[i][j][2])))
+				ret = max(dp[i][j][0], max(dp[i][j][1], dp[i][j][2]));
+		}
+	}
+
+	printf("%d", ret);
+
+	return 0;
+}
