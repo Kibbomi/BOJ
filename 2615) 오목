@@ -1,0 +1,202 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int map[20][20]; // 1 ~ 19
+
+//only right side. because it searches from left to right side.
+bool row_right(int pivot, int y, int x)
+{
+	bool retval = true;
+
+	//check 5
+	for (int i = 1; i < 5; ++i)
+	{
+		//it isnt necessary process.
+		int curx = x + i;
+		int cury = y;
+		
+		//it cant make 5 sets
+		if (curx > 19)	return false;
+
+		if (pivot != map[cury][curx])
+			retval = false;
+	}
+
+	//check 6
+	if (retval == true)
+	{
+		int curx = x + 5;
+		int cury = y;
+
+		if (curx <= 19)	
+			if (pivot == map[cury][curx])
+				retval = false;
+
+		curx = x - 1;
+		if (curx >= 1)
+		if (pivot == map[cury][curx])
+			retval = false;
+
+	}
+
+	return retval;
+}
+
+bool col_down(int pivot, int y, int x)
+{
+	bool retval = true;
+
+	//check 5
+	for (int i = 1; i < 5; ++i)
+	{
+		int curx = x;
+		int cury = y + i;
+
+		if (cury > 19)
+			return false;
+
+		if (pivot != map[cury][curx])
+			retval = false;
+	}
+
+	//check 6
+	if (retval == true)
+	{
+		int curx = x;
+		int cury = y + 5;
+
+		if (cury <= 19)
+			if (pivot == map[cury][curx])
+				retval = false;
+
+		cury = y - 1;
+		if (cury >= 1)
+			if (pivot == map[cury][curx])
+				retval = false;
+	}
+	return retval;
+}
+
+bool diag_rightdown(int pivot, int y, int x)
+{
+	bool retval = true;
+
+	//check 5
+	for (int i = 1; i < 5; ++i)
+	{
+		int curx = x + i;
+		int cury = y + i;
+
+		if (cury > 19 || curx > 19)
+			return false;
+
+		if (pivot != map[cury][curx])
+			retval = false;
+	}
+
+	//check 6
+	if (retval == true)
+	{
+		int curx = x + 5;
+		int cury = y + 5;
+
+		if (cury <= 19 && curx <= 19)	
+			if (pivot == map[cury][curx])
+				retval = false;
+
+		cury = y - 1;
+		curx = x - 1;
+		if (cury >= 1 && curx >= 1)
+			if (pivot == map[cury][curx])
+				retval = false;
+	}
+	return retval;
+}
+
+bool diag_rightup(int pivot, int y, int x)
+{
+	bool retval = true;
+
+	//check 5
+	for (int i = 1; i < 5; ++i)
+	{
+		int curx = x + i;
+		int cury = y - i;
+
+		if (cury < 1 || curx > 19)
+			return false;
+
+		if (pivot != map[cury][curx])
+			retval = false;
+	}
+
+	//check 6
+	if (retval == true)
+	{
+		int curx = x + 5;
+		int cury = y - 5;
+
+		if (cury >= 1 && curx <= 19)
+			if (pivot == map[cury][curx])
+				retval = false;
+
+		curx = x - 1;
+		cury = y + 1;
+
+		if (cury <= 19 && curx >= 1)
+			if (pivot == map[cury][curx])
+				retval = false;
+	}
+	return retval;
+}
+int main()
+{
+	bool isfind = false;
+
+	int retx=0, rety=0;
+	int winstone = 0;
+
+	for (int i = 1; i <= 19; ++i)
+		for (int j = 1; j <= 19; ++j)
+			scanf("%d", &map[i][j]);
+
+	for (int i = 1; i <= 19; ++i)
+		for (int j = 1; j <= 19; ++j)
+		{
+			if (isfind == true)	break;
+
+			bool chk_row = false;
+			bool chk_col = false;
+			bool chk_diag = false;
+			bool chk_diag2 = false;
+			if (map[i][j] != 0)
+			{
+				if( j <=15 )
+					chk_row = row_right(map[i][j], i, j);
+				if (i <= 15)
+					chk_col = col_down(map[i][j], i,j);
+				if (i <= 15 && j <= 15)
+					chk_diag = diag_rightdown(map[i][j], i, j);
+				if(i>=5 && j<=15)
+					chk_diag2 = diag_rightup(map[i][j], i, j);
+				if (chk_row || chk_col || chk_diag || chk_diag2)
+				{
+					rety = i, retx = j;
+					winstone = map[i][j];
+					isfind = true;
+				}
+			}
+		}
+
+	if (isfind == false)
+	{
+		printf("0\n");
+	}
+	else
+	{
+		printf("%d\n", winstone);
+		printf("%d %d\n", rety, retx);
+	}
+	return 0;
+}
