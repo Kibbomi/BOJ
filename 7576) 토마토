@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+int map[1000][1000];
+bool visited[1000][1000];
+
+int m, n;
+struct coord {
+	int y, x;
+	int d;
+};
+
+queue <coord> q;
+
+int bfs(void)
+{
+	int ret = 0;
+	while (!q.empty())
+	{
+		coord ct = q.front(); q.pop();
+
+		for (int i = 0; i < 4; i++)
+		{
+			coord nt;
+			nt.x = ct.x + dx[i];
+			nt.y = ct.y + dy[i];
+			nt.d = ct.d + 1;
+
+			if (nt.x < 0 || nt.x >= m || nt.y < 0 || nt.y >= n)
+				continue;
+
+			if (map[nt.y][nt.x] == 0 && visited[nt.y][nt.x] == false)
+			{
+				q.push(nt);
+				visited[nt.y][nt.x] = true;
+				map[nt.y][nt.x] = 1;
+				if (ret < nt.d)
+					ret = nt.d;
+			}
+		}
+	}
+
+	return ret;
+	
+}
+int main(void)
+{
+	scanf("%d %d", &m, &n);
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			scanf("%d", &map[i][j]);
+
+			if (map[i][j] == 1)
+			{
+				coord t;
+				t.x = j;
+				t.y = i;
+				t.d = 0;
+				q.push(t);
+				visited[i][j] = true;
+			}
+
+		}
+	}
+	
+	int ret = bfs();
+
+
+
+	bool check = false;
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			if (map[i][j] == 0)	check = true;
+		}
+	}
+
+	if (check)
+		printf("-1");
+	else
+		printf("%d", ret);
+
+
+	return 0;
+}
