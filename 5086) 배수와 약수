@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int l, r;
+	scanf("%d %d", &l, &r);
+	while (l != 0 && r != 0)
+	{
+		bool factor, multiple;
+
+		if (r % l == 0)
+			factor = true;
+		else
+			factor = false;
+		if (l % r == 0)
+			multiple = true;
+		else
+			multiple = false;
+
+		if (!factor && !multiple)
+			printf("neither\n");
+		else if (factor)
+			printf("factor\n");
+		else
+			printf("multiple\n");
+
+		scanf("%d %d", &l, &r);
+	}
+	return 0;
+}
