@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <vector>
+using namespace std;
+
+long long int fac(int val)
+{
+	long long int ret = 1;
+	for (int i = val; i >= 1; i--)
+		ret *= i;
+
+	return ret;
+}
+int main(void)
+{
+	int n, q;
+	scanf("%d", &n);
+	scanf("%d", &q);
+
+	vector<int> v;
+	for (int i = 1; i <= n; i++)
+		v.push_back(i);
+
+	if (q == 1)
+	{
+		long long int k;
+		scanf("%lld", &k);
+		
+		k -= 1;
+		for (int i = n - 1; i >= 0; i--)
+		{
+			vector<int> ::iterator iter = v.begin();
+			long long int temp = fac(i);
+			if (k == 0)
+			{
+				for (int i = 0; i < v.size(); i++)
+					printf("%d ", v[i]);
+				return 0;
+			}
+
+			if (k / temp > 0)
+			{
+				iter += k / temp;
+				printf("%d ", *iter);
+				v.erase(iter);
+				k = k%temp;
+			}
+			else
+			{//0이면
+				printf("%d ", v[0]);
+				v.erase(iter);
+			}
+
+		}
+
+	}
+	else
+	{
+		long long int ret = 0;
+
+		int order[20] = { 0 };
+		for (int i = 0; i < n; i++)
+			scanf("%d", &order[i]);
+
+		for (int i = 0; i < n; i++)
+		{
+			vector<int> ::iterator iter = v.begin();
+
+			for (int j = 0; j < v.size(); j++)
+			{
+				if (order[i] == v[j])
+				{
+					//j번째 원소임.
+					ret += fac(n - i - 1)*j;
+					v.erase(iter + j);
+				}
+			}
+		}
+
+		printf("%lld", ret + 1);
+	}
+
+
+	return 0;
+}
