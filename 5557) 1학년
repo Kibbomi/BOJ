@@ -1,0 +1,36 @@
+#include <cstdio>
+
+//1~100번,, 값 0~20까지
+long long int dp[101][21];
+int n;
+int val[101];
+
+int main(void)
+{
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++)
+		scanf("%d", &val[i]);
+
+	//초기화
+	dp[1][val[1]] = 1;
+
+	//마지막 n은 =이므로 pass
+	for (int i = 2; i < n; i++)
+	{
+		for (int j = 0; j <= 20; j++)
+		{
+			if (dp[i - 1][j] != 0)
+			{
+				int np = j + val[i];
+				int nn = j - val[i];
+
+				if (0 <= np && np <= 20)
+					dp[i][np] += dp[i - 1][j];
+				if (0 <= nn && nn <= 20)
+					dp[i][nn] += dp[i - 1][j];
+			}
+		}
+	}
+	printf("%lld", dp[n - 1][val[n]]);
+	return 0;
+}
