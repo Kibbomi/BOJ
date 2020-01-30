@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+
+int main(void)
+{
+	int x, y, z;
+
+	scanf("%d", &x);
+	scanf("%d", &y);
+	scanf("%d", &z);
+
+	int ret = x*y*z;
+
+	int _ret[10] = { 0 };
+
+	while (ret != 0)
+	{
+		_ret[ret % 10]++;
+		ret /= 10;
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		printf("%d\n", _ret[i]);
+	}
+	return 0;
+}
