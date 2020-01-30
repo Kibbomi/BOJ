@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+int am, an;
+int bm, bn;
+
+int a[100][100];
+int b[100][100];
+int ret[100][100];
+int main(void)
+{
+	scanf("%d %d", &an, &am);
+	for (int i = 0; i < an; i++)
+		for (int j = 0; j < am; j++)
+			scanf("%d", &a[i][j]);
+
+	scanf("%d %d", &bn, &bm);
+	for (int i = 0; i < bn; i++)
+		for (int j = 0; j < bm; j++)
+			scanf("%d", &b[i][j]);
+
+	for (int i = 0; i < an; i++)
+		for (int j = 0; j < bm; j++)
+		{
+			for (int k = 0; k < am; k++)
+			{
+				ret[i][j] += a[i][k] * b[k][j];
+			}
+		}
+
+	for (int i = 0; i < an; i++) {
+		for (int j = 0; j < bm; j++)
+			printf("%d ", ret[i][j]);
+		printf("\n");
+	}
+	return 0;
+}
