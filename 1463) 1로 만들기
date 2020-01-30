@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int cache[1000001] = { 0 };
+
+int dp(int count)
+{
+	if (count == 0) return cache[0] = 0;
+	if (count == 1) return cache[1] = 0;
+	if (count == 2) return cache[2] = 1;
+	
+	if (count % 6 == 0)
+		return cache[count] = min(min(dp(count / 3),dp(count / 2)), dp(count - 1)) + 1;
+
+	if (count % 3 == 0)
+		return cache[count] = min(dp(count / 3), dp(count - 1)) + 1;
+	else if (count % 2 == 0)
+		return cache[count] = min(dp(count / 2), dp(count - 1)) + 1;
+	else
+		return cache[count] = dp(count - 1) + 1;
+	
+}
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+
+	cache[0] = 0;
+	cache[1] = 0;
+	cache[2] = 1;
+
+	for (int count = 3; count <= n; count++)
+	{
+		if (count % 6 == 0)
+			cache[count] = min(min(cache[count / 3], cache[count / 2]), cache[count - 1]) + 1;
+
+		if (count % 3 == 0)
+			cache[count] = min(cache[count / 3], cache[count - 1]) + 1;
+		else if (count % 2 == 0)
+			cache[count] = min(cache[count / 2], cache[count - 1]) + 1;
+		else
+			cache[count] = cache[count - 1] + 1;
+	}
+
+	printf("%d", cache[n]);
+	return 0;
+}
