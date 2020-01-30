@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+int m[50][50],r,c,z;
+struct P {
+	int y,x,t;
+};
+int x[] = { 1,1,1,0,-1,-1,-1,0 };
+int y[] = { -1,0,1,1,1,0,-1,-1 };
+
+int main(void)
+{
+	scanf("%d %d", &r, &c);
+
+	for (int i = 0; i < r; i++)
+		for (int j = 0; j < c; j++)
+			scanf("%d", &m[i][j]);
+
+	for (int i = 0; i < r; i++){
+		for (int j = 0; j < c; j++){
+			if (m[i][j]) continue;
+			int d = 0;
+			queue<P> q;
+			P s;
+			s.y = i, s.x = j, s.t = 0;
+			bool v[50][50] = {false};
+
+			q.push(s);
+			v[s.y][s.x] = true;
+
+			while (!q.empty())
+			{
+				P a = q.front(); q.pop();
+
+				if (m[a.y][a.x] == 1)
+				{
+					d = a.t;
+					if (z < d)
+						z = d;
+					break;
+				}
+
+
+				for (int i = 0; i < 8; i++)
+				{
+					P n;
+					n.y = a.y + y[i];
+					n.x = a.x + x[i];
+					n.t = a.t + 1;
+
+					if (n.x < 0 || n.y < 0 || n.x >= c || n.y >= r)
+						continue;
+					if (v[n.y][n.x] == false)
+					{
+						v[n.y][n.x] = true;
+						q.push(n);
+					}
+				}
+
+			}
+
+		}
+	}
+
+	printf("%d", z);
+	return 0;
+}
