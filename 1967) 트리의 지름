@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include <vector>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+struct NODE {
+	int v;
+	int w;
+	int sum;
+};
+
+vector<NODE> v[10001];
+bool visited[10001];
+
+
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+	//w은 지금까지
+	for (int i = 0; i < n-1; i++)
+	{
+		int vertex;
+		NODE temp;
+		scanf("%d %d %d", &vertex, &temp.v, &temp.w);
+		//vertex -> temp.v
+		v[vertex].push_back(temp);
+		
+		//temp.v -> vertex
+		int goback = temp.v;
+		temp.v = vertex;
+		v[goback].push_back(temp);
+	}
+
+	queue<NODE> q;
+	NODE start;
+	start.v = 1, start.w = 0;
+	start.sum = 0;
+	visited[start.v] = true;
+	q.push(start);
+	
+	NODE candi;
+	candi.sum = 0;
+	while (!q.empty())
+	{
+		NODE cur = q.front(); q.pop();
+		if (candi.sum < cur.sum)
+		{
+			candi.sum = cur.sum;
+			candi.v = cur.v;
+		}
+
+		int len = v[cur.v].size();
+
+		for (int i = 0; i < len; i++)
+		{
+			NODE next;
+			next.v = v[cur.v][i].v;
+			next.sum = cur.sum + v[cur.v][i].w;
+			if (!visited[next.v])
+			{
+				visited[next.v] = true;
+				q.push(next);
+			}
+		}
+	}
+
+	for (int i = 1; i <= n; i++)
+		visited[i] = false;
+
+	start.v = candi.v, start.w = 0;
+	start.sum = 0;
+	visited[start.v] = true;
+	q.push(start);
+
+	candi.sum = 0;
+	while (!q.empty())
+	{
+		NODE cur = q.front(); q.pop();
+		if (candi.sum < cur.sum)
+		{
+			candi.sum = cur.sum;
+			candi.v = cur.v;
+		}
+
+		int len = v[cur.v].size();
+
+		for (int i = 0; i < len; i++)
+		{
+			NODE next;
+			next.v = v[cur.v][i].v;
+			next.sum = cur.sum + v[cur.v][i].w;
+			if (!visited[next.v])
+			{
+				visited[next.v] = true;
+				q.push(next);
+			}
+		}
+	}
+	printf("%d", candi.sum);
+	return 0;
+}
