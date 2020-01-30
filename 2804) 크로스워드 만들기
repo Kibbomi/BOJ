@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <string.h>
+
+char left[31];
+char right[31];
+
+char map[31][31];
+int main(void)
+{
+	scanf("%s", left);
+	scanf("%s", right);
+
+	int leftlen = strlen(left);
+	int rightlen = strlen(right);
+	bool find = false;
+
+	int i, j;
+	for (i = 0; i < leftlen; i++)
+	{
+		
+		for (j = 0; j < rightlen; j++)
+		{
+			if (left[i] == right[j])
+			{
+				find = true;
+				break;
+			}
+		}
+		if (find)	break;
+	}
+
+	for (int k = 0; k < 31; k++)
+		for (int h = 0; h < 31; h++)
+			map[k][h] = '.';
+
+	for (int y = 0; y < leftlen; y++)
+	{
+		map[j][y] = left[y];
+	}
+	for (int y = 0; y < rightlen; y++)
+	{
+		map[y][i] = right[y];
+	}
+
+	for (i = 0; i < rightlen; i++) {
+		for (j = 0; j < leftlen; j++)
+		{
+			printf("%c", map[i][j]);
+		}
+		printf("\n");
+	}
+		
+	return 0;
+}
