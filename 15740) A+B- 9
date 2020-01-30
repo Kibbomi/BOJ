@@ -1,0 +1,214 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int cpstr(string a, string b)
+{
+	while (a.length() > b.length())
+		b.insert(b.begin(), '0');
+	while (b.length() > a.length())
+		a.insert(a.begin(), '0');
+
+	if (a > b)
+		return 1;
+	else if (a == b)
+		return 0;
+	else
+		return -1;
+}
+int main(void)
+{
+	string a, b;
+	string ret;
+	bool concatminus = false;
+	//(-,-) (-,0) (-,+)
+	//(0,-) (0,0) (0,+)
+	//(+,-) (+,0) (+,+)
+	
+	cin >> a >> b;
+
+
+	if (a[0] == '-' && b[0] != '-')
+	{
+		string big, small;
+		a.erase(a.begin());
+		int val = cpstr(a, b);
+		if (val == 1)
+			big = a, small = b;
+		else if (val == 0)
+		{
+			cout << 0;
+			return 0;
+		}
+		else
+			big = b, small = a;
+		if (big == a)
+			concatminus = true;
+
+		int cache = 0;
+		while (big.length() > 0 && small.length() > 0)
+		{
+			int vb,vs,val = 0;
+			vb = big.back() - '0';
+			vs = small.back() - '0';
+			big.pop_back();
+			small.pop_back();
+
+			val = vb - vs + cache;
+			cache = 0;
+			if (val < 0) {
+				cache = -1;
+				val += 10;
+			}
+			ret.push_back(val + '0');
+
+		}
+		while (big.length() > 0)
+		{
+			int vb;
+			vb = big.back() - '0';
+			big.pop_back();
+
+			val = vb + cache;
+			
+			cache = 0;
+			if (val < 0) {
+				cache = -1;
+				val += 10;
+			}
+			ret.push_back(val + '0');
+		}
+
+
+
+	}
+	else if (a[0] != '-' && b[0] == '-')
+	{
+		b.erase(b.begin());
+		string big, small;
+		int val = cpstr(a, b);
+		if (val == 1)
+			big = a, small = b;
+		else if (val == 0)
+		{
+			cout << 0;
+			return 0;
+		}
+		else
+			big = b, small = a;
+
+		if (big == b)
+			concatminus = true;
+
+
+		int cache = 0;
+		while (big.length() > 0 && small.length() > 0)
+		{
+			int vb, vs, val = 0;
+			vb = big.back() - '0';
+			vs = small.back() - '0';
+			big.pop_back();
+			small.pop_back();
+
+			val = vb - vs + cache;
+			cache = 0;
+			if (val < 0) {
+				cache = -1;
+				val += 10;
+			}
+			ret.push_back(val + '0');
+
+		}
+		while (big.length() > 0)
+		{
+			int vb;
+			vb = big.back() - '0';
+			big.pop_back();
+
+			val = vb + cache;
+			cache = 0;
+			if (val < 0) {
+				cache = -1;
+				val += 10;
+			}
+			ret.push_back(val + '0');
+		}
+
+	}
+	else
+	{
+		//둘다 음수
+		if (a[0] == '-' && b[0] == '-')
+		{
+			concatminus = true;
+			a.erase(a.begin());
+			b.erase(b.begin());
+		}
+
+		//둘다 0보다 큰 수
+		int cache = 0;
+
+		while (a.length() > 0 && b.length() > 0)
+		{
+			int va, vb;
+			va = a.back() - '0';
+			vb = b.back() - '0';
+			a.pop_back();
+			b.pop_back();
+
+			cache += va + vb;
+			ret.push_back(cache % 10 + '0');
+			cache /= 10;
+		}
+		while (a.length() > 0)
+		{
+			int va;
+			va = a.back() - '0';
+			a.pop_back();
+
+			cache += va;
+			ret.push_back(cache % 10 + '0');
+			cache /= 10;
+		}
+
+		while (b.length() > 0)
+		{
+			int vb;
+			vb = b.back() - '0';
+			b.pop_back();
+
+			cache +=vb;
+			ret.push_back(cache % 10 + '0');
+			cache /= 10;
+		}
+		if (cache == 1)
+			ret.push_back('1');
+	}
+
+
+	//del 0
+	if (concatminus)
+		cout << '-';
+
+	if (ret.length() == 1 && ret[0] == '0')
+	{
+		cout << 0;
+		return 0;
+	}
+	
+	int len = ret.length();
+	bool zerocheck = true;
+	for (int i = len - 1; i >=0; i--)
+	{
+		if (zerocheck)
+		{
+			if (ret[i] != '0')
+				zerocheck = false;
+			else
+				continue;
+		}
+		cout << ret[i];
+	}
+	return 0;
+}
