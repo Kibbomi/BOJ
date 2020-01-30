@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int num[1000000];
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+
+	int retmin = 0x7ffffff;
+	int retmax = -0x7ffffff;
+
+	for (int i = 0; i < n; i++)
+		scanf("%d", &num[i]);
+
+	for (int i = 0; i < n; i++)
+	{
+		if (retmin > num[i])
+			retmin = num[i];
+
+		if (retmax < num[i])
+			retmax = num[i];
+	}
+
+	printf("%d %d", retmin, retmax);
+	return 0;
+}
