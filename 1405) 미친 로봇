@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <algorithm>
+
+using namespace std;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+int n;
+double d[4];
+
+//0->동  1->서 2->남 3->북
+double prob;
+bool map[29][29] = { false, };
+
+void dfs(int cy,int cx, int depth,double cv)
+{
+	if (depth == n)
+	{
+		prob += cv;
+		return;
+	}
+
+	for (int dir = 0; dir < 4; dir++)
+	{
+		int ny = cy + dy[dir];
+		int nx = cx + dx[dir];
+		double nv = cv * d[dir];
+		if (map[ny][nx])
+			continue;
+		map[ny][nx] = true;
+		dfs(ny,nx,depth + 1,nv);
+		map[ny][nx] = false;
+	}
+}
+
+
+int main(void)
+{
+	scanf("%d", &n);
+
+	scanf("%lf %lf %lf %lf", &d[0], &d[1], &d[2], &d[3]);
+	d[0] = d[0]/100;
+	d[1] = d[1]/100;
+	d[2] = d[2]/100;
+	d[3] = d[3]/100;
+	map[14][14] = true;
+	dfs(14,14,0,1);
+	printf("%.10lf", prob);
+}
