@@ -1,0 +1,72 @@
+#include <stdio.h>
+int n, r, c;
+int count=-1;
+bool flag = true;
+int end = 1;
+
+void makez(int left, int right, int up, int down)
+{
+	int col = (left + right) / 2;
+	int row = (up + down) / 2;
+	int size = (right-left+1)*(down-up+1);
+	
+	if (right - left > 2 && flag)
+	{
+		if (left <= c && c <= col && up<=r && r<=row)
+		{
+			count += 0;
+			//2사분면
+			makez(left, col, up, row);
+		}
+		else if (col + 1 <= c && c <= right && up <= r && r<= row)
+		{
+			count += (size / 4);
+			//1사분면
+			makez(col + 1, right, up, row);
+		}
+		else if (left <= c && c <= col && row + 1 <= r && r <= down)
+		{
+			count += (size / 2);
+			//3사분면
+			makez(left, col, row + 1, down);
+		}
+		else
+		{
+			count += (size / 4 * 3);
+			//4
+			makez(col + 1, right, row + 1, down);
+		}
+	}
+	else
+	{
+		for (int i = up; i <= down; i++)
+		{
+			for (int j = left; j <= right; j++)
+			{
+				count++;
+				//printf("%d %d\n",i,j);
+				if (i == r && j == c)
+				{
+					printf("%d", count);
+					flag = false;
+				}
+			}
+		}
+	}
+
+	return;
+}
+
+int main(void)
+{
+	scanf("%d %d %d", &n, &r, &c);
+
+	
+	for (int i = 0; i < n; i++)
+		end *= 2;
+
+	
+	makez(0, end - 1, 0, end - 1);
+	
+	return 0;
+}
