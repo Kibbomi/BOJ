@@ -1,0 +1,35 @@
+#include <stdio.h>
+
+
+int main(void)
+{
+	int cache;
+
+	scanf("%d", &cache);
+	int temp;
+	temp = cache;
+	int flag = 0;
+	//ascending 7 mixed 0 decending -7
+	for (int i = 0; i < 7; i++)
+	{
+		scanf("%d", &cache);
+		
+		if (temp < cache)
+		{
+			flag++;
+		}
+		else
+		{
+			flag--;
+		}
+		temp = cache;
+	}
+
+	if (flag == 7)
+		printf("ascending");
+	else if (flag == -7)
+		printf("descending");
+	else
+		printf("mixed");
+	return 0;
+}
