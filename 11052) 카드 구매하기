@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int cache[1001];
+int card[10001];
+
+int main(void)
+{
+	int n;
+	scanf("%d",&n);
+	
+	for (int i = 1; i <= n; i++)
+		scanf("%d", &card[i]);
+
+	cache[1] = card[1];
+
+	int ret = 0;
+	for (int i = 2; i <= n; i++)
+	{
+		for (int j = 0; j <= i; j++)
+		{
+			int temp = cache[j] + card[i - j];
+			if (ret < temp)
+				ret = temp;
+		}
+		cache[i] = ret;
+	}
+
+	printf("%d", cache[n]);
+
+	return 0;
+}
