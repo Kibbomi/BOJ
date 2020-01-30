@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int a, b, c;
+	scanf("%d %d %d", &a, &b, &c);
+
+	int count = 0;
+	int ret = 0;
+	int sol = 0;
+	while (c > 0)
+	{
+		c -= a;
+		ret += a;
+		count++;
+
+		if (count == 7)
+		{
+			count = 0;
+			ret += b;
+			c -= b;
+		}
+		sol++;
+	}
+	printf("%d", sol);
+	return 0;
+}
