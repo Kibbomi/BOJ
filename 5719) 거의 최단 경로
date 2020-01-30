@@ -1,0 +1,149 @@
+#include <stdio.h>
+#include <vector>
+#include <algorithm>
+using namespace std;
+#define INF 0x7fffffff
+
+struct NODE {
+	int v, w;
+	bool cantgo;
+};
+vector<int> path[10000];
+int weight[500][500];
+
+int dep, ari;
+int vertex, edge;
+
+void dfs(int v)
+{
+	if (v == dep) {
+		return;
+	}
+	int len = path[v].size();
+	for (int i = 0; i < len; i++)
+	{
+		weight[path[v][i]][v] = INF;
+		dfs(path[v][i]);
+	}
+}
+int main(void)
+{
+	while (1)
+	{
+		scanf("%d %d", &vertex, &edge);
+
+		if (vertex == 0 && edge == 0)
+			break;
+
+		
+		scanf("%d %d", &dep, &ari);
+
+		int dist[500];
+		bool visited[500] = { false, };
+
+		for (int i = 0; i < 500; i++)
+			for (int j = 0; j < 500; j++)
+				weight[i][j] = INF;
+		for (int i = 0; i < 500; i++)
+			path[i].clear();
+		for (int i = 0; i < edge; i++){
+			int from,to,w;
+			scanf("%d %d %d", &from, &to, &w);
+			weight[from][to] = w;
+		}
+
+		
+		for (int i = 0; i < vertex; i++)
+			dist[i] = INF;
+
+		dist[dep] = 0;
+
+		
+
+		for (int i = 0; i < vertex; i++){
+
+			int minval = INF;
+			int index = -1;
+			for (int k = 0; k < vertex; k++)
+			{
+				if (!visited[k] && dist[k] < minval)
+				{
+					minval = dist[k];
+					index = k;
+				}
+			}
+			if (index == -1)
+				continue;
+			//최소인 인덱스 찾았음.
+			visited[index] = true;
+			for (int k = 0; k < vertex; k++)
+			{
+				if (weight[index][k] == INF)
+					continue;
+
+				if (dist[k] > dist[index] + weight[index][k])
+				{
+					//갱신됨
+					dist[k] = dist[index] + weight[index][k];
+					path[k].clear();
+					path[k].push_back(index);
+				}
+				else if (dist[k] == dist[index] + weight[index][k])
+				{
+					path[k].push_back(index);
+				}
+				
+			}
+		}
+		//최단경로구함.
+		if (dist[ari] == INF)
+		{
+			printf("-1\n");
+			continue;
+		}
+		//경로를 막자.
+		int begin = ari;
+		dfs(ari);
+
+		//다시 탐색
+		for (int i = 0; i < vertex; i++)
+		{
+			dist[i] = INF;
+			visited[i] = false;
+		}
+
+		dist[dep] = 0;
+
+		for (int i = 0; i < vertex; i++) {
+
+			int minval = INF;
+			int index = -1;
+			for (int k = 0; k < vertex; k++)
+			{
+				if (!visited[k] && dist[k] < minval)
+				{
+					minval = dist[k];
+					index = k;
+				}
+			}
+			if (index == -1)
+				continue;
+			visited[index] = true;
+			//최소인 인덱스 찾았음.
+
+			for (int k = 0; k < vertex; k++)
+			{
+				if (weight[index][k] == INF)
+					continue;
+
+				if (dist[k] > dist[index] + weight[index][k])
+					dist[k] = dist[index] + weight[index][k];
+			}
+		}
+		if (dist[ari] != INF)
+			printf("%d\n", dist[ari]);
+		else
+			printf("-1\n");
+	}
+	return 0;
+}
