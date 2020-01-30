@@ -1,0 +1,57 @@
+#include <stdio.h>
+int n, m;
+int adj[1001][1001];
+bool visited[1001];
+int work[1001];
+int ret = 0;
+
+bool dfs(int from)
+{
+	visited[from] = true;
+	for (int i = 1; i <= m; i++)
+	{
+		if (adj[from][i] == 1)
+			if( work[i] == 0)
+			{
+				work[i] = from;
+				return true;
+			}
+			 else
+			{
+				 if (visited[i] == false && dfs(i))
+				 {
+					 work[i] = from;
+					 return true;
+				}
+			}
+	}
+	return false;
+}
+int main(void)
+{
+	scanf("%d %d", &n, &m);
+
+	for (int i = 1; i <= n; i++)
+	{
+		int m;
+		scanf("%d", &m);
+
+		for (int j = 0; j < m; j++) {
+			int temp;
+			scanf("%d", &temp);
+			adj[i][temp] = 1;
+		}
+			
+		
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= m; j++)
+			visited[j] = false;
+
+		if (dfs(i))
+			ret++;
+	}
+	printf("%d", ret);
+	return 0;
+}
