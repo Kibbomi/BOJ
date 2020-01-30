@@ -1,0 +1,150 @@
+#include <stdio.h>
+#include <queue>
+#include <vector>
+using namespace std;
+
+#define ROW 0
+#define COL 1
+
+int n;
+char map[50][50];
+bool visited[2][50][50] = { false, };
+struct COORD {
+	int y, x;
+	int time;
+	int dir;
+};
+vector<pair<int,int>> ev, bv;
+//   pair ->  y,x
+const int dx[] = { 1,-1,0,0,0 };
+const int dy[] = { 0,0,1,-1,0 };
+//East, West, South , North , Rotate
+
+//for check
+const int rx[] = { 1,1,1,0,-1,-1,-1,0 };
+const int ry[] = { -1,0,1,1,1,0,-1,-1 };
+
+bool iscanrotate(int y, int x)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		int ny = y + ry[i];
+		int nx = x + rx[i];
+
+		if (ny < 0 || nx < 0 || nx >= n || ny >= n || map[ny][nx] == '1')
+			return false;
+	}
+	return true;
+}
+int main(void)
+{
+	scanf("%d", &n);
+
+	for (int i = 0; i < n; i++){
+		for (int j = 0; j < n; j++){
+			scanf("%c", &map[i][j]);
+
+			if (map[i][j] == '\n')
+				j--;
+			if (map[i][j] == 'E')
+				ev.push_back(make_pair(i, j));
+			if(map[i][j] == 'B')
+				bv.push_back(make_pair(i, j));
+		}
+	}
+	
+	//set dir
+	COORD e, b;
+	e.y = ev[1].first, e.x = ev[1].second;
+	e.time = 0;
+	if (ev[0].first == ev[1].first)
+		e.dir = ROW;
+	else
+		e.dir = COL;
+	b.y = bv[1].first, b.x = bv[1].second;
+	b.time = 0;
+	if (bv[0].first == bv[1].first)
+		b.dir = ROW;
+	else
+		b.dir = COL;
+
+	//go... target -> e && e's dir
+	queue<COORD>q;
+	visited[b.dir][b.y][b.x];
+	q.push(b);
+
+	while (!q.empty())
+	{
+		COORD cur = q.front(); q.pop();
+
+		if (cur.y == e.y && cur.x == e.x && cur.dir == e.dir)
+		{
+			printf("%d", cur.time);
+			return 0;
+		}
+		for (int dir = 0; dir < 5; dir++)
+		{
+			COORD next;
+			next.y = cur.y + dy[dir];
+			next.x = cur.x + dx[dir];
+			next.time = cur.time + 1;
+			if (dir == 4)
+				next.dir = (cur.dir + 1) % 2;
+			else
+				next.dir = cur.dir;
+
+			//boundary check.
+			if(dir != 4)
+				if (next.dir == ROW)
+				{
+					//next.y next.x-1
+					//next.y next.x
+					//next.y next.x+1
+
+					if (next.y < 0 || next.y >= n)
+						continue;
+					if (next.x - 1 < 0 || next.x < 0 || next.x + 1 < 0 ||
+						next.x - 1 >= n || next.x >= n || next.x + 1 >= n)
+						continue;
+					if (map[next.y][next.x - 1] == '1' || map[next.y][next.x] == '1' || map[next.y][next.x + 1] == '1')
+						continue;
+					if (visited[ROW][next.y][next.x] == false)
+					{
+						visited[ROW][next.y][next.x] = true;
+						q.push(next);
+					}
+				}
+				else
+				{
+					//next.y-1 next.x
+					//next.y next.x
+					//next.y+1 next.x
+					if (next.x < 0 || next.x >= n)
+						continue;
+					if (next.y - 1 < 0 || next.y < 0 || next.y + 1 < 0 ||
+						next.y - 1 >= n || next.y >= n || next.y + 1 >= n)
+						continue;
+					if (map[next.y - 1][next.x] == '1' || map[next.y][next.x] == '1' || map[next.y + 1][next.x] == '1')
+						continue;
+					if (visited[COL][next.y][next.x] == false)
+					{
+						visited[COL][next.y][next.x] = true;
+						q.push(next);
+					}
+				}
+			else
+			{
+				if (iscanrotate(next.y, next.x))
+				{
+					if (visited[next.dir][next.y][next.x] == false)
+					{
+						visited[next.dir][next.y][next.x] = true;
+						q.push(next);
+					}
+				}
+			}
+		}
+	}
+	printf("0");
+	return 0;
+}
