@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <vector>
+#include <queue>
+using namespace std;
+
+vector<int> v[1001];
+bool visited[1001];
+int main(void)
+{
+	int t;
+	scanf("%d", &t);
+	while (t--)
+	{
+		queue<int> q;
+		for (int i = 1; i < 1001; i++){
+			v[i].clear();
+			visited[i] = false;
+		}
+
+		int n, m;
+		scanf("%d %d", &n, &m);
+
+		int from, to;
+		for (int i = 0; i < m; i++)
+		{
+			scanf("%d %d", &from, &to);
+			v[from].push_back(to);
+			v[to].push_back(from);
+		}
+		//list complete;
+		int ret = 0;
+		visited[from] = true;
+		int len = v[from].size();
+		for (int i = 0; i < len; i++){
+			if (!visited[v[from][i]]) {
+				q.push(v[from][i]);
+				visited[v[from][i]] = true;
+				ret++;
+			}
+		}
+
+		while (!q.empty())
+		{
+			int cur = q.front(); q.pop();
+
+			int len = v[cur].size();
+			for (int i = 0; i < len; i++)
+			{
+				if (!visited[v[cur][i]])
+				{
+					ret++;
+					visited[v[cur][i]] = true;
+					q.push(v[cur][i]);
+				}
+			}
+		}
+		printf("%d\n", ret);
+
+
+	}
+	return 0;
+}
