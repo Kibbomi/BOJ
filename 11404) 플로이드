@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <algorithm>
+#define NIL -1
+#define INF 987654321
+using namespace std;
+
+int n, m;
+
+int val[101][101];
+int parent[101][101];
+
+int main(void)
+{
+	scanf("%d", &n);
+	scanf("%d", &m);
+	
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= n; j++){
+			if (i == j)
+			{
+				val[i][j] = 0;
+				parent[i][j] = NIL;
+			}
+			else {
+				val[i][j] = INF;
+				parent[i][j] = NIL;
+			}
+		}
+
+	for (int i = 0; i < m; i++){
+		int from, to, value;
+		scanf("%d %d %d", &from, &to, &value);
+		if (val[from][to] < value)	continue;
+		val[from][to] = value;
+		parent[from][to] = from;
+	}
+	//table complete
+
+	//k = 중간점
+	for (int k = 1; k <= n; k++)
+	{
+		for (int i = 1; i <= n; i++)
+		{
+			for (int j = 1; j <= n; j++)
+			{
+				val[i][j] = min(val[i][j], val[i][k] + val[k][j]);
+				//직접가는거보다 찍고 가는게 더 빠르다면,
+				if (val[i][j] > val[i][k] + val[k][j])
+					parent[i][j] = k;
+				
+			}
+		}
+	}
+
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			if (val[i][j] == INF) val[i][j] = 0;
+			printf("%d ", val[i][j]);
+		}
+		printf("\n");
+	}
+	return 0;
+}
