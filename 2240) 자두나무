@@ -1,0 +1,66 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+//w, t, (1,2)
+int dp[31][1001][3];
+int in_t, in_w;
+
+int main(void)
+{
+	scanf("%d %d", &in_t, &in_w);
+	
+	//init
+	int val;
+	scanf("%d", &val);
+	int w1 = 0, w2 = 0;
+
+	if (val == 1) {
+		w1 = 1;
+		w2 = 0;
+	}
+	else {
+		w1 = 0;
+		w2 = 1;
+	}
+	dp[0][1][1] = w1;
+	dp[1][1][2] = w2;
+
+	for (int t = 2; t <= in_t; t++)
+	{
+		int val;
+		scanf("%d", &val);
+		int w1 = 0, w2 = 0;
+
+		if (val == 1){
+			w1 = 1;
+			w2 = 0;
+		}
+		else{
+			w1 = 0;
+			w2 = 1;
+		}
+
+		for (int w = 0; w <= in_w; w++)
+		{
+			if (w > 0)
+			{
+				//바꾸는 경우
+				dp[w][t][1] = max(dp[w][t][1], dp[w - 1][t - 1][2] + w1);
+				dp[w][t][2] = max(dp[w][t][2], dp[w - 1][t - 1][1] + w2);
+			}
+			//바꾸지 않는 경우
+			dp[w][t][1] = max(dp[w][t][1], dp[w][t - 1][1] + w1);
+			dp[w][t][2] = max(dp[w][t][2], dp[w][t - 1][2] + w2);
+		}
+	}
+	
+	int ret = 0;
+
+	for(int i=1; i<=in_t;i++)
+		for (int j = 0; j <= in_w; j++)
+			ret = max(ret, max(dp[j][i][1], dp[j][i][2]));
+		
+	printf("%d", ret);
+	return 0;
+}
