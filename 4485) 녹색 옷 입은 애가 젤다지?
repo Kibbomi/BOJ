@@ -1,0 +1,85 @@
+#include <cstdio>
+#include <queue>
+#include <functional>
+#include <algorithm>
+#define INF 0x1f1f1f1f
+using namespace std;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+
+int main()
+{
+	int n;
+	scanf("%d", &n);
+	int round = 0;
+	while (n!= 0)
+	{		
+		++round;
+		int dist[126][126] = { 0, };
+		int weight[126][126] = { 0, };
+		//bool visited[126][126] = { false, };
+		priority_queue<pair<int, pair<int,int>>, vector<pair<int, pair<int,int>>>, greater<pair<int, pair<int,int>>>>pq;
+
+		int ret = 0;
+		//init
+		for (int i = 1; i <= n; ++i)
+			for (int j = 1; j <= n; ++j)
+				dist[i][j] = INF;
+			
+
+		for (int i = 1; i <= n; ++i)
+			for (int j = 1; j <= n; ++j)
+				scanf("%d", &weight[i][j]);
+			
+
+		//시작점
+		dist[1][1] = weight[1][1];
+		for (int i = 1; i <= n; ++i)
+			for (int j = 1; j <= n; ++j)
+				pq.push(make_pair(dist[i][j], make_pair(i, j)));
+
+		//dijkstra
+		for (int k = 1; k <= n*n; ++k)
+		{
+			//최솟값 찾는게 이제 pq로 구현됨.
+			int cy, cx, d;
+			cy = pq.top().second.first;
+			cx = pq.top().second.second;
+			d = pq.top().first;
+			pq.pop();
+			if (dist[cy][cx] < d)	continue;
+
+			//동서남북
+			for (int dir = 0; dir < 4; ++dir)
+			{
+				int nx = cx + dx[dir];
+				int ny = cy + dy[dir];
+
+				if (nx < 1 || nx > n || ny < 1 || ny > n)
+					continue;
+
+				int candi;
+				candi = dist[cy][cx] + weight[ny][nx];
+
+				//COORD next;
+				//next.y = ny, next.x = nx;
+
+				if (dist[ny][nx] > candi)
+				{
+					dist[ny][nx] = candi;
+					pq.push(make_pair(candi, make_pair(ny,nx)));
+				}
+				//dist[ny][nx] = min(dist[ny][nx], dist[cy][cx] + weight[ny][nx]);
+			}
+		}
+
+
+		printf("Problem %d: %d\n", round, dist[n][n]);
+		scanf("%d", &n);
+	}
+
+
+	return 0;
+}
