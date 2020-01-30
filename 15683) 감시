@@ -1,0 +1,136 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+int n, m;
+int map[8][8];
+const int r[] = { 0,4,2,4,4,1 };
+struct COORD {
+	int y, x;
+	int type;
+}cctv[8];
+int cnum;
+int ret = 0x7fffffff;
+
+void draw_map(int dir, COORD camera)
+{
+	dir = dir % 4;
+	if (dir == 0)
+	{
+		for (int x = camera.x + 1; x < m; x++)
+		{
+			if (map[camera.y][x] == 6)	break;
+			map[camera.y][x] = 9;
+		}
+	}
+	else if (dir == 1)
+	{
+		for (int y = camera.y - 1; y >= 0; y--)
+		{
+			if (map[y][camera.x] == 6)break;
+			map[y][camera.x] = 9;
+		}
+	}
+	else if (dir == 2)
+	{
+		for (int x = camera.x - 1; x >= 0; x--)
+		{
+			if (map[camera.y][x] == 6)break;
+			map[camera.y][x] = 9;
+		}
+	}
+	else if (dir == 3)
+	{
+		for (int y = camera.y + 1; y < n; y++)
+		{
+			if (map[y][camera.x] == 6)break;
+			map[y][camera.x] = 9;
+		}
+	}
+	return;
+}
+void cpmap(int dest[][8], int src[][8])
+{
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			dest[i][j] = src[i][j];
+	return;
+}
+void dfs(int depth)
+{
+	if (depth == cnum)
+	{
+		int sum = 0;
+		for(int i=0;i<n;i++)
+			for (int j = 0; j < m; j++)
+			{
+				if (map[i][j] == 0)
+					sum++;
+			}
+		ret = min(ret, sum);
+		return;
+	}
+	for (int dir = 0; dir < r[cctv[depth].type]; dir++)
+	{
+		int clone[8][8];
+		cpmap(clone, map);
+		
+		if (cctv[depth].type == 1)
+		{
+			draw_map(dir, cctv[depth]);
+		}
+		else if (cctv[depth].type == 2)
+		{
+			draw_map(dir, cctv[depth]);
+			draw_map(dir+2, cctv[depth]);
+		}
+		else if (cctv[depth].type == 3)
+		{
+			draw_map(dir, cctv[depth]);
+			draw_map(dir+1, cctv[depth]);
+		}
+		else if (cctv[depth].type == 4)
+		{
+			draw_map(dir, cctv[depth]);
+			draw_map(dir+1, cctv[depth]);
+			draw_map(dir+2, cctv[depth]);
+		}
+		else if (cctv[depth].type == 5)
+		{
+			draw_map(dir, cctv[depth]);
+			draw_map(dir+1, cctv[depth]);
+			draw_map(dir+2, cctv[depth]);
+			draw_map(dir+3, cctv[depth]);
+		}
+
+
+		
+		dfs(depth + 1);
+
+		
+		cpmap(map, clone);
+	}
+	return;
+}
+int main(void)
+{
+	scanf("%d %d", &n, &m);
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+		{
+			scanf("%d", &map[i][j]);
+			if (map[i][j] > 0 && map[i][j] < 6)
+			{
+				cctv[cnum].y = i;
+				cctv[cnum].x = j;
+				cctv[cnum].type = map[i][j];
+				cnum++;
+			}
+		}
+
+	//Permutation..
+	dfs(0);
+
+	printf("%d", ret);
+	return 0;
+}
