@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int n;
+int arr[8];
+bool visited[8] = { false, };
+int ret[8];
+int max1 = 0x7fffffff + 1;
+
+void dfs(int count)
+{
+	if (count == n)
+	{
+		int sum = 0;;
+		for (int i = 0; i < n-1; i++)
+		{
+			sum += abs(ret[i] - ret[i + 1]);
+		}
+		if (max1 < sum)
+			max1 = sum;
+		return;
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		if (visited[i] == false)
+		{
+			ret[count] = arr[i];
+			visited[i] = true;
+			dfs(count + 1);
+			visited[i] = false;
+		}
+	}
+}
+
+int main(void)
+{
+	scanf("%d", &n);
+
+	
+	for (int i = 0; i < n; i++)
+	{
+		scanf("%d", &arr[i]);
+	}
+
+	dfs(0);
+	printf("%d", max1);
+
+	return 0;
+}
