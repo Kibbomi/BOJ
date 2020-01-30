@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <string.h>
+#include <algorithm>
+using namespace std;
+
+int main(void)
+{	
+	char up[101];
+	char down[101];
+	char op;
+	scanf("%s", up);
+	scanf(" %c", &op);
+	scanf("%s", down);
+	
+	int uplen = strlen(up);
+	int dnlen = strlen(down);
+
+	
+
+
+	if (op == '*')
+	{
+		//곱셈
+		int numofzero = uplen + dnlen - 2;
+
+		printf("1");
+		for (int i = 0; i < numofzero; i++)
+			printf("0");
+
+
+	}
+	else
+	{
+		int diff = 0;
+		if (uplen > dnlen)
+		{
+			diff = uplen - dnlen;
+			dnlen = uplen;
+
+			for (int i = dnlen - 1; i >= 0; i--)
+				down[i + diff] = down[i];
+
+			for (int i = 0; i < diff; i++)
+				down[i] = '0';
+		}
+		else
+		{
+			diff = dnlen - uplen;
+			uplen = dnlen;
+			for (int i = dnlen - 1; i >= 0; i--)
+				up[i + diff] = up[i];
+
+			for (int i = 0; i < diff; i++)
+				up[i] = '0';
+		}
+		//덧셈
+		char ret[102] = { 0 };
+		int index = 0;
+		int opindex = uplen;
+
+		for (int i = opindex - 1; i >= 0; i--)
+			ret[index++] = up[i] + down[i] -'0';
+		
+
+		for (int i = index - 1; i >= 0; i--)
+			printf("%c", ret[i]);
+	}
+
+
+	return 0;
+}
