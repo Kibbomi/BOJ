@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <string.h>
+
+
+char left[10001], right[10001];
+char ret[10003];
+
+int main(void)
+{
+	scanf("%s %s", left, right);
+	
+	int llen = strlen(left);
+	int rlen = strlen(right);
+
+	if (llen > rlen)
+	{
+		int zero = llen - rlen;
+		for (int i = zero+ rlen - 1; i >= zero; i--)
+		{
+			right[i] = right[i - zero];
+		}
+		for (int i = 0; i < zero; i++)
+			right[i] = '0';
+			
+	}
+	else if (llen < rlen)
+	{
+		int zero = rlen - llen;
+		for (int i = zero+ llen - 1; i >= zero; i--)
+		{
+			left[i] = left[i - zero];
+		}
+		for (int i = 0; i < zero; i++)
+			left[i] = '0';
+	}
+	//자리수..
+
+	int len; 
+	if (llen > rlen)
+		len = llen;
+	else
+		len = rlen;
+
+	
+	int nowcarry = 0;
+	int nextcarry = 0;
+	int i;
+	for (i = 0; i < len; i++)
+	{
+		nowcarry = nextcarry;
+		char temp = left[len - 1-i] + right[len - 1-i] - '0';
+		if (temp > '9')
+		{
+			temp -= 10;
+			nextcarry = 1;
+		}
+		else
+			nextcarry = 0;
+		ret[i] = temp + nowcarry;
+
+		if (ret[i] > '9')
+		{
+			ret[i] -= 10;
+			nextcarry = 1;
+		}
+
+	}
+	if (nextcarry == 1)
+	{
+		ret[i] = '1';
+	}
+
+	int retlen = strlen(ret);
+
+	for (int i = retlen - 1; i >= 0; i--)
+		printf("%c", ret[i]);
+
+	return 0;
+}
