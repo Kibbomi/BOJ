@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <vector>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+bool visited[201][201][201];
+
+int main(void)
+{
+	int a, b, c;
+	scanf("%d %d %d", &a, &b, &c);
+
+	queue<pair<pair<int, int>, int>> q;
+
+	q.push(make_pair(make_pair(0, 0), c));
+	
+	
+	vector<int> v;
+
+	while (!q.empty())
+	{
+		int ca = q.front().first.first;
+		int cb = q.front().first.second;
+		int cc = q.front().second;
+		q.pop();
+
+		if (visited[ca][cb][cc])	
+			continue;
+		else
+			visited[ca][cb][cc] = true;
+
+		if (ca == 0)
+			v.push_back(cc);
+
+		//대입
+		//c->b
+		if (b - cb >= cc)
+			q.push(make_pair(make_pair(ca, cb + cc), 0));
+		else
+			q.push(make_pair(make_pair(ca, b), cc - b + cb));
+
+		//c->a
+		if (a - ca >= cc)
+			q.push(make_pair(make_pair(ca + cc, cb), 0));
+		else
+			q.push(make_pair(make_pair(a, cb), cc - a + ca));
+
+		//b->a
+		if (a - ca >= cb)
+			q.push(make_pair(make_pair(ca + cb, 0), cc));
+		else
+			q.push(make_pair(make_pair(a, cb - a + ca), cc));
+
+		//b->c
+		if (c - cc >= cb)
+			q.push(make_pair(make_pair(ca, 0), cc + cb));
+		else
+			q.push(make_pair(make_pair(ca, cb - c + cc), c));
+
+		//a->b
+		if (b - cb >= ca)
+			q.push(make_pair(make_pair(0, cb + ca), cc));
+		else
+			q.push(make_pair(make_pair(ca - b + cb, b), cc));
+
+		//a->c
+		if (c - cc >= ca)
+			q.push(make_pair(make_pair(0, cb), cc + ca));
+		else
+			q.push(make_pair(make_pair(ca - c + cc, cb), c));
+		
+	}
+
+	sort(v.begin(), v.end());
+
+	for (int i = 0; i < v.size(); i++)
+		printf("%d ", v[i]);
+	return 0;
+}
