@@ -1,0 +1,59 @@
+#include <stdio.h>
+int r, c, k;
+char map[1001][1001];
+int dp[3][1001][1001];
+//row기준, 0열부터 y열까지의 값,  y열 포함x한 값.
+//[0] -> J  [1] -> O [2] ->I
+int main(void)
+{
+	scanf("%d %d", &r, &c);
+	scanf("%d", &k);
+
+	for (int i = 1; i <= r; i++)
+		scanf("%s", &map[i][1]);
+
+	for (int j = 1; j <= c; j++)
+	{
+		for (int i = 1; i <= r; i++)
+		{
+			if (map[i][j] == 'J')
+				dp[0][i][j] = dp[0][i][j - 1] + 1;
+			else
+				dp[0][i][j] = dp[0][i][j - 1];
+
+			if (map[i][j] == 'O')
+				dp[1][i][j] = dp[1][i][j - 1] + 1;
+			else
+				dp[1][i][j] = dp[1][i][j - 1];
+
+			if (map[i][j] == 'I')
+				dp[2][i][j] = dp[2][i][j - 1] + 1;
+			else
+				dp[2][i][j] = dp[2][i][j - 1];
+		}
+	}
+	for (int i = 1; i < r; i++)
+	{
+		for (int j = 1; j <= c; j++)
+		{
+			dp[0][i + 1][j] += dp[0][i][j];
+			dp[1][i + 1][j] += dp[1][i][j];
+			dp[2][i + 1][j] += dp[2][i][j];
+		}
+
+	}
+
+	while (k--)
+	{
+		int ly, lx, ry, rx;
+		scanf("%d %d %d %d", &ly, &lx, &ry, &rx);
+		int ret1 = 0, ret2 = 0, ret3 = 0;
+
+		ret1 = dp[0][ry][rx] - (dp[0][ry][lx - 1] + dp[0][ly - 1][rx]) + dp[0][ly - 1][lx - 1];
+		ret2 = dp[1][ry][rx] - (dp[1][ry][lx - 1] + dp[1][ly - 1][rx]) + dp[1][ly - 1][lx - 1];
+		ret3 = dp[2][ry][rx] - (dp[2][ry][lx - 1] + dp[2][ly - 1][rx]) + dp[2][ly - 1][lx - 1];
+
+		printf("%d %d %d\n", ret1, ret2, ret3);
+	}
+	return 0;
+}
