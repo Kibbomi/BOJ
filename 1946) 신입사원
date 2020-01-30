@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+struct score {
+	int p;
+	int i;
+}val[100000];
+
+int compare(const void* a, const void* b)
+{
+	score* aa = (score*)a;
+	score* bb = (score*)b;
+	
+	return aa->p - bb->p;
+
+}
+int main(void)
+{
+	int t;
+	scanf("%d", &t);
+	while (t--)
+	{
+		
+		int n;
+		scanf("%d", &n);
+		
+		for (int i = 0; i < n; i++)
+			scanf("%d %d", &val[i].p, &val[i].i);
+		
+		qsort(val, n, sizeof(struct score), compare);
+
+		int standard;
+		standard = val[0].i;
+		int ret = 1;
+		for (int i = 1; i < n; i++)
+		{
+			if (val[i].i < standard)
+			{
+				standard = val[i].i;
+				ret++;
+			}
+		}
+		printf("%d\n", ret);
+	}
+	
+	return 0;
+}
