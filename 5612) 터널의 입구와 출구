@@ -1,0 +1,29 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n, m;
+	scanf("%d", &n);
+	scanf("%d", &m);
+
+	int ret = m;
+	int val = m;
+
+	for (int i = 0; i < n; i++)
+	{
+		//i~i+1분
+		int in, out;
+		scanf("%d %d", &in, &out);
+		val += in;
+		val -= out;
+		if (val < 0){
+			printf("0");
+			return 0;
+		}
+		if (val > ret)
+			ret = val;
+	}
+	printf("%d", ret);
+
+	return 0;
+}
