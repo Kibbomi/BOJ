@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <deque>
+#include <queue>
+using namespace std;
+struct COORD {
+	int y, x;
+	int dir;
+};
+int n, k, l;
+int map[100][100];
+queue<pair<int, char>>q;
+//time and direction
+deque<COORD> snake;
+//북 동 남 서
+const int dx[] = {0,1,0,-1  };
+const int dy[] = {-1,0,1,0};
+
+int main(void)
+{
+	scanf("%d %d", &n, &k);
+	for (int i = 0; i < k; i++)
+	{
+		int y, x;
+		scanf("%d %d", &y, &x);
+		map[y-1][x-1] = 2; // the apple is number 2
+	}
+	scanf("%d", &l);
+
+	for (int i = 0; i < l; i++)
+	{
+		int time;
+		char dir;
+		scanf("%d %c", &time, &dir);
+		q.push(make_pair(time, dir));
+	}
+	//data input the end.
+
+	//setting head.
+	COORD head;
+	head.y = 0, head.x = 0, head.dir = 1;
+	//drawing map
+	map[head.y][head.x] = 1;
+	snake.push_front(head);
+
+	int runtime = 0;
+	while (1)
+	{
+		//움직여보고 닿으면 바로 종료.
+		
+		//streach a head.
+		COORD cur = snake.front();
+
+		//when i streach my head, i have to check chaning of the direction
+		if (q.size() > 0)
+			if (runtime == q.front().first)
+			{
+				//change dir.
+				char dir = q.front().second;
+				q.pop();
+				if (dir == 'L')
+					cur.dir = (cur.dir + 3) % 4;
+				else
+					cur.dir = (cur.dir + 1) % 4;
+			}
+		COORD next;
+		next.y = cur.y + dy[cur.dir];
+		next.x = cur.x + dx[cur.dir];
+		next.dir = cur.dir;
+
+		//if head can go?
+		if (next.x < 0 || next.y < 0 || next.x >= n || next.y >= n || map[next.y][next.x] == 1)
+			break;
+		
+		runtime++;
+
+		//yes, i can go
+		//check apple
+		if (map[next.y][next.x] == 2)
+		{
+			map[next.y][next.x] = 1;
+			snake.push_front(next);
+		}
+		else
+		{
+			map[next.y][next.x] = 1;
+			snake.push_front(next);
+
+			//cut my tail
+			COORD tail = snake.back();
+			map[tail.y][tail.x] = 0;
+			snake.pop_back();
+		}
+		
+	}
+	printf("%d", runtime + 1);
+	return 0;
+}
