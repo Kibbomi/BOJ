@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <vector>
+using namespace std;
+
+int n, m;
+vector<int> v[1001];
+bool visited[1001];
+
+void dfs(int start, int count)
+{
+	int len = v[start].size();
+
+	for (int i = 0; i < len; i++)
+	{
+		if (visited[v[start][i]] == false)
+		{
+			visited[v[start][i]] = true;
+			dfs(v[start][i], count + 1);
+		}
+	}
+
+	return;
+}
+
+int main(void)
+{
+	scanf("%d %d", &n, &m);
+
+
+	for (int i = 0; i < m; i++)
+	{
+		int from, to;
+		scanf("%d %d", &from, &to);
+
+		v[from].push_back(to);
+		v[to].push_back(from);
+	}
+	int cnt = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		//i를 시작으로 
+		if (visited[i] == false)
+		{
+			visited[i] = true;
+			dfs(i, 0);
+			cnt++;
+		}
+		
+	}
+
+	printf("%d", cnt);
+	return 0;
+}
