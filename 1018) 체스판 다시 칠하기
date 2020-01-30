@@ -1,0 +1,64 @@
+#include <stdio.h>
+
+char map[50][50];
+
+int main(void)
+{
+	int x, y;
+	scanf("%d %d", &x, &y);
+
+	for (int i = 0; i < x; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			scanf("%c", &map[i][j]);
+			if (map[i][j] == '\n')
+				j--;
+		}
+	}
+	
+	int ret = 0x7ffffff;
+	int count = 0;
+	//첫번째가 W인경우
+	for (int a = 0; a < x - 7; a++)
+		for (int b = 0; b < y - 7; b++)
+		{
+			count = 0;
+			for (int i = a; i < a+8; i++)
+			{
+				for (int j = b; j < b+8; j++)
+				{
+					if ((i + j) % 2 == 0 && map[i][j] != 'W')
+						count++;
+					if ((i + j) % 2 == 1 && map[i][j] != 'B')
+						count++;
+				}
+			}
+			if (ret > count)
+				ret = count;
+		}
+
+	//첫번째가 B인경우
+
+	for (int a = 0; a < x - 7; a++)
+		for (int b = 0; b < y - 7; b++)
+		{
+			count = 0;
+			for (int i = a; i < a + 8; i++)
+			{
+				for (int j = b; j < b + 8; j++)
+				{
+					if ((i + j) % 2 == 0 && map[i][j] != 'B')
+						count++;
+					if ((i + j) % 2 == 1 && map[i][j] != 'W')
+						count++;
+				}
+			}
+			if (ret > count)
+				ret = count;
+		}
+
+		printf("%d", ret);
+
+	return 0;
+}
