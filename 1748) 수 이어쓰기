@@ -1,0 +1,32 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int sum = 0;
+	int val;
+	scanf("%d", &val);
+
+	for (int i = 1; i <= val; i++)
+	{
+		if (i < 10)
+			sum += 1;
+		else if (i < 100)
+			sum += 2;
+		else if (i < 1000)
+			sum += 3;
+		else if (i < 10000)
+			sum += 4;
+		else if (i < 100000)
+			sum += 5;
+		else if (i < 1000000)
+			sum += 6;
+		else if (i < 10000000)
+			sum += 7;
+		else if (i< 100000000)
+			sum += 8;
+		else
+			sum += 9;
+	}
+	printf("%d", sum);
+	return 0;
+}
