@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+const int dz[] = { 1,-1 };
+
+struct coord {
+	int l;
+	int d;
+};
+
+int n, k;
+bool visited[100001];
+int retmin = 0x7fffffff;
+
+void bfs(coord start)
+{
+	queue<coord> q;
+
+	q.push(start);
+	visited[start.l] = true;
+	bool flag = true;
+
+	while (!q.empty())
+	{
+		coord cur;
+		cur = q.front(); q.pop();
+		visited[cur.l] = true;
+
+		if (cur.l == k)
+		{
+			flag = false;
+			if (cur.d < retmin)
+				retmin = cur.d;
+			
+		}
+			
+		if(flag)
+		for (int i = 0; i < 3; i++)
+		{
+			coord next;
+			if (i != 2) {
+				next.l = cur.l + dz[i];
+				next.d = cur.d + 1;
+			}
+			else
+			{
+				next.l = cur.l * 2;
+				next.d = cur.d;
+			}
+
+			
+			if (next.l < 0 || next.l >= 100001)
+				continue;
+
+			if (visited[next.l] == false)
+			{
+				q.push(next);
+			}
+
+		}
+	}
+
+	return ;
+
+}
+int main(void)
+{
+	scanf("%d %d", &n, &k);
+
+	coord first;
+	first.l = n;
+	first.d = 0;
+
+	bfs(first);
+	printf("%d", retmin);
+	return 0;
+}
