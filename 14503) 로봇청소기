@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+const int dx[] = { 0,1,0,-1 };
+const int dy[] = { -1,0,1,0 };
+
+struct COORD {
+	int y, x;
+	int dir;
+	int time;
+}robot;
+int map[50][50];
+bool visited[50][50];
+
+int n, m;
+
+int main(void)
+{
+	scanf("%d %d", &n, &m);
+	scanf("%d %d %d", &robot.y, &robot.x, &robot.dir);
+	
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			scanf("%d", &map[i][j]);
+
+	queue<COORD>q;
+
+	//clean my location.
+	visited[robot.y][robot.x] = true;
+	q.push(robot);
+
+	while (!q.empty())
+	{
+		COORD cur = q.front(); q.pop();
+
+		for (int dir = 0; dir < 4; dir++)
+		{
+			COORD next;
+			next.dir = (cur.dir + 3*(dir+1)) % 4; //왼쪽으로..
+			next.y = cur.y + dy[next.dir];
+			next.x = cur.x + dx[next.dir];
+
+			if (next.y < 0 || next.x < 0 || next.x >= m || next.y >= n||map[next.y][next.x] == 1)
+				continue;
+
+			if (visited[next.y][next.x] == false)
+			{
+				//if there isnt cleaned
+				//cleaning.......condition 2.a clear.
+
+				visited[next.y][next.x] = true;
+				q.push(next);
+				break;
+			}
+		}
+
+		//4방향 모두 안돼...
+		//후진하고 큐에 넣기.
+		if (q.empty())
+		{
+			COORD next;
+			int dir = (cur.dir + 2) % 4;
+			next.y = cur.y + dy[dir];
+			next.x = cur.x + dx[dir];
+			next.dir = cur.dir;
+
+			if (next.y < 0 || next.x < 0 || next.x >= m || next.y >= n || map[next.y][next.x] == 1)
+				break;
+
+			q.push(next);
+		}
+	}
+	int ret = 0;
+	for(int i=0;i<n;i++)
+		for (int j = 0; j < m; j++)
+			if (visited[i][j])
+				ret++;
+			
+	printf("%d", ret);
+	return 0;
+}
