@@ -1,0 +1,90 @@
+#include <cstdio>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+
+int dp[2][21][101];
+char in_str[21];
+char demon_str[101],angel_str[101];
+
+int main(void)
+{
+	scanf("%s", &in_str[1]);
+	scanf("%s", &demon_str[1]);
+	scanf("%s", &angel_str[1]);
+
+	//0번 인덱스는 비어있으므로 -1
+	int len = strlen(&in_str[1]);
+	int scroll_len = strlen(&demon_str[1]);
+
+	for (int i = 0; i <= scroll_len; i++)
+		dp[0][0][i] = dp[1][0][i] = 1;
+	
+	//Demon First..
+	for (int i = 1; i <= len; i++)
+	{
+		for (int j = i; j <= i + scroll_len - len; j++)
+		{
+			if (i % 2 == 1)
+			{
+				//demon
+				if (in_str[i] == demon_str[j])
+				{
+					dp[0][i][j] = dp[0][i - 1][j - 1] + dp[0][i][j - 1];
+				}
+				else
+				{
+					dp[0][i][j] = dp[0][i][j - 1];
+				}
+			}
+			else
+			{
+				//angel
+				if (in_str[i] == angel_str[j])
+				{
+					dp[0][i][j] = dp[0][i - 1][j - 1] + dp[0][i][j - 1];
+				}
+				else
+				{
+					dp[0][i][j] = dp[0][i][j - 1];
+				}
+			}
+		}
+		
+	}
+
+	//Angel First..
+	for (int i = 1; i <= len; i++)
+	{
+		for (int j = i; j <= i + scroll_len - len; j++)
+		{
+			if (i % 2 == 0)
+			{
+				//demon
+				if (in_str[i] == demon_str[j])
+				{
+					dp[1][i][j] = dp[1][i - 1][j - 1] + dp[1][i][j - 1];
+				}
+				else
+				{
+					dp[1][i][j] = dp[1][i][j - 1];
+				}
+			}
+			else
+			{
+				//angel
+				if (in_str[i] == angel_str[j])
+				{
+					dp[1][i][j] = dp[1][i - 1][j - 1] + dp[1][i][j - 1];
+				}
+				else
+				{
+					dp[1][i][j] = dp[1][i][j - 1];
+				}
+			}
+		}
+
+	}
+	printf("%d", dp[0][len][scroll_len] + dp[1][len][scroll_len]);
+	return 0;
+}
