@@ -1,0 +1,2 @@
+#include <stdio.h>
+int n,a;int main(){scanf("%d%d",&n,&a);printf("%d",n*--a+1);}
