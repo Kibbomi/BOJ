@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int n;
+int map[101][101];
+const int dx[] = { 1,0,-1,0 };
+const int dy[] = { 0,-1,0,1 };
+struct COORD {
+	int y, x, d;
+};
+int  main(void)
+{
+	scanf("%d", &n);
+
+	for (int i = 0; i < n; i++)
+	{
+		int x, y, d, g;
+		scanf("%d %d %d %d", &x, &y, &d, &g);
+
+		vector<int>v;
+		v.push_back(d);
+		map[y][x] = 1;
+		for (int k = 0; k < g; k++)
+		{
+			int len = v.size();
+			for (int j = len - 1; j >= 0; j--)
+			{
+				int nd = (v[j] + 1) % 4;
+				v.push_back(nd);
+			}
+		}
+		//그리기
+		int len = v.size();
+		for (int k = 0; k < len; k++)
+		{
+			int nx = x + dx[v[k]];
+			int ny = y + dy[v[k]];
+
+			if (nx < 0 || ny < 0 || nx >100 || nx >100)
+			{
+				x = nx;
+				y = ny;
+				continue;
+			}
+			map[ny][nx] = 1;
+			x = nx;
+			y = ny;
+		}
+	}
+	int ret = 0;
+	for (int i = 0; i < 100; i++)
+		for (int j = 0; j < 100; j++)
+		{
+			if (map[i][j] == 1 && map[i+1][j] == 1 && map[i][j+1] == 1 && map[i+1][j+1] == 1)
+				ret++;
+		}
+
+	printf("%d", ret);
+
+	return 0;
+}
