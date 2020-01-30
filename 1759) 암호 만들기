@@ -1,0 +1,76 @@
+#include <stdio.h>
+using namespace std;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+int n, r;
+char alpha[15];
+
+int select[15];
+int size = 0;
+
+void dfs(int start, int count)
+{
+	if (count == r)
+	{
+		int ja = 0, mo = 0;
+		for (int i = 0; i < r; i++)
+		{
+			if (alpha[select[i]] == 'a' || alpha[select[i]] == 'e'
+				|| alpha[select[i]] == 'i' || alpha[select[i]] == 'o' ||
+				alpha[select[i]] == 'u')
+			{
+				mo += 1;
+			}
+			else
+			{
+				ja += 1;
+			}
+		}
+
+		if (mo >= 1 && ja >= 2)
+		{
+			for (int i = 0; i < r; i++)
+				printf("%c", alpha[select[i]]);
+
+			printf("\n");
+		}
+	}
+
+	for (int i = start; i < n; i++)
+	{
+		select[size++] = i;
+		dfs(i + 1, count + 1);
+		select[size--] = 0;
+	}
+
+}
+int main(void)
+{
+	
+	scanf("%d %d", &r, &n);
+
+	for (int i = 0; i < n; i++)
+	{
+		scanf("%c", &alpha[i]);
+		if (alpha[i] < 'a' || alpha[i] >'z')
+			i--;
+	}
+
+	for (int i = 0; i < n - 1; i++)
+	{
+		for (int j = i + 1; j < n; j++)
+		{
+			if (alpha[i] > alpha[j])
+			{
+				char temp = alpha[j];
+				alpha[j] = alpha[i];
+				alpha[i] = temp;
+			}
+		}
+	}
+	dfs(0,0);
+
+	return 0;
+}
