@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+int v, e, n;
+
+int map[1001][1001];
+bool visiteddfs[1001];
+bool visitedbfs[1001];
+
+void dfs(int l)
+{
+	if (l < 1 || l > v)
+		return;
+	visiteddfs[l] = true;
+	printf("%d ", l);
+
+	for (int i = 1; i <= v; i++){
+			if (map[l][i] == 1 && visiteddfs[i] == false){
+				dfs(i);
+			}
+	}
+	return;
+}
+
+
+void bfs(int l)
+{
+
+	queue<int> q;
+
+	q.push(l);
+	visitedbfs[l] = true;
+	while (!q.empty())
+	{
+		int visit = q.front(); q.pop();
+		
+		printf("%d ", visit);
+
+		for (int i = 1; i <= v; i++)
+		{
+			if (map[visit][i] == 1 && visitedbfs[i] == false)
+			{
+				//queue에 들어가는순간 된거
+				q.push(i);
+				visitedbfs[i] = true;
+			}
+		}
+	}
+
+	return;
+}
+int main(void)
+{
+	scanf("%d %d %d", &v, &e, &n);
+
+	for (int i = 0; i < e; i++){
+		int x, y;
+		scanf("%d %d", &y,&x );
+		map[y][x] = 1;
+		map[x][y] = 1;
+	}
+
+	dfs(n);
+	printf("\n");
+
+	
+	bfs(n);
+	
+
+	return 0;
+}
