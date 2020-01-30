@@ -1,0 +1,37 @@
+#include <stdio.h>
+
+long long int cache[101] = { 0 };
+int main(void)
+{
+	int t;
+	scanf("%d", &t);
+	
+	for (int a = 0; a < t; a++)
+	{
+		int n;
+		scanf("%d", &n);
+
+		for (int i = 1; i <= n; i++)
+		{
+			if (i == 1)
+			{
+				cache[1] = 1;
+				continue;
+			}
+			if (i == 2)
+			{
+				cache[2] = 1;
+				continue;
+			}
+			if (i == 3)
+			{
+				cache[3] = 1;
+				continue;
+			}
+			cache[i] = cache[i - 2] + cache[i - 3];
+		}
+
+		printf("%lld\n", cache[n]);
+	}
+	return 0;
+}
