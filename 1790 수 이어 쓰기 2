@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+	int n, k;
+	int val = 9;
+	scanf("%d %d", &n, &k);
+
+	int count = 0;
+	int tn = n;
+	while (tn > 0)
+	{
+		count++;
+		tn /= 10;
+	}
+
+	int calk = k;
+	int totalnum = 0;
+	int kcount = 1;
+	for (int i = 1; i < count; i++)
+	{
+		if (calk - i*val > 0)
+		{
+			calk -= i*val;
+			kcount = i+1;
+		}
+		totalnum += i*val;
+		val *= 10;
+	}
+	totalnum+=count*(n+1-pow(10, count - 1));
+
+
+	if (totalnum < k)
+		printf("-1");
+	else
+	{
+		int q, r;
+		q = calk / kcount;
+		r = calk % kcount;
+		if (r == 0)
+		{
+			int ret = pow(10, kcount - 1) + q-1;
+			printf("%d", ret % 10);
+		}
+		else
+		{
+			int ret = pow(10, kcount - 1) + q;
+			for (int i = 0; i < kcount - r; i++)
+			{
+				ret /= 10;
+			}
+			printf("%d", ret%10);
+		}
+	}
+	return 0;
+}
