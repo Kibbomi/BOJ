@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <string.h>
+
+char top;
+int dp_merged[5000];
+int dp[5000];
+
+char ciphertext[5000];
+
+int main(void)
+{
+	scanf("%s", ciphertext);
+	int len = strlen(ciphertext);
+
+	top = ciphertext[0];
+	if (top == '0')
+	{
+		printf("0");
+		return 0;
+	}
+	else if (top == '1' || top == '2')
+	{
+		dp_merged[0] = 0;
+		dp[0] = 1;
+	}
+	else
+	{
+		dp_merged[0] = 1;
+		dp[0] = 0;
+	}
+	
+	for (int i = 1; i < len; i++)
+	{
+		if (ciphertext[i] == '0')
+		{
+			if (top == '1' || top == '2')
+			{
+				dp_merged[i] = dp[i - 1]%1000000;
+				dp[i] = 0;
+			}
+			else
+			{
+				printf("0");
+				return 0;
+			}
+		}
+		else
+		{
+			if (top == '1' || (top == '2' && ciphertext[i] <= '6'))
+			{
+				dp_merged[i] = dp[i - 1] % 1000000;
+				dp[i] = (dp[i - 1] + dp_merged[i - 1]) % 1000000;
+			}
+			else
+			{
+				dp_merged[i] = 0;
+				dp[i] = (dp[i - 1] + dp_merged[i - 1]) % 1000000;
+			}
+		}
+		top = ciphertext[i];
+	}
+	printf("%d", (dp[len - 1] + dp_merged[len - 1]) % 1000000);
+
+	return 0;
+}
