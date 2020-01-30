@@ -1,0 +1,149 @@
+// 18: 55~
+#include <stdio.h>
+#include <queue>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct COORD {
+	int y, x;
+	int time;
+};
+char map[1500][1500];
+bool visited[1500][1500];
+
+int depth[1500][1500];
+bool depthvisited[1500][1500];
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+int r, c;
+vector <COORD>v;
+int ret = 0;
+int maxval = -100;
+
+bool bfs(int limit)
+{
+	queue<COORD>q;
+	for (int i = 0; i < r; i++)
+		for (int j = 0; j < c; j++)
+			visited[i][j] = false;
+
+	COORD start = v[1];
+	q.push(v[1]);
+	visited[v[1].y][v[1].x] = true;
+
+	while (!q.empty())
+	{
+		COORD cur = q.front(); q.pop();
+		if (cur.y == v[0].y && cur.x == v[0].x)
+		{
+			return true;
+		}
+		for (int dir = 0; dir < 4; dir++)
+		{
+			COORD next;
+			next.x = cur.x + dx[dir];
+			next.y = cur.y + dy[dir];
+
+			if (next.x < 0 || next.y < 0 || next.x >= c || next.y >= r || depth[next.y][next.x] >limit)
+				continue;
+
+			if (visited[next.y][next.x] == false)
+			{
+				visited[next.y][next.x] = true;
+				q.push(next);
+			}
+
+		}
+
+	}
+	return false;
+}
+void cal_depth(void)
+{
+	queue<COORD>q;
+	for (int i = 0; i < r; i++)
+		for (int j = 0; j < c; j++)
+		{
+			if (map[i][j] == '.')
+			{
+				COORD s;
+				s.y = i, s.x = j, s.time = 0;
+				depthvisited[i][j] = true;
+				q.push(s);
+			}
+		}
+
+	while (!q.empty())
+	{
+		COORD cur = q.front(); q.pop();
+		depth[cur.y][cur.x] = cur.time;
+		maxval = max(maxval, depth[cur.y][cur.x]);
+		for (int dir = 0; dir < 4; dir++)
+		{
+			COORD next;
+			next.x = cur.x + dx[dir];
+			next.y = cur.y + dy[dir];
+			next.time = cur.time + 1;
+
+			if (next.x < 0 || next.y < 0 || next.x >= c || next.y >= r)
+				continue;
+			if (depthvisited[next.y][next.x] == false)
+			{
+				depthvisited[next.y][next.x] = true;
+				q.push(next);
+			}
+		}
+	}
+	return ;
+}
+
+
+int main(void)
+{
+	scanf("%d %d", &r, &c);
+	for (int i = 0; i < r; i++)
+		for (int j = 0; j < c; j++)
+		{
+			scanf("%c", &map[i][j]);
+			if (map[i][j] == '\n')
+			{
+				j--;
+				continue;
+			}
+			if (map[i][j] == 'L')
+			{
+				map[i][j] = '.';
+				COORD temp;
+				temp.y = i, temp.x = j, temp.time = 0;
+				v.push_back(temp);
+			}
+		}
+	cal_depth();
+
+
+	int left = 0, right = maxval;
+	
+	while (left <= right)
+	{
+		int mid = (left + right) / 2;
+		
+		if (bfs(mid))
+		{
+			//찾음
+			ret = mid;
+			right = mid - 1;
+		}
+		else
+		{
+			//못 찾음
+			left = mid + 1;
+		}
+	}
+
+
+
+	printf("%d", ret);
+	return 0;
+}
