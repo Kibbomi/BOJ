@@ -1,0 +1,66 @@
+#include <stdio.h>
+
+int village[10000];
+
+int main(void)
+{
+	int ret = 0;
+	int n;
+	scanf("%d", &n);
+	int maxret = -1;
+	int sum = 0;
+	for (int i = 0; i < n; i++)
+	{
+		scanf("%d", &village[i]);
+		sum += village[i];
+		if (maxret < village[i])
+			maxret = village[i];
+	}
+	int budget;
+
+	scanf("%d", &budget);
+
+	if (sum <= budget)
+	{
+		//요청한금액 배정
+		printf("%d", maxret);
+	}
+	else
+	{
+		//최대값 산출
+		int left = 0;
+		int right = maxret;
+
+		while (left <= right)
+		{
+			int mid = (left  + right )/2;
+			int temp = 0;
+
+			for (int i = 0; i < n; i++)
+			{
+				if (village[i] < mid)
+				{
+					temp += village[i];
+				}
+				else
+				{
+					temp += mid;
+				}
+			}
+
+			if (temp <= budget)
+			{
+				if (ret < mid)
+					ret = mid;
+				left = mid + 1;
+			}
+			else
+				right = mid - 1;
+
+		}
+		printf("%d", ret);
+	}
+
+	
+	return 0;
+}
