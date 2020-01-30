@@ -1,0 +1,49 @@
+#include <stdio.h>
+
+char map[50][50];
+char ret[100][100];
+
+int main(void)
+{
+	int r, c;
+	scanf("%d %d", &r, &c);
+
+	for (int i = 0; i < r; i++)
+		for (int j = 0; j < c; j++)
+		{
+			scanf("%c", &map[i][j]);
+			if (map[i][j] == '\n')
+				j--;
+		}
+	int errr, errc;
+	scanf("%d %d", &errr, &errc);
+
+	//2사분면
+	for (int i = 0; i < r; i++)
+		for (int j = 0; j < c; j++)
+			ret[i][j] = map[i][j];
+	//1사분면
+	for (int i = 0; i < r; i++)
+		for (int j = 0; j < c; j++)
+			ret[i][2*c-1-j] = map[i][j];
+
+	//3사분면
+	for (int i = 0; i < r; i++)
+		for (int j = 0; j < c; j++)
+			ret[2*r-1-i][j] = map[i][j];
+	
+	//4사분면
+	for (int i = 0; i < r; i++)
+		for (int j = 0; j < c; j++)
+			ret[2 * r - 1 - i][2 * c - 1 - j] = map[i][j];
+
+	if (ret[errr-1][errc-1] == '#')
+		ret[errr-1][errc-1] = '.';
+	else
+		ret[errr-1][errc-1] = '#';
+
+	for (int i = 0; i < 2 * r; i++) 
+			printf("%s\n", ret[i]);
+	
+	return 0;
+}
