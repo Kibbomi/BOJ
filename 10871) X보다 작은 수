@@ -1,0 +1,21 @@
+#include <stdio.h>
+
+int main(void)
+{
+	
+	int n, base;
+
+	scanf("%d %d", &n, &base);
+
+	for (int i = 0; i < n; i++)
+	{
+		int temp;
+		scanf("%d ", &temp);
+
+		if (temp < base)
+			printf("%d ", temp);
+	}
+	
+
+	return 0;
+}
