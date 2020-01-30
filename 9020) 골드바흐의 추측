@@ -1,0 +1,55 @@
+#include <stdio.h>
+using namespace std;
+
+bool isprime[10001] = { false, };	//false 소수
+
+int main(void)
+{
+	
+	isprime[1] = true;
+
+	for (int i = 2; i < 10001; i++){
+		if (isprime[i] == false)
+		{
+			for (int j = 2; i*j < 10001; j++)
+			{
+					isprime[i*j] = true;
+				
+			}
+		}
+	}
+	
+
+	int n;
+
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++)
+	{
+		int v;
+		scanf("%d", &v);
+
+		int pivot = v / 2;
+		bool flag = true;
+		for (int a = pivot; a > 0; a--)
+		{
+			if (!isprime[a] )
+			{
+				for (int b = a; b <= v; b++) {
+					if (!isprime[b] )
+					{
+						if (a + b == v)
+						{
+							printf("%d %d\n", a, b);
+							flag = false;
+							break;
+						}
+					}
+				}
+			}
+			if (flag == false)
+				break;
+		}
+	}
+
+	return 0;
+}
