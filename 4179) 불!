@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+char map[1002][1002];
+bool fvisited[1002][1002];
+bool jvisited[1002][1002];
+int n, m;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+int ret=0x7fffffff;
+struct COORD {
+	int y, x;
+	int time;
+	bool fire;
+}ji;
+
+int main(void)
+{
+	scanf("%d %d", &n, &m);
+	queue<COORD> q;
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+		{
+			scanf("%c", &map[i][j]);
+			if (map[i][j] == '\n')
+				j--;
+			if (map[i][j] == 'J')
+			{
+				ji.y = i, ji.x = j, ji.time = 0, ji.fire = false;
+				map[i][j] = '.';
+			}
+			if (map[i][j] == 'F')
+			{
+				COORD fire;
+				fire.y = i, fire.x = j, fire.time = 0, fire.fire = true;
+				q.push(fire);
+				fvisited[i][j] = true;
+			}
+		}
+	q.push(ji);
+	jvisited[ji.y][ji.x] = true;
+
+	while (!q.empty())
+	{
+		COORD cur = q.front(); q.pop();
+
+		if (cur.x < 1 || cur.y < 1 || cur.x >= m + 1 || cur.y >= n + 1)
+		{
+			ret = cur.time;
+			break;
+		}
+		for (int dir = 0; dir < 4; dir++)
+		{
+			COORD next;
+			next.y = cur.y + dy[dir];
+			next.x = cur.x + dx[dir];
+			next.time = cur.time + 1;
+			next.fire = cur.fire;
+
+			if (next.fire)
+			{
+				if (next.y < 1 || next.x < 1 || next.x >= m + 1 || next.y >= n + 1)
+					continue;
+				if (map[next.y][next.x] == '#')
+					continue;
+
+				if (fvisited[next.y][next.x] == false)
+				{
+					fvisited[next.y][next.x] = true;
+					q.push(next);
+					map[next.y][next.x] = 'F';
+				}
+			}
+			else
+			{
+				if (next.y < 0 || next.x < 0 || next.x > m + 1 || next.y > n + 1)
+					continue;
+				if (map[next.y][next.x] == '#' || map[next.y][next.x] == 'F')
+					continue;
+				if (jvisited[next.y][next.x] == false)
+				{
+					jvisited[next.y][next.x] = true;
+					q.push(next);
+					
+				}
+			}
+		}
+	}
+	
+	if (ret == 0x7fffffff)
+		printf("IMPOSSIBLE\n");
+	else
+		printf("%d", ret);
+
+	return 0;
+}
