@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int compare(const void* a, const void* b)
+{
+	int aa = *(int*)a;
+	int bb = *(int*)b;
+
+	return aa - bb;
+}
+
+int house[200000];
+int n, c;
+
+
+int main(void)
+{
+	scanf("%d %d", &n, &c);
+
+	for (int i = 0; i < n; i++)
+		scanf("%d", &house[i]);
+	
+	qsort(house, n, sizeof(int), compare);
+
+	int left = 0;
+	int right = 1000000000;
+	int ret = 0;
+	while (left <= right)
+	{
+		int mid = (left + right) / 2;
+		int cnt = 1;
+		int update = house[0];
+
+		for (int i = 1; i < n; i++)
+		{	
+			if (house[i] - update >= mid)
+			{
+				cnt++;
+				update = house[i];
+			}
+		}
+
+		if (cnt < c)
+		{
+			// 덜 설치되었다면.. 범위가 크니까 줄여야함.
+			right = mid - 1;
+		}
+		else
+		{
+			//더 설치되었으면 간격이 짧다는 말이니까
+			//간격을 더 늘려야함.
+			left = mid + 1;
+			ret = mid;
+
+		}
+	}
+
+	printf("%d", ret);
+
+	return 0;
+}
