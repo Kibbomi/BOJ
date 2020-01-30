@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int map[51][51];
+struct COORD {
+	int y, x;
+	bool open;
+}c[13],house[100];
+int num = 0,housenum=0;
+int n, m;
+int ret = 0x7fffffff;
+
+void dfs(int depth, int start, int limit)
+{
+	if (depth == limit)
+	{
+		int sum = 0;
+		for (int i = 0; i < housenum; i++)
+		{
+			int candi = 0x7fffffff;
+			for (int j = 0; j < num; j++)
+			{
+				if (c[j].open)
+				{
+					//candi = min(candi, abs(house[i].x - c[j].x) + abs(house[i].y - c[j].y));
+					if (candi > abs(house[i].x - c[j].x) + abs(house[i].y - c[j].y))
+						candi = abs(house[i].x - c[j].x) + abs(house[i].y - c[j].y);
+				}
+			}
+			sum += candi;
+		}
+		//ret = min(ret, sum);
+		if (ret > sum)
+			ret = sum;
+		return;
+	}
+	for (int i = start; i < num; i++)
+	{
+		c[i].open = true;
+		dfs(depth + 1, i + 1,limit);
+		c[i].open = false;
+	}
+}
+int  main(void)
+{
+	scanf("%d %d", &n, &m);
+	
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= n; j++)
+		{
+			scanf("%d", &map[i][j]);
+
+			if (map[i][j] == 1)
+			{
+				house[housenum].y = i;
+				house[housenum].x = j;
+				housenum++;
+			}
+			if (map[i][j] == 2)
+			{
+				c[num].y = i;
+				c[num].x = j;
+				c[num].open = false;
+				num++;
+			}
+		}
+	
+	//combination
+	for(int i=1;i<=m;i++)
+		dfs(0, 0,i);
+	
+	printf("%d", ret);
+	return 0;
+}
