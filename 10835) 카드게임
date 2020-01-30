@@ -1,0 +1,49 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int n, L[2001], R[2001];
+// [i][j]개 남았을 때의 최대값.
+int dp[2001][2001];
+
+
+//left, right장 버렸을때의 최대값.
+int solution(int left, int right)
+{
+	//왼, 오른쪽 카드뭉치가 바닥을 보였을 경우.
+	if (left == n+1 || right == n+1)
+		return 0;
+
+	//memoization
+	if (dp[left][right] != -1)
+		return dp[left][right];
+
+	//실제로 구하는 부분
+	if (L[left] > R[right])
+	{
+		//right를 버리고 점수를 취함.
+		return dp[left][right] = solution(left,right+1) + R[right];
+	}
+	else
+	{
+		//왼쪽만 버릴건지, 둘다 버릴건지
+		return dp[left][right] = max(solution(left + 1, right), solution(left + 1, right + 1));
+	}
+}
+int main(void)
+{
+	scanf("%d", &n);
+
+	for (int i = 1; i <=n; i++)
+		scanf("%d", &L[i]);
+	for (int i = 1; i <=n; i++)
+		scanf("%d", &R[i]);
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= n; j++)
+			dp[i][j] = -1;
+
+	//00에서 시작
+	printf("%d", solution(1, 1));
+	return 0;
+}
