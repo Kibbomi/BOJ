@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+
+int main(void)
+{
+	int m, n;
+	scanf("%d %d", &m, &n);
+	int minval = 0x7fffffff;
+	int sum = 0;
+	for (int i = 1; i * i <= n; i++)
+	{
+		if (i*i >= m && i*i <= n)
+		{
+			sum += i*i;
+			minval = min(minval, i*i);
+		}
+	}
+	if (sum == 0)
+		printf("-1\n");
+	else
+		printf("%d\n%d", sum, minval);
+	return 0;
+}
