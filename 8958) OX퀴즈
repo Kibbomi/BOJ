@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+
+int main(void)
+{
+	int t;
+	scanf("%d", &t);
+	
+
+	for (int i = 0; i < t; i++)
+	{
+		int score = 0;
+		int weight = 0;
+		bool flag = false;
+		char data[81] = { 0 };
+		scanf("%s", data);
+		
+		for (int i = 0; data[i] != 0; i++)
+		{
+			if (data[i] == 'O')
+			{
+				if (flag)	weight++;
+				score = score + 1 + weight;
+				flag = true;
+			}
+			else
+			{
+				flag = false;
+				weight = 0;
+			}
+		}
+		printf("%d\n", score);
+
+	}
+	return 0;
+}
