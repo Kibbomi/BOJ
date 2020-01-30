@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+	while (n--)
+	{
+		int x1, y1, r1, x2, y2, r2;
+
+		scanf("%d %d %d %d %d %d", &x1, &y1, &r1, &x2, &y2, &r2);
+
+		int dis;
+		dis = (x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1);
+
+		if (dis == 0)
+		{
+			if (r1 == r2)
+				printf("-1\n");
+			else
+				printf("0\n");
+		}
+		else {
+			if (dis < (r2 - r1)*(r2 - r1))
+				printf("0\n");
+			else if (dis == (r2 - r1)*(r2 - r1))
+				printf("1\n");
+			else if (dis>(r2 - r1)*(r2 - r1) && dis<(r1 + r2)*(r1 + r2)) {/*교점이 2개*/
+				printf("2\n");
+			}
+			else if (dis == (r1 + r2)*(r1 + r2)) {
+				printf("1\n");
+			}
+			else if (dis > (r1 + r2)*(r1 + r2)) {
+				printf("0\n");
+			}
+
+
+		}
+
+
+
+		
+	}
+	return 0;
+}
