@@ -1,0 +1,110 @@
+#include <stdio.h>
+#include <vector>
+#include <string.h>
+#include <queue>
+#include<algorithm>
+using namespace std;
+
+char map[50][50];
+int t[50][50];
+bool visited[50][50];
+vector<int> v;
+int n;
+int housenum = 0, checknum = 0;
+
+struct COORD {
+	int y, x;
+}s;
+const int dx[] = { 1,1,1,0,-1,-1,-1,0 };
+const int dy[] = { -1,0,1,1,1,0,-1,-1 };
+
+int bfs(COORD cur, int left, int right)
+{
+	queue<COORD> q;
+	int retval = 0;
+
+	if (t[cur.y][cur.x] < left || t[cur.y][cur.x] >right)
+		return retval;
+
+	visited[cur.y][cur.x] = true;
+	q.push(cur);
+
+	while (!q.empty())
+	{
+		COORD c = q.front(); q.pop();
+
+		for (int dir = 0; dir < 8; dir++)
+		{
+			COORD next;
+			next.y = c.y + dy[dir];
+			next.x = c.x + dx[dir];
+
+			if (next.y < 0 || next.x < 0 || next.x >= n || next.y >= n)
+				continue;
+			if (t[next.y][next.x] < left || t[next.y][next.x] >right)
+				continue;
+
+			if (visited[next.y][next.x] == false)
+			{
+				visited[next.y][next.x] = true;
+				q.push(next);
+				if (map[next.y][next.x] == 'K')
+					retval++;
+			}
+		}
+	}
+	return retval;
+}
+int main(void)
+{
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+		{
+			scanf("%c", &map[i][j]);
+			if (map[i][j] == '\n') {
+				j--;
+				continue;
+			}
+
+		}
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+		{
+			scanf("%d", &t[i][j]);
+			v.push_back(t[i][j]);
+			if (map[i][j] == 'P') {
+				s.y = i, s.x = j;
+			}
+			if (map[i][j] == 'K') {
+				housenum++;
+			}
+		}
+	//data input the end.
+
+	sort(v.begin(),v.end());//set으로도 해보기
+	v.erase(unique(v.begin(),v.end()), v.end());
+
+	int ret = 0x7fffffff;
+
+	int i = 0, j = 0;
+	int len = v.size();
+	for (j = 0; j < len; j++)
+	{
+		while (1)
+		{
+			memset(visited, false, sizeof(visited));
+
+			checknum = 0;
+			if (bfs(s, v[i], v[j]) != housenum)
+				break;
+
+			ret = min(ret, v[j] - v[i]);
+			i++;
+		}
+	}
+
+
+	printf("%d", ret);
+	return 0;
+}
