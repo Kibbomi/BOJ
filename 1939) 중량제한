@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include <vector>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+struct LEG {
+	int v;
+	int w;
+};
+struct FIND {
+	int v;
+	int maximum;
+};
+vector<LEG> v[10001];
+
+
+
+bool bfs(int from,int to,int limit)
+{
+	bool visited[10001] = { false ,};
+	int ret = -0x7fffffff;
+
+	queue<FIND> q;
+
+	FIND start;
+	start.v = from;
+	start.maximum = 0x7fffffff;
+	visited[start.v] = true;
+	q.push(start);
+
+	while (!q.empty())
+	{
+		FIND cur = q.front(); q.pop();
+
+		if (cur.v == to)
+			return true;
+		
+
+		int len = v[cur.v].size();
+		for (int i = 0; i < len; i++)
+		{
+			FIND next;
+			next.v = v[cur.v][i].v;
+			next.maximum = min(cur.maximum, v[cur.v][i].w);
+
+			if (v[cur.v][i].w < limit)
+				continue;
+
+			if (visited[next.v] == false)
+			{
+				visited[next.v] = true;
+				q.push(next);
+			}
+		}
+	}
+	if (ret == -0x7fffffff)
+		return false;
+	else
+		return true;
+}
+int main(void)
+{
+	int n, m;
+
+	scanf("%d %d", &n, &m);
+
+	for (int i = 0; i < m; i++)
+	{
+		int from, to, wei;
+		scanf("%d %d %d", &from, &to, &wei);
+		LEG temp;
+		temp.v = to;
+		temp.w = wei;
+		v[from].push_back(temp);
+		temp.v = from;
+		v[to].push_back(temp);
+	}
+	
+	int from, to;
+	scanf("%d %d", &from, &to);
+
+
+	long long int right = 1000000000;
+	long long int left = 0;
+	int retval = -1;
+	while (left <= right)
+	{
+		bool candoit;
+		long long mid = (right + left) / 2;
+
+		//mid는 중량제한...
+		//mid보다 작은 다리는 생략
+
+		candoit = bfs(from, to,mid);
+
+		if (candoit)
+		{
+			retval = mid;
+			left = mid + 1;
+		}
+		else
+			right = mid - 1;
+	}
+
+
+	
+	printf("%d", retval);
+	
+
+	return 0;
+}
