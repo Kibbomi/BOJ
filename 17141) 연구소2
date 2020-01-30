@@ -1,0 +1,139 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+int map[50][50];
+int n, m;
+struct virus {
+	int y, x;
+	bool selected;
+}v[2500];
+int vnum;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+struct coord {
+	int y, x;
+	int time;
+};
+
+int ret = 0x7fffffff;
+bool finish = false;
+
+void dfs(int start, int count)
+{
+	if (count == m)
+	{
+		int clone[50][50];
+		bool visited[50][50] = { false, };
+		queue<coord> q;
+
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+			{
+				clone[i][j] = map[i][j];
+			}
+		
+		for (int k = 0; k < vnum; k++)
+		{
+			if (v[k].selected) {
+				clone[v[k].y][v[k].x] = 2;
+				coord temp;
+				temp.y = v[k].y;
+				temp.x = v[k].x;
+				temp.time = 0;
+
+				q.push(temp);
+				visited[temp.y][temp.x] = true;
+			}
+			
+		}
+
+		//copy complete
+		int localtime = -0x7fffffff;
+
+		while (!q.empty())
+		{
+			coord cur = q.front(); q.pop();
+
+			if (localtime < cur.time)
+			{
+				localtime = cur.time;
+			}
+
+			for (int dir = 0; dir < 4; dir++)
+			{
+				coord next;
+				next.y = cur.y + dy[dir];
+				next.x = cur.x + dx[dir];
+				next.time = cur.time + 1;
+				
+				if (next.y < 0 || next.x < 0 || next.x >= n || next.y >= n)
+					continue;
+				
+				if (visited[next.y][next.x] == false && clone[next.y][next.x] == 0)
+				{
+					q.push(next);
+					visited[next.y][next.x] = true;
+					clone[next.y][next.x] = 2;
+				}
+		
+				
+			}
+		}
+		//방을 가득채웠는지 체크
+		
+
+		for(int i=0;i<n;i++)
+			for (int j = 0; j < n; j++)
+			{
+				if (clone[i][j] == 0)
+				{
+					//이번거는 실패
+					return;
+				}
+			}
+
+		finish = true;
+		if (ret > localtime)
+			ret = localtime;
+		
+		return;
+	}
+
+	for (int i = start; i < vnum; i++)
+	{
+		v[i].selected = true;
+		dfs(i + 1, count + 1);
+		v[i].selected = false;
+	}
+}
+
+
+int main(void)
+{
+	scanf("%d %d", &n, &m);
+
+	for (int i = 0; i < n; i++){
+		for (int j = 0; j < n; j++){
+			scanf("%d", &map[i][j]);
+			if (map[i][j] == 2)
+			{
+				//좌표는 얻고 일단 0으로
+				map[i][j] = 0;
+				v[vnum].y = i;
+				v[vnum].x = j;
+				v[vnum].selected = false;
+				vnum++;
+			}
+		}
+	}
+	dfs(0, 0);
+
+	if (finish)
+		printf("%d", ret);
+	else
+		printf("-1");
+	return 0;
+}
