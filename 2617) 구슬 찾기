@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <vector>
+#include <string.h>
+using namespace std;
+int n, m;
+vector<vector<int>> h;
+vector<vector<int>> l;
+int heavy[101],light[101];
+bool hvisited[101],lvisited[101];
+int ret;
+
+int dfslight(int start)
+{
+	int result = 1;
+
+	int len = l[start].size();
+	for (int i = 0; i < len; i++)
+	{
+		int next;
+		next = l[start][i];
+		if (lvisited[next] == false)
+		{
+			lvisited[next] = true;
+			result += dfslight(next);
+		}
+		
+	}
+	return result;
+}
+int dfsheavy(int start)
+{
+	int result = 1;
+	int len = h[start].size();
+	for (int i = 0; i < len; i++)
+	{
+		int next;
+		next = h[start][i];
+		if (hvisited[next] == false)
+		{
+			hvisited[next] = true;
+			result += dfsheavy(next);
+		}
+	}
+	return result;
+}
+int main(void)
+{
+	scanf("%d %d", &n, &m);
+
+	h.resize(n + 1);
+	l.resize(n + 1);
+
+	for (int i = 0; i < m; i++)
+	{
+		int from, to;
+		scanf("%d %d", &from, &to);
+
+		h[from].push_back(to);
+		l[to].push_back(from);
+	}
+
+	for (int i = 1; i <= n; i++)
+	{
+		memset(lvisited, false, sizeof(lvisited));
+		memset(hvisited, false, sizeof(hvisited));
+		light[i] = dfslight(i);
+		heavy[i] = dfsheavy(i);
+	}
+	
+	for (int i = 1; i <= n; i++)
+	{
+		int limit = (n + 1) / 2;
+
+		if (heavy[i] > limit || light[i] > limit)
+			ret++;
+	}
+
+	printf("%d", ret);
+
+	return 0;
+}
