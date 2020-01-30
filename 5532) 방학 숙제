@@ -1,0 +1,37 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int l, a, b, c, d;
+	scanf("%d", &l);
+	scanf("%d", &a);
+	scanf("%d", &b);
+	scanf("%d", &c);
+	scanf("%d", &d);
+
+	int val = 0;
+	int val2 = 0;
+	int ret = 0;
+
+	if (a%c == 0)
+		val = a / c;
+	else
+		val = a / c + 1;
+
+	
+	
+	if (b%d == 0)
+		val2 = b / d;
+	else
+		val2 = b / d + 1;
+	
+	if (val > val2)
+		ret = val;
+	else
+		ret = val2;
+
+
+	printf("%d", l - ret);
+
+	return 0;
+}
