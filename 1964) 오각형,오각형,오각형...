@@ -1,0 +1,19 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+	long long int n;
+	scanf("%lld", &n);
+
+	long long int a1 = 5;
+	long long int b1 = 7;
+	long long int d = 3;
+	long long int ret;
+
+	ret = a1 + ((n - 1)*(2 * b1 + (n - 2)*d)) / 2;
+
+	printf("%lld", ret%45678);
+	return 0;
+}
