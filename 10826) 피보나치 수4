@@ -1,0 +1,65 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+string dp[10001];
+
+string sumstring(string a, string b)
+{
+	string ret;
+	int carry = 0, cur_sum = 0, left = 0, right = 0;
+
+	//a+b
+	//compare and set the length
+	int alen = a.length();
+	int blen = b.length();
+
+	if (alen > blen)
+	{
+		for (int i = 0; i < alen - blen; ++i)
+			b.push_back('0');
+	}
+	else
+	{
+		for (int i = 0; i < blen - alen; ++i)
+			a.push_back('0');
+	}
+
+	for (int i = 0; i < alen; ++i)
+	{
+		cur_sum = a[i] - '0' + b[i] - '0' + carry;
+
+		carry = cur_sum / 10;
+		int next_sum = cur_sum % 10;
+
+		ret.push_back(next_sum+'0');
+	}
+	
+	if (carry != 0)
+		ret.push_back(carry+'0');
+
+	return ret;
+}
+
+int main(void)
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int val;
+	cin >> val;
+	dp[0] = "0";
+	dp[1] = "1";
+	
+	for (int i = 2; i <= val; ++i)
+		dp[i] = sumstring(dp[i - 1], dp[i - 2]);
+	
+
+	int len = dp[val].length();
+
+	for (int i = len - 1; i >= 0; --i)
+		cout << dp[val][i];
+
+	return 0;
+}
