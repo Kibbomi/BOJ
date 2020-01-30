@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+
+int n, m;
+int value[100];
+int ret[100];
+bool visited[100] = { false, };
+
+int compare(const void* num1, const void* num2)
+{
+	int a = *(int*)num1;
+	int b = *(int*)num2;
+
+	if (a < b) return -1;
+	if (a > b) return 1;
+	return 0;
+}
+void dfs(int count)
+{
+	if (count == m)
+	{
+		for (int i = 0; i < m; i++)
+		{
+			printf("%d ", ret[i]);
+		}
+		printf("\n");
+		return;
+	}
+
+	for (int i =0; i < n; i++)
+	{
+		if (visited[i] == false)
+		{
+			visited[i] = true;
+			ret[count] = value[i];
+			dfs(count + 1);
+			visited[i] = false;
+		}
+	}
+}
+
+int main (void)
+{
+	scanf("%d %d", &n, &m);
+	for (int i = 0; i < n; i++)
+	{
+		scanf("%d", &value[i]);
+	}
+	qsort(value, n, sizeof(int), compare);
+	dfs(0);
+	return 0;
+}
