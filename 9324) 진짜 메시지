@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <string.h>
+
+char temp[100000];
+
+int main(void)
+{
+	int n;
+	scanf("%d ", &n);
+	
+	while (n--)
+	{
+		int alpha[26] = { 0 };
+		bool isright = true;
+		scanf("%s", temp);
+		int len = strlen(temp);
+
+		for (int i = 0; i < len; i++){
+			alpha[temp[i] - 'A']++;
+			
+			if (alpha[temp[i] - 'A'] % 3 == 0)
+			{
+				i++;
+				if (temp[i - 1] != temp[i]){
+					isright = false;
+					printf("FAKE\n");
+					break;
+				}
+			}
+		}
+		if (isright)
+			printf("OK\n");
+	}
+
+	return 0;
+}
