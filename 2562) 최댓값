@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int num[10];
+
+int main(void)
+{
+	for (int i = 1; i < 10; i++)
+	{
+		scanf("%d", &num[i]);
+	}
+	int ret = -0x7ffffff;
+	int retnum = 0;
+
+	for (int i = 1; i < 10; i++)
+	{
+		if (ret < num[i])
+		{
+			ret = num[i];
+			retnum = i;
+		}
+	}
+
+	printf("%d\n%d", ret, retnum);
+	return 0;
+}
