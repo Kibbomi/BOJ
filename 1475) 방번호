@@ -1,0 +1,32 @@
+#include <algorithm>
+#include <iostream>
+using namespace std;
+int main(void)
+{
+	int n;
+	cin >> n;
+	int use[10] = { 0 };
+	if (n == 0)
+	{
+		cout << "1";
+		return 0;
+	}
+	while (n != 0)
+	{
+		use[n % 10]++;
+		n /= 10;
+	}
+	int temp = use[6] + use[9];
+
+	use[9] = temp / 2;
+	use[6] = temp - use[9];
+
+	int ret = -0x7fffffff;
+
+	for (int i = 0; i <= 9; i++)
+	{
+		ret = max(ret, use[i]);
+	}
+	cout << ret;
+	return 0;
+}
