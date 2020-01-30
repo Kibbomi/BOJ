@@ -1,0 +1,16 @@
+#include <stdio.h>
+int n;
+
+int fac(int val)
+{
+	if (val == 1) return 1;
+	if (val == 0)return 1;
+	return val*fac(val - 1);
+}
+int main(void)
+{
+	scanf("%d", &n);
+
+	printf("%d", fac(n));
+	return 0;
+}
