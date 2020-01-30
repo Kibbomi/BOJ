@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <algorithm>
+#include <string.h>
+using namespace std;
+
+int dp[501][501];
+int map[501];
+int sum[501];
+
+int main(void)
+{
+	int t;
+	scanf("%d", &t);
+	while (t--)
+	{
+		memset(dp, 0, sizeof(dp));
+		memset(map, 0, sizeof(map));
+		
+		
+		int n;
+		scanf("%d", &n);
+
+		for (int i = 1; i <= n; i++)
+		{
+			scanf("%d", &map[i]);
+			sum[i] = sum[i - 1] + map[i];
+		}
+
+		for (int j = 2; j <= n; j++)
+		{
+			for (int i = j-1; i>=1; i--)
+			{
+				//양 끝이 i와 j이다.
+				dp[i][j] = 0x7fffffff;
+				for (int k = i; k <= j; k++)
+				{
+					dp[i][j] = min(dp[i][j], dp[i][k] + dp[k + 1][j]);
+				}
+				dp[i][j] += sum[j] - sum[i - 1];
+			}
+		}
+		printf("%d\n", dp[1][n]);
+	}
+
+	return 0;
+}
