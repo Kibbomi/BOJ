@@ -1,0 +1,51 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+
+int dp[1001];
+//마지막그룹의 최대 최솟값
+int val[1001],minval[1001],maxval[1001];
+int n;
+
+int main(void)
+{
+	scanf("%d", &n);
+
+	for (int i = 1; i <= n; i++)
+		scanf("%d", &val[i]);
+	
+	minval[1] = maxval[1] = val[1];
+
+
+	for (int i = 2; i <= n; i++)
+	{
+		//For dp[i-1]
+		int nextmax = maxval[i - 1];
+		int nextmin = minval[i - 1];
+		int nextdp = dp[i - 1] - (maxval[i - 1] - minval[i - 1]);
+
+		nextmax = max(nextmax, val[i]);
+		nextmin = min(nextmin, val[i]);
+		
+		int onestep = nextdp + (nextmax - nextmin);
+		int twostep = dp[i - 2] + abs(val[i - 1] - val[i]);
+
+		if( onestep > twostep)
+		{
+			maxval[i] = nextmax;
+			minval[i] = nextmin;
+			dp[i] = onestep;
+		}
+		else
+		{
+			maxval[i] = max(val[i], val[i - 1]);
+			minval[i] = min(val[i], val[i - 1]);
+			dp[i] = twostep;
+		}
+	}
+
+	printf("%d", dp[n]);
+
+	return 0;
+}
