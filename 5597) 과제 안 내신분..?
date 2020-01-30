@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int num[31];
+
+int main(void)
+{
+	for (int i = 0; i < 28; i++)
+	{
+		int temp;
+		scanf("%d", &temp);
+		num[temp]++;
+	}
+	for (int i = 1; i <= 30; i++)
+	{
+		if (num[i] == 0)
+			printf("%d\n", i);
+	}
+
+	return 0;
+}
