@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+double win, lose, draw;
+
+double bronze, silver, gold, platinum, diamond;
+
+double dp[21][3001];
+//열-> 점수 갖고 있는 값은 확률..
+int main(void)
+{
+	
+	
+	scanf("%lf %lf %lf", &win, &lose, &draw);
+
+	dp[0][2000] = 1;
+
+	for (int i = 1; i <= 20; i++)
+	{
+		for (int j = 1000; j <= 3000; j++)
+		{
+			if (dp[i - 1][j] == 0) continue;
+			
+				dp[i][j - 50] += dp[i-1][j] * lose;
+				dp[i][j] += dp[i-1][j] * draw;
+				dp[i][j + 50] += dp[i-1][j] * win;
+		}
+	}
+	
+	for (int i = 1000; i <= 3000; i++)
+	{
+		
+			if (i < 1500)
+				bronze += dp[20][i];
+			else if (1500 <= i && i < 2000)
+				silver += dp[20][i];
+			else if (2000 <= i && i < 2500)
+				gold += dp[20][i];
+			else if (2500 <= i && i < 3000)
+				platinum += dp[20][i];
+			else if ( 3000<= i)
+				diamond += dp[20][i];
+
+		
+	}
+	printf("%.8lf\n", bronze);
+	printf("%.8lf\n", silver);
+	printf("%.8lf\n", gold);
+	printf("%.8lf\n", platinum);
+	printf("%.8lf\n", diamond);
+	return 0;
+}
