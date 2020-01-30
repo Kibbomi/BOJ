@@ -1,0 +1,45 @@
+#include <stdio.h>
+
+
+int te(int n)
+{
+	int ret = 0;
+	while (n > 0)
+	{
+		ret += n % 10;
+		n /= 10;
+	}
+	return ret;
+}
+int tw(int n)
+{
+	int ret = 0;
+	while (n > 0)
+	{
+		ret += n % 12;
+		n /= 12;
+	}
+	return ret;
+}
+int si(int n)
+{
+	int ret = 0;
+	while (n > 0)
+	{
+		ret += n % 16;
+		n /= 16;
+	}
+	return ret;
+}
+
+int main(void)
+{
+	for (int i = 1000; i <= 9999; i++){
+		int ten, twelve, sixteen;
+
+		if (te(i) == si(i) && si(i) == tw(i))
+			printf("%d\n", i);
+	}
+
+	return 0;
+}
