@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+int n, l, r;
+int map[50][50];
+int group[50][50];
+
+struct COORD {
+	int y, x;
+};
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+bool grouping(void)
+{
+	bool grouping[50][50] = { false, };
+	int val[2501] = { 0 };
+	int groupnum = 0;
+		
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			if (grouping[i][j] == false)
+			{
+				groupnum++;
+				int sum = 0;
+				int peoplenum = 0;
+				queue<COORD>q;
+				COORD s;
+				s.y = i, s.x = j;
+				grouping[i][j] = true;
+				q.push(s);
+
+				while (!q.empty())
+				{
+					COORD cur = q.front(); q.pop();
+					
+					group[cur.y][cur.x] = groupnum;
+					sum += map[cur.y][cur.x];
+					peoplenum++;
+
+					for (int dir = 0; dir < 4; dir++)
+					{
+						COORD next;
+						next.x = cur.x + dx[dir];
+						next.y = cur.y + dy[dir];
+
+						if (next.x < 0 || next.y < 0 || next.x >= n || next.y >= n)
+							continue;
+						if (abs(map[next.y][next.x] - map[cur.y][cur.x]) <l || abs(map[next.y][next.x] - map[cur.y][cur.x])>r)
+							continue;
+						if (grouping[next.y][next.x] == false)
+						{
+							grouping[next.y][next.x] = true;
+							q.push(next);
+						}
+					}
+				}
+				if (peoplenum == 1)
+				{
+					group[i][j] = 0;
+					groupnum--;
+				}
+				else
+				{
+					val[groupnum] = sum / peoplenum;
+				}
+				
+			}
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			if(group[i][j] != 0)
+				map[i][j] = val[group[i][j]];
+			
+		
+	if (groupnum == 0)
+		return false;
+	else return true;
+}
+int  main(void)
+{
+	int ret = 0;
+	scanf("%d %d %d", &n, &l, &r);
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			scanf("%d", &map[i][j]);
+	
+	while (grouping())
+		ret++;
+
+	printf("%d", ret);
+
+	return 0;
+}
