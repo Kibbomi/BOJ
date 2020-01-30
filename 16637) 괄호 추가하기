@@ -1,0 +1,100 @@
+#include <stdio.h>
+int n;
+char val[20];
+bool check[20] = { false, };
+
+int ret = -0x7fffffff;
+
+void dfs(int depth, int start, int limit)
+{
+	if (depth == limit)
+	{
+		int temp;
+		temp = val[0]-'0';
+		for (int i = 2; i < n;)
+		{
+			if (check[i])
+			{
+				int a=0;
+				if (val[i + 1] == '+')
+				{
+					a = val[i]-'0' + val[i + 2]-'0';
+				}
+				else if (val[i+1] == '-')
+				{
+					a = val[i] - '0' - (val[i + 2] - '0');
+				}
+				else if (val[i + 1] == '*')
+				{
+					a = (val[i] - '0') * (val[i + 2] - '0');
+				}
+				else if (val[i + 1] == '/')
+				{
+					a = (val[i] - '0') / (val[i + 2] - '0');
+				}
+
+
+				if (val[i - 1] == '+')
+				{
+					temp = temp + a;
+				}
+				else if (val[i - 1] == '-')
+				{
+					temp = temp - a;
+				}
+				else if (val[i - 1] == '*')
+				{
+					temp = temp * a;
+				}
+				else if (val[i - 1] == '/')
+				{
+					temp = temp / a;
+				}
+				i += 4;
+			}
+			else
+			{
+				if (val[i - 1] == '+')
+				{
+					temp = temp + val[i]-'0';
+				}
+				else if (val[i - 1] == '-')
+				{
+					temp = temp - (val[i]-'0');
+				}
+				else if (val[i - 1] == '*')
+				{
+					temp = temp * (val[i] - '0');
+				}
+				else if (val[i - 1] == '/')
+				{
+					temp = temp / (val[i] - '0');
+				}
+				i += 2;
+			}
+		}
+		if (ret < temp)
+			ret = temp;
+		return;
+	}
+	for (int i = start; i <= n-3; i=i+2)
+	{
+		check[i] = true;
+		dfs(depth + 1, i + 4, limit);
+		check[i] = false;
+	}
+}
+int main(void)
+{
+	scanf("%d", &n);
+	scanf("%s", val);
+
+	int num = (n-1) / 4;
+
+	for (int i = 0; i <= num; i++)
+		dfs(0, 0, i);
+	
+
+	printf("%d", ret);
+	return 0;
+}
