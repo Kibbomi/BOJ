@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+vector<pair<int,int>> photo;
+bool compare(pair<int,int> a, pair<int, int> b)
+{
+	return a.first < b.first;
+}
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+	int m;
+	scanf("%d", &m);
+
+
+	for (int i = 0; i < m; i++)
+	{
+		int candi;
+		bool isin = false;
+		scanf("%d", &candi);
+
+		int len = photo.size();
+
+		//이미 게시되어 있는지 검사 필요.
+		for (int k = 0; k < len; k++)
+		{
+			if (photo[k].first == candi)
+			{
+				isin = true;
+				photo[k].second++; //추천수 증가
+			}
+		}
+
+		if (isin)
+			continue;
+
+		if (len == n)
+		{
+			int least = 987654231;
+			//추천의 최솟값 구하기
+			for (int k = 0; k < len; k++)
+				if (photo[k].second < least)
+					least = photo[k].second;
+
+
+			//최솟값이고 오래있었던 사람 삭제
+			for (int k = 0; k < len; k++)
+				if (photo[k].second == least)
+				{
+					photo.erase(photo.begin() + k);
+					//photo[k].first = candi;
+					//photo[k].second = 1;
+					break;
+				}
+			photo.push_back(make_pair(candi, 1));
+		}
+		else
+			photo.push_back(make_pair(candi,1));
+		
+	}
+
+	sort(photo.begin(), photo.end(), compare);
+	int retlen = photo.size();
+	for (int k = 0; k < retlen; k++)
+		printf("%d ", photo[k].first);
+	return 0;
+}
