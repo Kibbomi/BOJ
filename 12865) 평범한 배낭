@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int bag[101][100001];
+// bag[i][j]
+// i개까지 넣었을때, j무게일때의 값.
+
+struct VAL {
+	int w;
+	int val;
+}stuff[101];
+
+int main(void)
+{
+	int n, w;
+	scanf("%d %d", &n, &w);
+	//knapsack 은 table을 얼마나 잘 만드느냐..
+	for (int i = 1; i <= n; i++)
+		scanf("%d %d", &stuff[i].w, &stuff[i].val);
+	
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= w; j++)
+		{
+			if (j - stuff[i].w >= 0)
+			{
+				bag[i][j] = max(bag[i - 1][j], bag[i - 1][j - stuff[i].w] + stuff[i].val);
+			}
+			else
+				bag[i][j] = bag[i - 1][j];
+		}
+	}
+	printf("%d", bag[n][w]);
+
+	return 0;
+}
