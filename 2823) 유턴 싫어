@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+//전 우 후 좌
+const int dx[] = { 0,1,0,-1 };
+const int dy[] = { -1,0,1,0 };
+
+char map[10][10];
+int r, c;
+
+int main(void)
+{
+	scanf("%d %d ", &r, &c);
+	for (int i = 0; i < r; i++)
+		scanf("%s", map[i]);
+		
+
+	for (int i = 0; i < r; i++)
+	{
+		for (int j = 0; j < c; j++)
+		{
+			if (map[i][j] == '.')
+			{
+				int check = 0;
+
+				for (int dir = 0; dir < 4; dir++)
+				{
+					int ny = i + dy[dir];
+					int nx = j + dx[dir];
+
+					if (ny < 0 || nx < 0 || nx >= c || ny >= r||map[ny][nx] == 'X')
+						continue;
+
+					check++;
+				}
+				if (check == 1)
+				{
+					printf("1\n");
+					return 0;
+				}
+				
+			}
+		}
+	}
+	printf("0");
+	return 0;
+}
