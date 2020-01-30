@@ -1,0 +1,46 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n;
+	int base[2] = { 0 };
+	scanf("%d", &n);
+
+	if (n < 10)
+	{
+		base[0] = 0;
+		base[1] = n;
+	}
+	else
+	{
+		base[0] = n / 10;
+		base[1] = n % 10;
+	}
+	
+	bool flag = true;
+	
+	int comp[2] = { 0 };
+	comp[0] = base[0];
+	comp[1] = base[1];
+	int count = 0;
+	while (flag)
+	{
+		int ret = 0;
+
+		ret = comp[0] + comp[1];
+
+		ret = ret % 10;
+
+		comp[0] = comp[1];
+		comp[1] = ret;
+
+		if (comp[0] == base[0] && comp[1] == base[1])
+			flag = false;
+
+		count++;
+	}
+
+	printf("%d\n", count);
+
+	return 0;
+}
