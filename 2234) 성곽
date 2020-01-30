@@ -1,0 +1,159 @@
+#include <stdio.h>
+#include <queue>
+#include <vector>
+using namespace std;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+const int bitcheck[] = { 4,1,8,2 };
+
+struct COORD {
+	int y, x;
+	int time;
+	bool isbreak;
+};
+
+int map[51][51];
+bool roomcheck[51][51];
+
+int group[51][51];
+int groupnum = 0;
+int groupval[2510];
+//0은 제거x 1은 1개 제거o
+
+bool boundary[51][51];
+
+int main(void)
+{
+	int n, m;
+	scanf("%d %d", &m, &n);
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			scanf("%d", &map[i][j]);
+
+	int roommax = 0;
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+		{
+			if (!roomcheck[i][j])
+			{
+				int count = 0;
+				groupnum++;
+
+				queue<COORD> q;
+
+				COORD start;
+				start.y = i, start.x = j;
+				start.time = 0, start.isbreak = false;
+				group[i][j] = groupnum;
+				q.push(start);
+				roomcheck[start.y][start.x] = true;
+
+				while (!q.empty())
+				{
+					COORD cur = q.front(); q.pop();
+					count++;
+					if (count > roommax)
+						roommax = count;
+					for (int dir = 0; dir < 4; dir++)
+					{
+						COORD next;
+						next.y = cur.y + dy[dir];
+						next.x = cur.x + dx[dir];
+						next.time = cur.time + 1;
+						next.isbreak = cur.isbreak;
+
+						//맵 바깥이면,
+						if (next.x < 0 || next.y < 0 || next.x >= m || next.y >= n)
+							continue;
+
+						//벽이 막혀있으면, 동 서 남 북
+						if (map[cur.y][cur.x] & bitcheck[dir])
+							continue;
+
+						//그게 아니면,
+						if (!roomcheck[next.y][next.x])
+						{
+							group[next.y][next.x] = groupnum;
+							roomcheck[next.y][next.x] = true;
+							q.push(next);
+						}
+
+
+					}
+				}
+			}
+		}
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			groupval[group[i][j]]++;
+
+	//bfs로 경계 검색
+	int breakmax = 0;
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+		{
+			if (!boundary[i][j])
+			{
+				int mygroup = group[i][j];
+				queue<COORD> q;
+
+				COORD start;
+				start.y = i, start.x = j;
+				start.time = 0, start.isbreak = false;
+				q.push(start);
+				boundary[start.y][start.x] = true;
+
+				while (!q.empty())
+				{
+					COORD cur = q.front(); q.pop();
+					//딱 한번만 들어감. 인접한 그룹은
+					if (group[cur.y][cur.x] != mygroup)
+					{
+						//다른 그룹이라면,
+						int temp = groupval[mygroup] + groupval[group[cur.y][cur.x]];
+
+						if (temp > breakmax)
+							breakmax = temp;
+
+						continue;
+					}
+
+					for (int dir = 0; dir < 4; dir++)
+					{
+						COORD next;
+						next.y = cur.y + dy[dir];
+						next.x = cur.x + dx[dir];
+						next.time = cur.time + 1;
+						next.isbreak = cur.isbreak;
+
+						//맵 바깥이면,
+						if (next.x < 0 || next.y < 0 || next.x >= m || next.y >= n)
+							continue;
+
+						if (!roomcheck[next.y][next.x] && mygroup)
+						{
+							//내그룹은 그냥 방문만.
+							roomcheck[next.y][next.x] = true;
+							q.push(next);
+						}
+						else if (group[next.y][next.x] != mygroup)
+						{
+							//근접한 다른친구는 그냥 방문처리 안하고 ㄱㄱ
+							q.push(next);
+						}
+
+
+					}
+				}
+			}
+		}
+	
+
+		
+	printf("%d\n%d\n%d", groupnum, roommax, breakmax );
+	return 0;
+}
