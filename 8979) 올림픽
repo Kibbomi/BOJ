@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+struct ORDER {
+	int gold, silver, bronze;
+	int name;
+	int ordernum;
+};
+
+vector <ORDER> v;
+bool compare(ORDER a, ORDER b)
+{
+	if (a.gold > b.gold)
+		return a.gold > b.gold;
+	else if (a.gold == b.gold && a.silver > b.silver)
+		return a.silver > b.silver;
+	else if (a.gold == b.gold && a.silver == b.silver && a.bronze > b.bronze)
+		return a.bronze > b.bronze;
+	else
+		return false;
+
+}
+int main(void)
+{	
+	int n, k;
+	scanf("%d %d", &n, &k);
+
+	for (int i = 0; i < n; i++)
+	{
+		ORDER temp;
+		scanf("%d %d %d %d", &temp.name, &temp.gold, &temp.silver, &temp.bronze);
+		temp.ordernum = 1;
+		v.push_back(temp);
+	}
+	sort(v.begin(), v.end(), compare);
+	int len = v.size();
+
+	for (int i = 0; i < len - 1; i++)
+	{
+		if (v[i].gold == v[i + 1].gold && v[i].silver == v[i + 1].silver &&
+			v[i].bronze == v[i + 1].bronze)
+		{
+			v[i + 1].ordernum = v[i].ordernum;
+		}
+		else
+			v[i + 1].ordernum += (i + 1);
+	}
+	for (int i = 0; i < len; i++)
+	{
+		if (v[i].name == k)
+		{
+			printf("%d", v[i].ordernum);
+			return 0;
+		}
+	}
+	return 0;
+}
