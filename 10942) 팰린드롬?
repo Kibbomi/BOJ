@@ -1,0 +1,71 @@
+#include <cstdio>
+#include <vector>
+using namespace std;
+
+int n, m;
+//vector<int> v;	//try normal array
+int arr[2001] = { 0 , };
+int dp[2001][2001] = {0,};
+
+int main(void)
+{
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++)
+	{
+		int val;
+		scanf("%d", &val);
+		arr[i] = val;
+	}
+	int t;
+	scanf("%d", &t);
+
+	while (t--)
+	{
+		int s, e;
+		scanf("%d %d", &s, &e);
+		int clone_s=s, clone_e=e;
+
+
+		if (dp[s][e] == 1)
+			printf("1\n");
+		else if (dp[s][e] == -1)
+			printf("0\n");
+		else
+		{
+			while (s <= e)
+			{
+				if (arr[s] != arr[e])
+				{
+					printf("0\n");
+
+					clone_s = s, clone_e = e;
+
+					while (clone_s >= 1 && clone_e <= n)
+					{
+						dp[clone_s][clone_e] = -1;
+						clone_s--, clone_e++;
+					}
+					break;
+				}
+				else
+				{
+					s++, e--;
+				}
+			}
+			if (s > e)
+			{
+				while (clone_s <= clone_e)
+				{
+					dp[clone_s][clone_e] = 1;
+					clone_s++, clone_e--;
+				}
+				printf("1\n");
+			}
+		}
+
+	}
+
+
+	
+	return 0;
+}
