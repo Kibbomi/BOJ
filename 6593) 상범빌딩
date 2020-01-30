@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+struct COORD {
+	int x, y, z;
+	int time;
+};
+const int dx[] = { 1,-1,0,0,0,0 };
+const int dy[] = { 0,0,1,-1,0,0 };
+const int dz[] = { 0,0,0,0,1,-1 };
+int main(void)
+{
+	while (1)
+	{
+		int l, r, c;
+		scanf("%d %d %d", &l, &r, &c);
+
+		if (l == 0 && r == 0 && c == 0)	break;
+
+		char map[30][30][30] = { 0 };
+		bool visited[30][30][30] = { false, };
+		bool isfind = false;
+		COORD sb, door;
+		
+		for (int k = l - 1; k >= 0; k--) {
+			for (int i = 0; i < r; i++) {
+				for (int j = 0; j < c; j++) {
+					scanf("%c", &map[k][i][j]);
+					if (map[k][i][j] == '\n')
+						j--;
+					else if (map[k][i][j] == 'S')
+						sb.x = j, sb.y = i, sb.z = k, sb.time = 0;
+					else if (map[k][i][j] == 'E')
+						door.x = j, door.y = i, door.z = k;
+				}
+			}
+		}
+		
+	
+		//입력 완료
+		queue<COORD> q;
+		visited[sb.z][sb.y][sb.x] = true;
+		q.push(sb);
+
+		while (!q.empty())
+		{
+			COORD cur = q.front(); q.pop();
+			if (cur.z == door.z && cur.y == door.y && cur.x == door.x)
+			{
+				isfind = true;
+				printf("Escaped in %d minute(s).\n", cur.time);
+				break;
+			}
+			for (int dir = 0; dir < 6; dir++)
+			{
+				COORD next;
+				next.x = cur.x + dx[dir];
+				next.y = cur.y + dy[dir];
+				next.z = cur.z + dz[dir];
+				next.time = cur.time + 1;
+
+				if (next.x < 0 || next.y < 0 || next.z < 0 ||
+					next.x >= c || next.y >= r || next.z >= l ||
+					map[next.z][next.y][next.x] == '#')
+					continue;
+
+				if (visited[next.z][next.y][next.x] == false)
+				{
+					visited[next.z][next.y][next.x] = true;
+					q.push(next);
+				}
+			}
+		}
+		if (!isfind)
+		{
+			printf("Trapped!\n");
+		}
+	}
+	return 0;
+}
