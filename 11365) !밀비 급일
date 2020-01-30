@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	while (1)
+	{
+		char temp[501] = { 0 };
+		char linefeed;
+		scanf("%[^\n]", temp);
+		scanf("%c", &linefeed);
+		//scanf("%s", temp);
+		if (strcmp(temp, "END")==0)
+			break;
+		int len = strlen(temp);
+
+		for (int i = len-1; i >= 0; i--)
+			printf("%c", temp[i]);
+		printf("\n");
+
+	}
+	
+
+
+	return 0;
+}
