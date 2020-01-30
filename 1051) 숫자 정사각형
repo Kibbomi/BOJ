@@ -1,0 +1,48 @@
+#include <stdio.h>
+
+char map[50][50];
+int n, m;
+
+int main(void)
+{
+	scanf("%d %d", &n, &m);
+	int minlen = 0;
+
+	for (int i = 0; i < n; i++)
+			scanf("%s", map[i]);
+	
+	if (m > n)
+		minlen = n;
+	else
+		minlen = m;
+
+	int ret = 1;
+	int s = 1;
+
+	for ( s = 1; s <= minlen; s++)
+	{
+		bool isfind = false;
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++)
+			{
+				if (i + s >= n || j + s >= m)
+					continue;
+				//사각형 4개가 같으면
+				if (map[i][j] == map[i][j + s] && map[i + s][j] == map[i + s][j + s]
+					&& map[i][j + s] == map[i + s][j + s])
+				{
+					isfind = true;
+					if (ret < s+1)
+						ret = s+1;
+					break;
+				}
+			}
+			if (isfind)
+				break;
+		}
+	}
+
+	printf("%d", ret*ret);
+	return 0;
+}
