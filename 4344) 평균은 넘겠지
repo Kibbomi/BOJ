@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int t;
+	scanf("%d", &t);
+
+	for (int i = 0; i < t; i++)
+	{
+		int student[1000] = { 0 };
+		int studentnum = 0;
+
+		scanf("%d", &studentnum);
+		int num = 0;
+		int sum = 0;
+		for (int j = 0; j < studentnum; j++)
+		{
+			int temp;
+			scanf("%d", &temp);
+			student[num++] = temp;
+			sum += temp;
+		}
+
+		double average = (double)sum / (double)studentnum;
+		int count = 0;
+		for (int j = 0; j < studentnum; j++)
+		{
+			if ((double)student[j] > average)
+				count++;
+		}
+		printf("%.3lf%%\n", (double)count / (double)studentnum*100);
+
+
+	}
+	return 0;
+}
