@@ -1,0 +1,57 @@
+#include <stdio.h>
+using namespace std;
+
+int main(void)
+{
+	int x=1, y = 1;
+	// x / y
+	int n = 1;
+	bool flag = false;
+	int ret;
+	int count = 0;
+	scanf("%d", &ret);
+
+	while (1)
+	{
+		for (int i = 1; i < n; i++)
+		{
+			if (flag)
+			{
+				x++;
+				y--;
+				count++;
+			}
+			else
+			{
+				x--;
+				y++;
+				count++;
+			}
+			if (count == ret-1)
+			{
+				printf("%d/%d", x, y);
+				return 0;
+			}
+		}
+
+		n++;
+		if (flag == false) {
+			flag = true;
+			y++;
+			count++;
+		}
+		else
+		{
+			flag = false;
+			x++;
+			count++;
+		}
+		if (count == ret-1)
+		{
+			printf("%d/%d", x, y);
+			return 0;
+		}
+
+	}
+	return 0;
+}
