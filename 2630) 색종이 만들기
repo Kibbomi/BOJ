@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+int map[128][128];
+int retone;
+int retzero;
+void divide(int left, int right, int up, int down)
+{
+	if (left <= right && up <= down)
+	{
+		int sum = 0;
+		bool flag = true;
+		//check condition
+		for(int i=up;i<=down;i++)
+			for (int j = left; j <= right; j++)
+			{
+				sum += map[i][j];
+			}
+		if (sum == (right - left + 1) *(right- left + 1) || sum==0)
+		{
+			//end condition
+			flag = false;
+			if (sum == 0)
+			{
+				retzero++;
+			}
+			else
+			{
+				retone++;
+			}
+		}
+		
+		if (flag)
+		{
+			//divide
+			int horizontal = 0, vertical = 0;
+			horizontal = (left + right) / 2;
+			vertical = (up + down) / 2;
+
+			divide(left, horizontal, up, vertical);
+			divide(left, horizontal, vertical+1, down);
+			divide(horizontal+1, right, up, vertical);
+			divide(horizontal+1, right, vertical+1, down);
+		}
+	}
+	return;
+}
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+
+	for(int i=0;i<n;i++)
+		for (int j = 0; j < n; j++)
+			scanf("%d", &map[i][j]);
+		
+	divide(0, n - 1, 0, n - 1);
+
+	printf("%d\n%d", retzero, retone);
+	return 0;
+}
