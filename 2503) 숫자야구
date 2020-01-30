@@ -1,0 +1,64 @@
+#include<stdio.h>
+struct num {
+	char val[4];
+	int s, b;
+}v[100];
+
+int base[3];
+int ret;
+int n;
+
+void dfs( int depth)
+{
+	if (depth == 3)
+	{
+		//같은숫자 제거
+		if (base[0] == base[1] || base[0] == base[2] || base[1] == base[2])
+			return;
+
+
+		//brute force...
+		for (int i = 0; i < n; i++)
+		{
+			int strike = 0, ball = 0;
+			
+			for (int j = 0; j < 3; j++)
+			{
+				for (int k = 0; k < 3; k++)
+				{
+					if (base[j] == v[i].val[k]-'0' && k == j)
+					{
+						strike++;
+					}
+					if (base[j] == v[i].val[k] - '0' && k != j)
+					{
+						ball++;
+					}
+				}
+			}
+
+			if (v[i].s != strike || v[i].b != ball)
+				return;
+		}
+		ret++;
+		return;
+	}
+
+	for (int i = 1; i < 10; i++)
+	{
+		base[depth] = i;
+		dfs(depth + 1);
+		base[depth] = -1;
+	}
+
+}
+int main(void)
+{	
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++)
+		scanf("%s %d %d", v[i].val, &v[i].s, &v[i].b);
+	
+	dfs(0);
+	printf("%d", ret);
+	return 0;
+}
