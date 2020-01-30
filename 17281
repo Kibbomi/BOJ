@@ -1,0 +1,129 @@
+#include <stdio.h>
+
+int n;
+int hit[51][10];
+int order[10];
+int num[] = { 0,0,1,1,1,1,1,1,1,1 };
+int ret = -0x7fffffff;
+void dfs(int depth)
+{
+	if (depth == 4)
+	{
+		order[depth] = 1;
+		dfs(depth + 1);
+	}
+	if (depth == 10)
+	{
+		int thisscore = 0;
+
+		int next = 1;
+
+		for (int i = 1; i <= n; i++)
+		{
+			bool base[4] = { false, };
+			int getscore = 0;
+			int outcount = 0;
+			//i번째 이닝..
+			while (outcount != 3)
+			{
+				
+				if (hit[i][order[next]] == 0)
+				{
+					outcount++;
+					
+				}
+				else if (hit[i][order[next]] == 1)
+				{
+					if (base[3] == true)
+						getscore++;
+					base[3] = false;
+
+					if (base[2])
+					{
+						base[2] = false;
+						base[3] = true;
+					}
+					if (base[1])
+					{
+						base[1] = false;
+						base[2] = true;
+					}
+					base[1] = true;
+				}
+				else if (hit[i][order[next]] == 2)
+				{
+					for (int i = 2; i <= 3; i++)
+						if (base[i])
+							getscore++;
+
+					for (int i = 2; i <= 3; i++)
+						base[i] = false;
+
+					base[2] = true;
+
+					if (base[1] == true)
+					{
+						base[1] = false;
+						base[3] = true;
+					}
+						
+				}
+				else if (hit[i][order[next]] == 3)
+				{
+					//주자
+					for (int i = 1; i <= 3; i++)
+						if (base[i])
+							getscore++;
+					for (int i = 1; i <= 3; i++)
+						base[i] = false;
+					base[3] = true;
+				}
+				else if (hit[i][order[next]] == 4)
+				{
+					//주자
+					for (int i = 0; i <= 3; i++)
+						if (base[i])
+							getscore++;
+					//타자
+					getscore++;
+					for (int i = 1; i <= 3; i++)
+						base[i] = false;
+				}
+				next = (next % 9) + 1;
+			}
+			outcount = 0;
+			thisscore += getscore;
+		}
+		if (ret < thisscore)
+			ret = thisscore;
+
+		return;
+	}
+
+	//순열.
+	for (int i = 0; i <= 9; i++)
+	{
+		num[i]--;
+		if (num[i] >= 0)
+		{
+			order[depth] = i;
+			dfs(depth + 1);
+			order[depth] = 0;
+		}
+		num[i]++;
+	}
+}
+
+int main(void)
+{
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= 9; j++)
+				scanf("%d", &hit[i][j]);
+		
+	dfs(1);
+
+	printf("%d", ret);
+
+	return 0;
+}
