@@ -1,0 +1,21 @@
+#include <stdio.h>
+
+int main(void)
+{	
+	int e, f, c;
+	scanf("%d %d %d", &e, &f, &c);
+	
+	e += f;
+	int ret = 0;
+
+	while (e >= c)
+	{
+		int q = e / c;
+		int r = e % c;
+
+		ret += q;
+		e = q + r;
+	}
+	printf("%d", ret);
+	return 0;
+}
