@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int rest[42];
+
+int main(void)
+{
+	for (int i = 0; i < 10; i++)
+	{
+		int n;
+		scanf("%d", &n);
+
+		int ret = n % 42;
+		rest[ret]++;
+	}
+	
+	int num = 0;
+	for (int i = 0; i < 42; i++)
+	{
+		if (rest[i] != 0)
+			num++;
+	}
+	
+	printf("%d", num);
+	return 0;
+}
