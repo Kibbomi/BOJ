@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int main(void)
+{	
+	int t;
+	scanf("%d", &t);
+	while (t--)
+	{
+		int n;
+		scanf("%d", &n);
+		int total = 0; float val = 0;
+		int temp1 = 0; float temp2 = 0;
+
+		for (int i = 0; i < n; i++)
+		{
+			scanf("%d %f", &temp1, &temp2);
+			total += temp1;
+			val += temp1*temp2;
+		}
+
+		printf("%d %.1f\n", total, val / (float)total);
+
+	}
+	return 0;
+}
