@@ -1,0 +1,42 @@
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+vector<int> v;
+vector<int> ret;
+
+int main(void)
+{
+	v.push_back(0);
+	int n;
+	scanf("%d", &n);
+
+	for (int i = 0; i < n; i++)
+	{
+		int val;
+		scanf("%d", &val);
+
+		v.push_back(val);
+	}
+
+	//init
+	ret.push_back(v[1]);
+
+	int len = v.size();
+	vector<int>::iterator del;
+	for (int i = 2; i < len; i++)
+	{
+		if (ret.back() < v[i])
+		{
+			ret.push_back(v[i]);
+		}
+		else
+		{
+			del = lower_bound(ret.begin(), ret.end(), v[i]);
+			*del = v[i];
+		}
+	}
+	printf("%d", ret.size());
+	return 0;
+}
