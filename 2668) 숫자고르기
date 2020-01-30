@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int ret;
+int n;
+int v[101];
+
+int visited[101];
+int group[101];
+int groupnum;
+//0 init
+
+
+
+int compare(const void* a, const void* b)
+{
+	int aa = *(int*)a;
+	int bb = *(int*)b;
+
+	return aa-bb;
+}
+
+
+int dfs(int now, int start)
+{
+	int check;
+	if (visited[now] == 2)	return 2;
+
+	if (visited[now] == 1 && start != now)
+		return 3;
+
+	if (visited[now] == 1 && start == now)
+	{
+		
+		for (int i = v[now]; i != now; i=v[i])
+		{
+			visited[i] = 2;
+			group[groupnum++] = i;
+		}
+		visited[now] = 2;
+		group[groupnum++] = now;
+
+		return 0;
+
+	}
+
+
+
+	visited[now] = 1;
+	check = dfs(v[now], start);
+
+	if (check == 2)
+		visited[now] = 2;
+
+	return check ;
+}
+
+int main(void)
+{
+	scanf("%d", &n);
+
+	for (int i = 1; i <= n; i++){
+		scanf("%d", &v[i]);
+		if (i == v[i])
+		{
+			group[groupnum++] = i;
+			visited[i] = 2;
+		}
+	}
+	
+	for (int i = 1; i <= n; i++)
+	{
+		if (visited[i] == 0)
+		{
+			int check;
+			check = dfs(i, i);
+			if (check == 2)
+				visited[i] = 2;
+			if (check == 3)
+				visited[i] = 2;
+			for (int i = 1; i <= n; i++)
+			{
+				if (visited[i] == 1)
+					visited[i] = 0;
+			}
+		}
+		
+	}
+
+	//ret와 같은거 순서 -1도
+	qsort(group, groupnum, sizeof(int), compare);
+	printf("%d\n", groupnum);
+	for (int i = 0; i <groupnum; i++)
+			printf("%d\n", group[i]);
+		
+	
+}
