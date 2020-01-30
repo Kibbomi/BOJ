@@ -1,0 +1,51 @@
+#include <stdio.h>
+
+int test[46];
+int val;
+int order[3];
+bool fin;
+void dfs(int depth)
+{
+	if (depth == 3)
+	{
+		if (test[order[0]] + test[order[1]] + test[order[2]] == val)
+		{
+			fin = true;
+		}
+		return;
+	}
+
+	for (int i = 1; i < 46; i++)
+	{
+		if (val > test[i] && !fin)
+		{
+			order[depth] = i;
+			dfs(depth + 1);
+			order[depth] = -1;
+		}
+	}
+}
+
+int main(void)
+{
+	test[1] = 1;
+	for (int i = 2; i <= 45; i++)
+		test[i] = test[i - 1] + i;
+
+
+	int t;
+	scanf("%d", &t);
+
+	while (t--)
+	{
+		fin = false;
+		scanf("%d", &val);
+
+		dfs(0);
+		if (fin)
+			printf("1\n");
+		else
+			printf("0\n");
+	}
+	return 0;
+}
