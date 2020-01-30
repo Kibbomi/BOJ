@@ -1,0 +1,17 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+
+	int k = 1; 
+	int ret = 0;
+	while ((n - (k*k - k)) / k > 0)
+	{
+		ret += (n - (k*k - k)) / k;
+		k++;
+	}
+	printf("%d", ret);
+	return 0;
+}
