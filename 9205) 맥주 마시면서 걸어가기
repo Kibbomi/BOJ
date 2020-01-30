@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <queue>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct COORD {
+	int y, x;
+	int vertex;
+};
+
+int main(void)
+{
+	int t;
+	scanf("%d", &t);
+	
+	while (t--)
+	{
+		int dist[102][102] = { 0 };
+		COORD c[102];
+		bool visited[102] = { false, };
+		//0->집  n+1 -> 페스티벌
+
+		int n;
+		scanf("%d", &n);
+		for (int i = 0; i <= n + 1; i++) {
+			scanf("%d %d", &c[i].x, &c[i].y);
+			c[i].vertex = i;
+		}
+		
+
+		for (int i = 0; i <= n + 1; i++)
+		{
+			for (int j = i; j <= n + 1; j++)
+			{
+				if (i == j)
+					dist[i][j] = 0;
+				else
+				{
+					int val;
+					val = abs(c[i].x - c[j].x) + abs(c[i].y - c[j].y);
+					if (val > 1000)
+						dist[i][j] = dist[j][i] = 0;
+					else
+						dist[i][j] = dist[j][i] = 1;
+				}
+			}
+		}
+		//맵 완성
+		queue<COORD> q;
+
+		q.push(c[0]);
+		visited[0] = true;
+
+		while (!q.empty())
+		{
+			COORD cur = q.front(); q.pop();
+
+			for (int i = 0; i <= n + 1; i++)
+			{
+				if (dist[cur.vertex][i] == 1 && visited[i] == false)
+				{
+					visited[i] = true;
+					q.push(c[i]);
+				}
+			}
+		}
+
+		if (visited[n + 1])
+			printf("happy\n");
+		else
+			printf("sad\n");
+
+	}
+	return 0;
+}
