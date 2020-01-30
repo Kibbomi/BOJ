@@ -1,0 +1,50 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int n, m;
+int v[1000000];
+
+int main(void)
+{
+	scanf("%d %d", &n, &m);
+	for (int i = 0; i < n; ++i)
+		scanf("%d", &v[i]);
+	
+	int left=1, right=2000000000;
+	int ret = 0;
+
+	while (left <= right)
+	{
+		//Be careful overflow
+		//type casting long long int mid는 뺴보기
+		int mid = ((long long int)left + (long long int)right) / 2;
+		//cal length
+		long long int sum = 0;
+
+		for (int i = 0; i < n; ++i)
+		{
+			if (v[i] > mid)
+			{
+				sum += (v[i] - mid);
+			}
+			if (sum >= m) break;
+		}
+
+		if (sum >= m)
+		{
+			//평균 길이를 늘려서 나무를 조금만 자를 수 있게
+			ret = mid;
+			left = mid + 1;
+		}
+		else
+		{
+			//길이가 모자란것. 즉 너무 길게 잘라서 모자란거죠
+			right = mid - 1;
+		}
+	}
+
+	printf("%d", ret);
+
+	return 0;
+}
