@@ -1,0 +1,38 @@
+#include <stdio.h>
+using namespace std;
+
+int main(void)
+{
+	int x, y;
+	// x * y
+	scanf("%d", &x);
+	scanf("%d", &y);
+
+	int ret1, ret2, ret3;
+
+	int t = 0;
+
+	t = y % 10;
+
+	ret1 = x * t;
+
+	t = y % 100;
+	t /= 10;
+
+	ret2 = x * t;
+
+	t = y % 1000;
+	t /= 100;
+
+	ret3 = x * t;
+
+	printf("%d\n",ret1);
+	printf("%d\n",ret2);
+	printf("%d\n",ret3);
+	printf("%d\n",x*y);
+	
+
+
+
+	return 0;
+}
