@@ -1,0 +1,52 @@
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+int main(void)
+{
+	int n;
+	cin >> n;
+	stack<int>st;
+
+	for (int i = 0; i < n; i++)
+	{
+		string s;
+		int val;
+		cin >> s;
+		if (s == "push")
+		{
+			cin >> val;
+			st.push(val);
+		}
+		else if (s == "pop")
+		{
+			if (st.size() > 0)
+			{
+				cout << st.top() << '\n';
+				st.pop();
+			}
+			else
+				cout << "-1" << '\n';
+		}
+		else if (s == "size")
+		{
+			cout << st.size()<<'\n';
+		}
+		else if (s == "empty")
+		{
+			if (st.empty())
+				cout << "1" << '\n';
+			else
+				cout << "0" << '\n';
+		}
+		else if (s == "top")
+		{
+			if (st.size() == 0)
+				cout << "-1" << '\n';
+			else
+				cout << st.top() << '\n';
+		}
+	}
+	return 0;
+}
