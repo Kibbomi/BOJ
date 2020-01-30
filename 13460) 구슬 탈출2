@@ -1,0 +1,257 @@
+#include <stdio.h>
+struct COORD {
+	int y, x;
+}b,r,o,rr,bb;
+char map[10][10];
+int order[10];
+int n, m;
+bool check = false;
+bool rg, bg;
+//0 1 2 3 동서남북
+
+void cpmap(char dest[][10], char src[][10])
+{
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			dest[i][j] = src[i][j];
+	return;
+}
+bool issameline(int dir)
+{
+	if (dir == 0 || dir == 1)
+	{
+		if (bb.y == rr.y)	return true;
+		else
+			return false;
+	}
+	else
+	{
+		if (bb.x == rr.x)	return true;
+		else
+			return false;
+	}
+}
+void a_move(int dir,char clone[][10])
+{
+	if (dir == 0)
+	{
+		int nx = rr.x;
+		clone[rr.y][rr.x] = '.';
+		while (clone[rr.y][nx + 1] =='.')
+			nx++;
+
+		if (clone[rr.y][nx + 1] == 'O')
+			rg = true;
+		else
+		{
+			clone[rr.y][nx] = 'R';
+			rr.x = nx;
+		}
+		
+	}
+	else if (dir == 1)
+	{
+		int nx = rr.x;
+		clone[rr.y][rr.x] = '.';
+		while (clone[rr.y][nx - 1] == '.')
+			nx--;
+
+		if (clone[rr.y][nx - 1] == 'O')
+			rg = true;
+		else
+		{
+			clone[rr.y][nx] = 'R';
+			rr.x = nx;
+		}
+	}
+	else if (dir == 2)
+	{
+		int ny = rr.y;
+		clone[rr.y][rr.x] = '.';
+		while (clone[ny+1][rr.x] == '.')
+			ny++;
+
+		if (clone[ny+1][rr.x] == 'O')
+			rg = true;
+		else
+		{
+			clone[ny][rr.x] = 'R';
+			rr.y = ny;
+		}
+	}
+	else
+	{
+		int ny = rr.y;
+		clone[rr.y][rr.x] = '.';
+		while (clone[ny - 1][rr.x] == '.')
+			ny--;
+
+		if (clone[ny - 1][rr.x] == 'O')
+			rg = true;
+		else
+		{
+			clone[ny][rr.x] = 'R';
+			rr.y = ny;
+		}
+	}
+	return;
+}
+void b_move(int dir, char clone[][10])
+{
+	if (dir == 0)
+	{
+		int nx = bb.x;
+		clone[bb.y][bb.x] = '.';
+		while (clone[bb.y][nx + 1] == '.')
+			nx++;
+
+		if (clone[bb.y][nx + 1] == 'O')
+			bg = true;
+		else
+		{
+			clone[bb.y][nx] = 'B';
+			bb.x = nx;
+		}
+
+	}
+	else if (dir == 1)
+	{
+		int nx = bb.x;
+		clone[bb.y][bb.x] = '.';
+		while (clone[bb.y][nx - 1] == '.')
+			nx--;
+
+		if (clone[bb.y][nx - 1] == 'O')
+			bg = true;
+		else
+		{
+			clone[bb.y][nx] = 'B';
+			bb.x = nx;
+		}
+	}
+	else if (dir == 2)
+	{
+		int ny = bb.y;
+		clone[bb.y][bb.x] = '.';
+		while (clone[ny + 1][bb.x] == '.')
+			ny++;
+
+		if (clone[ny + 1][bb.x] == 'O')
+			bg = true;
+		else
+		{
+			clone[ny][bb.x] = 'B';
+			bb.y = ny;
+		}
+	}
+	else
+	{
+		int ny = bb.y;
+		clone[bb.y][bb.x] = '.';
+		while (clone[ny - 1][bb.x] == '.')
+			ny--;
+
+		if (clone[ny - 1][bb.x] == 'O')
+			bg = true;
+		else
+		{
+			clone[ny][bb.x] = 'B';
+			bb.y = ny;
+		}
+	}
+	return;
+}
+void dfs(int depth, int limit)
+{
+	if (depth == limit)
+	{
+		//move..
+		char clone[10][10] = { 0 };
+		cpmap(clone, map);
+		rr = r, bb = b;
+		rg = bg = false;
+		for (int i = 0; i < limit; i++)
+		{
+			if (issameline(order[i]))
+			{
+				//두번하기
+				a_move(order[i],clone);
+				b_move(order[i],clone);
+				a_move(order[i], clone);
+				b_move(order[i], clone);
+			}
+			else
+			{
+				//한번하기
+				a_move(order[i],clone);
+				b_move(order[i], clone);
+			}
+			if (rg && !bg)
+			{
+				check = true;
+				return;
+			}
+			if (!rg && bg || rg&&bg)
+				return;
+
+
+		}
+		return;
+	}
+	
+	for (int i = 0; i < 4; i++)
+	{
+		if (check)	return;
+		if (depth > 0)
+		{
+			if (order[depth - 1] == i)
+				continue;
+		}
+		order[depth] = i;
+		dfs(depth + 1, limit);
+	}
+	return;
+}
+int main(void)
+{
+	scanf("%d %d", &n, &m);
+	for(int i=0;i<n;i++)
+		for (int j = 0; j < m; j++)
+		{
+			scanf("%c", &map[i][j]);
+			if (map[i][j] == '\n')
+			{
+				j--;
+				continue;
+			}
+			if (map[i][j] == 'B')
+			{
+				b.y = i; b.x = j;
+				
+			}
+			if (map[i][j] == 'R')
+			{
+				r.y = i; r.x = j;
+			
+			}
+			if (map[i][j] == 'O')
+			{
+				o.y = i; o.x = j;
+			}
+		}
+	//permutaion
+	for (int i = 1; i <= 10; i++)
+	{
+		dfs(0, i);
+		if (check)
+		{
+			printf("%d", i);
+			return 0;
+		}
+	
+	}
+		
+
+	printf("-1");
+	return 0;
+}
