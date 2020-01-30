@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int n;
+int box[1001];
+//n번째 박스에 넣을 수 있는 최대 값..
+int dp[1001];
+
+
+int main(void)
+{
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++)
+	{
+		scanf("%d", &box[i]);
+		dp[i] = 1;
+	}
+
+	int ret = 0;
+	
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j < i;j++)
+		{
+			//결국 전수조사다..!
+			if (box[i] > box[j])
+			{
+					dp[i] = max(dp[j] + 1, dp[i]);
+			}
+		 }
+		ret = max(ret, dp[i]);
+		//값을 구하기 위한 부분..
+	}
+	
+	printf("%d", ret);
+
+	return 0;
+}
