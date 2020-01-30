@@ -1,0 +1,49 @@
+#include <iostream>
+#include <algorithm>
+#define INF 0x1f1f1f1f
+using namespace std;
+
+int dist[1001][1001];
+
+int main()
+{
+	int n, m, x;
+
+	cin >> n >> m >> x;
+
+	//data init
+	for (int i = 1; i <= n; ++i)
+		for (int j = 1; j <= n; ++j)
+			if (i != j)	dist[i][j] = INF;
+
+	//input
+	for (int i = 1; i <= m; ++i)
+	{
+		int from, to, val;
+		cin >> from >> to >> val;
+		dist[from][to] = val;
+	}
+
+			
+	//k를 들렸다 가는경우
+	for (int k = 1; k <= n; ++k)
+	{
+		for (int i = 1; i <= n; ++i)
+		{
+			for (int j = 1; j <= n; ++j)
+			{
+				if (dist[i][j] > dist[i][k] + dist[k][j])
+					dist[i][j] = dist[i][k] + dist[k][j];
+			}
+		}
+	}
+
+	int ret = -1;
+
+	for (int i = 1; i <= n; ++i)
+		ret = max(ret, dist[i][x] + dist[x][i]);
+	
+
+	cout << ret;
+	return 0;
+}
