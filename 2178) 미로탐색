@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+int n, m;
+int map[100][100];
+bool visited[100][100];
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+struct coord {
+	int y, x;
+	int d;
+};
+
+int bfs(int y, int x)
+{
+	queue<coord> q;
+	coord t;
+	int ret = 1;
+	t.x = x, t.y = y;
+	t.d = 1;
+	q.push(t);
+	visited[t.y][t.x] = true;
+
+
+	while (!q.empty())
+	{
+		t = q.front(); q.pop();
+
+		
+		if (t.x == m - 1 && t.y == n - 1)
+			return t.d;
+			
+		for (int i = 0; i < 4; i++)
+		{
+			coord nt;
+			nt.x = t.x + dx[i];
+			nt.y = t.y + dy[i];
+			nt.d = t.d + 1;
+			if (nt.x < 0 || nt.x >= m || nt.y < 0 || nt.y >= n)
+				continue;
+
+			if (visited[nt.y][nt.x] == false && map[nt.y][nt.x] == 1)
+			{
+				visited[nt.y][nt.x] = true;
+				q.push(nt);
+			}
+		}
+	}
+
+	return ret;
+}
+
+
+int main(void)
+{
+	scanf("%d %d", &n, &m);
+
+	for (int i = 0; i < n; i++)
+	{
+		char temp[100];
+		scanf("%s", temp);
+
+		for (int j = 0; j < m; j++)
+			map[i][j] = temp[j] - '0';
+
+	}
+
+
+	printf("%d", bfs(0, 0));
+
+	
+
+	return 0;
+}
