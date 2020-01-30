@@ -1,0 +1,84 @@
+#include <stdio.h>
+
+int v[100001];
+int visited[100001];
+//0초기화
+//1방문
+//2방문금지
+//3사이클
+//4애매함.
+
+int dfs(int now,int start)
+{
+	if (visited[now] == 3 || visited[now] == 2)
+		return 2;
+
+	if (visited[now] == 1 && start == now)
+	{
+		visited[now] = 3;
+		return 3;
+	}
+	else if (visited[now] == 1 && start != now)
+	{
+		for (int i = start; i != now; i = v[i])
+			visited[i] = 2;
+
+		visited[now] = 3;
+		for (int i = v[now]; i != now; i = v[i])
+			visited[i] = 3;
+
+		return 4;
+	}
+	int check;
+
+	visited[now] = 1;
+	check = dfs(v[now],start);
+
+	if (check == 3)
+		visited[now] = 3;
+	else if (check == 2)
+		visited[now] = 2;
+	else if (check == 4)
+		
+	return check;
+}
+int main(void)
+{
+	int t;
+	scanf("%d", &t);
+	
+	while (t--)
+	{
+		for (int i = 1; i <= 100001; i++){
+			v[i] = 0;
+			visited[i] = 0;
+		}
+		int n;
+		scanf("%d", &n);
+
+		for (int i = 1; i <= n; i++){
+			scanf("%d", &v[i]);
+			if (i == v[i])
+				visited[i] = 3;
+		}
+
+		for (int i = 1; i <= n; i++)
+		{
+			if (visited[i] == 0)
+			{
+				int check;
+				check = dfs(i,i);
+
+
+			}
+		}
+
+		int ret = 0;
+		for (int i = 1; i <= n; i++)
+		{
+			if (visited[i] == 2)
+				ret++;
+		}
+		printf("%d\n", ret);
+	}
+}
