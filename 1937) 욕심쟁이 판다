@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int n;
+int map[500][500];
+
+int dp[500][500];//시작점일경우 최대값
+
+const int dy[] = {0,0,1,-1};
+const int dx[] = {1,-1,0,0};
+//y:열 x:행
+
+//y,x점에서 갈 수 있는 거리가 나옴.
+int dfs(int y, int x)
+{
+	if (y < 0 || y >= n || x < 0 || x >= n)	
+		return 0;
+
+	if (dp[y][x] != -1)	
+		return dp[y][x];
+	else
+	{
+		dp[y][x] = 1;
+
+		for (int i = 0; i < 4; i++)
+		{
+			if (map[y + dy[i]][ x + dx[i]] > map[y][x])
+				dp[y][x] = max(dp[y][x],dfs(y + dy[i], x + dx[i]) + 1);
+		}
+	}
+
+	return dp[y][x];
+}
+
+
+int main(void)
+{
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+		{
+			scanf("%d", &map[i][j]);
+			dp[i][j] = -1;
+		}
+
+	int ret = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			ret = max(ret, dfs(i, j));
+		}
+	}
+
+	printf("%d", ret);
+	return 0;
+}
