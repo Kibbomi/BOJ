@@ -1,0 +1,18 @@
+#include <stdio.h>
+int main(void)
+{
+	
+	char temp;
+	scanf("%c", &temp);
+	printf("%c", temp);
+	while (temp != '\n')
+	{
+		scanf("%c", &temp);
+		if (temp == '-')
+		{
+			scanf("%c", &temp);
+			printf("%c", temp);
+		}
+	}
+	return 0;
+}
