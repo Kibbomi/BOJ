@@ -1,0 +1,59 @@
+#include <stdio.h>
+
+int cache[10001] = { 0 };
+
+void dfs(int count)
+{
+	if (count > 10000)
+	{
+
+		return;
+	}
+
+	if (count / 10 == 0)
+	{
+		cache[count+count] = -1;
+		dfs(count + count);
+		
+	}
+	else if (count / 100 == 0)
+	{
+		cache[count + count / 10 + count % 10] = -1;
+		dfs(count + count / 10 + count % 10);
+	}
+	else if (count / 1000 == 0)
+	{
+		int h = count / 100;
+		int t = (count % 100) / 10;
+		int o = count % 10;
+		cache[count + h + t + o] = -1;
+		dfs(count + h + t + o);
+	}
+	else
+	{
+		int th = count / 1000;
+		int h = count / 100 - th*10;
+		int t = count / 10 - th*100 - h*10;
+		int o = count % 10;
+		cache[count + th+h + t + o] = -1;
+		dfs(count + th+h + t + o);
+	}
+	
+
+}
+int main(void)
+{
+	for (int i = 1; i <= 10000; i++)
+	{
+		if (cache[i] == -1)	continue;
+			dfs(i);
+	}
+
+
+	for (int i = 1; i <= 10000; i++)
+	{
+		if (cache[i] == 0)
+			printf("%d\n", i);
+	}
+	return 0;
+}
