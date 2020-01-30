@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+int n, history[401][401];
+
+
+void floyd(void)
+{
+	int i, j, k;
+	for (k = 1; k <= n; k++)
+		for (i = 1; i <= n; i++)
+			for (j = 1; j <= n; j++)
+				if (history[i][k] == 1 && history[k][j] == 1)
+					history[i][j] = 1, history[j][i] = -1;
+
+
+	return;
+}
+
+int main(void)
+{
+	int m, i, before, after;
+	scanf("%d %d", &n, &m);
+
+	for (int i = 0; i < m; i++)
+	{
+		scanf("%d %d", &before, &after);
+		history[before][after] = -1;
+		history[after][before] = 1;
+	}
+	floyd();
+
+	scanf("%d", &m);
+	for (int i = 0; i < m; i++)
+	{
+		scanf("%d %d", &before, &after);
+		printf("%d\n", history[before][after]);
+	}
+	return 0;
+}
