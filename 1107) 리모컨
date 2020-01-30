@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+bool num[10];
+int n, target;
+int err[10];
+int ret = 0x7fffffff;
+int t;
+bool isok(int val)
+{	
+	t = 0;
+	if (val == 0)
+	{
+		if (num[0] == false)
+			return false;
+		else
+		{
+			t++;
+			return true;
+		}
+	}
+	while (val > 0)
+	{
+		int temp = val%10;
+		
+		if (num[temp] == false)
+			return false;
+		else
+		{
+			val /= 10;
+			t++;
+		}
+	}
+	return true;
+}
+int main(void)
+{
+	scanf("%d", &target);
+	scanf("%d", &n);
+	for (int i = 0; i < 10; i++)
+		num[i] = true;
+
+	for (int i = 0; i < n; i++){
+		scanf("%d", &err[i]);
+		num[err[i]] = false;
+	}
+	ret = abs(target - 100);
+	for (int i = 0; i <= 1000000; i++)
+	{
+		if (isok(i))
+		{
+			//i까지 이동
+			//횟수는 t번
+			int temp = abs(target - i)+t;
+			if (temp < ret)
+				ret = temp;
+		}
+	}
+
+	printf("%d", ret);
+
+	return 0;
+}
