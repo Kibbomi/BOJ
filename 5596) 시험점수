@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int main(void)
+{	
+	int left = 0, right = 0;
+
+	int temp;
+	for (int i = 0; i < 4; i++)
+	{
+		scanf("%d", &temp);
+		left += temp;
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		scanf("%d", &temp);
+		right += temp;
+	}
+
+	if (left < right)
+		printf("%d", right);
+	else
+		printf("%d", left);
+	return 0;
+}
