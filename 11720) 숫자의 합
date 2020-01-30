@@ -1,0 +1,22 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n;
+
+	scanf("%d", &n);
+	int sum = 0;
+	char a;
+	scanf("%c", &a);
+	for (int i = 1; i <= n; i++)
+	{
+		int temp;
+		char buffer;
+		scanf("%c", &buffer);
+		temp = buffer - '0';
+		sum += temp;
+	}
+
+	printf("%d\n", sum);
+	return 0;
+}
