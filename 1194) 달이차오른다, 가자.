@@ -1,0 +1,110 @@
+//1시간 8분
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+struct COORD {
+	int y, x;
+	int key;
+	int time;
+};
+//0 -> key가 없을때..
+#define KEY_NONE 0
+#define KEY_A 1
+#define KEY_B 2
+#define KEY_C 4
+#define KEY_D 8
+#define KEY_E 16
+#define KEY_F 32
+bool visited[64][50][50] = { false, };
+char map[50][50];
+int r, c;
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+int ret = -1;
+
+int main(void)
+{
+	COORD start;
+	scanf("%d %d", &r, &c);
+	for (int i = 0; i<r; i++)
+		for (int j = 0; j < c; j++)
+		{
+			scanf("%c", &map[i][j]);
+			if (map[i][j] == '\n'){
+				j--;
+				continue;
+			}
+
+			//find 민식
+			if (map[i][j] == '0')
+				start.time = 0, start.y = i, start.x = j,start.key = KEY_NONE;
+		}
+
+	//start.
+	queue<COORD> q;
+	visited[start.key][start.y][start.x] = true;
+	q.push(start);
+
+	while (!q.empty())
+	{
+		COORD cur = q.front(); q.pop();
+		if (map[cur.y][cur.x] == '1')
+		{
+			ret = cur.time;
+			break;
+		}
+		for (int dir = 0; dir < 4; dir++)
+		{
+			COORD next;
+			next.y = cur.y + dy[dir];
+			next.x = cur.x + dx[dir];
+			next.time = cur.time + 1;
+			next.key = cur.key;
+
+			//boundary
+			if (next.y < 0 || next.x < 0 || next.y >= r || next.x>= c || map[next.y][next.x] == '#')
+				continue;
+
+			//don't have a key
+			if ((next.key & KEY_A) == 0 && map[next.y][next.x] == 'A')
+				continue;
+			if ((next.key & KEY_B) == 0 && map[next.y][next.x] == 'B')
+				continue;
+			if ((next.key & KEY_C) == 0 && map[next.y][next.x] == 'C')
+				continue;
+			if ((next.key & KEY_D) == 0 && map[next.y][next.x] == 'D')
+				continue;
+			if ((next.key & KEY_E) == 0 && map[next.y][next.x] == 'E')
+				continue;
+			if ((next.key & KEY_F) == 0 && map[next.y][next.x] == 'F')
+				continue;
+
+			
+			if (visited[next.key][next.y][next.x] == false)
+			{
+				//키가 없고, 키가 있다면,
+				visited[next.key][next.y][next.x] = true;
+				if ((next.key & KEY_A) == 0 && map[next.y][next.x] == 'a')
+					next.key += KEY_A;
+				if ((next.key & KEY_B) == 0 && map[next.y][next.x] == 'b')
+					next.key += KEY_B;
+				if ((next.key & KEY_C) == 0 && map[next.y][next.x] == 'c')
+					next.key += KEY_C;
+				if ((next.key & KEY_D) == 0 && map[next.y][next.x] == 'd')
+					next.key += KEY_D;
+				if ((next.key & KEY_E) == 0 && map[next.y][next.x] == 'e')
+					next.key += KEY_E;
+				if ((next.key & KEY_F) == 0 && map[next.y][next.x] == 'f')
+					next.key += KEY_F;
+					
+				visited[next.key][next.y][next.x] = true;
+				q.push(next);
+			}
+		}
+			
+	}
+	
+	printf("%d", ret);
+	return 0;
+}
