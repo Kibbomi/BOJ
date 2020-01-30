@@ -1,0 +1,88 @@
+#include <stdio.h>
+
+int map[10][10000];
+int clone[10][10000];
+int r, c;
+int ret = -0x7fffffff;
+int order[10];
+
+void dfs(int depth)
+{
+	if (depth == 10)
+	{
+		int val = 0;
+
+		//copy
+		for (int i = 0; i < r; i++)
+			for (int j = 0; j < c; j++)
+				clone[i][j] = map[i][j];
+
+		for (int i = 0; i < r; i++)
+		{
+			if(order[i] == 1)
+				for (int j = 0; j < c; j++)
+				{
+					if (clone[i][j] == 1)
+						clone[i][j] = 0;
+					else
+						clone[i][j] = 1;
+				}
+		}
+
+		for (int j = 0; j < c; j++)
+		{
+			int rnum = 0;
+			for (int i = 0; i < r; i++)
+				if (clone[i][j] == 0)
+					rnum++;
+
+			// 뒷면이 더 많다면,
+			if (r - rnum <  rnum)
+			{
+				//뒤집어야함.
+				val += rnum;
+			}
+			else
+			{
+				//뒷면이 더 적다면
+				//안뒤집어도됨
+				val += r - rnum;
+
+			}
+		}
+
+		if (ret < val)
+			ret = val;
+
+		return;
+	}
+
+	//i -> 0 裏返さない　1 -> 裏返す
+	for (int i = 0; i < 2; i++)
+	{
+		order[depth] = i;
+		dfs(depth + 1);
+		//order[depth] = -1;
+	}
+}
+
+int main(void)
+{
+	scanf("%d %d", &r, &c);
+
+	for (int i = 0; i < r; i++)
+		for (int j = 0; j < c; j++)
+			scanf("%d", &map[i][j]);
+	/*for (int i = 0; i < r; i++)
+		for (int j = 0; j < c; j++)
+		{
+			if (i % 3 == 0)
+				map[i][j] = 1;
+			if (j % 5 == 0)
+				map[i][j] = 1;
+		}*/
+
+	dfs(0);
+	printf("%d", ret);
+	return 0;
+}
