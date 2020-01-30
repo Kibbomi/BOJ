@@ -1,0 +1,106 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+struct coord {
+	int y, x;
+	int time;
+	int whoami;
+};
+
+char map[50][50];
+bool visited[50][50];
+
+int main(void)
+{
+	int n, m;
+	scanf("%d %d", &n, &m);
+
+	coord water;
+	water.whoami = 1;
+	coord dog;
+	dog.whoami = 2;
+	coord cave;
+
+	queue<coord> q;
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++)
+		{
+			scanf("%c", &map[i][j]);
+			if (map[i][j] == 'S')
+			{
+				dog.x = j;
+				dog.y = i;
+				dog.time = 0;
+			}
+			if (map[i][j] == '*')
+			{
+				water.x = j;
+				water.y = i;
+				water.time = 0;
+				q.push(water);
+				visited[water.y][water.x] = true;
+			}
+			if (map[i][j] == 'D')
+			{
+				cave.x = j;
+				cave.y = i;
+			}
+			if (map[i][j] == '\n')
+				j--;
+		}
+	}
+	q.push(dog);
+	visited[dog.y][dog.x] = true;
+
+	int ret = -1;
+
+	while (!q.empty())
+	{
+		coord cur = q.front(); q.pop();
+
+		if (cur.y == cave.y && cur.x == cave.x)
+		{
+			ret = cur.time;
+			break;
+		}
+		for (int dir = 0; dir < 4; dir++)
+		{
+			coord next;
+			next.y = cur.y + dy[dir];
+			next.x = cur.x + dx[dir];
+			next.time = cur.time + 1;
+			next.whoami = cur.whoami;
+
+			if (next.y < 0 || next.x < 0 || next.y >= n || next.x >= m)
+				continue;
+
+			//물
+			if (next.whoami == 1 && visited[next.y][next.x] == false && (map[next.y][next.x] == '.'|| map[next.y][next.x] == 'S'))
+			{
+				map[next.y][next.x] = '*';
+				visited[next.y][next.x] = true;
+				q.push(next);
+			}
+			//고슴도치
+			if (next.whoami == 2 && visited[next.y][next.x] == false && (map[next.y][next.x] == '.' || map[next.y][next.x] == 'D'))
+			{
+				map[cur.y][cur.x] = '.';
+				map[next.y][next.x] = 'S';
+				q.push(next);
+			}
+
+		}
+
+	}
+	if (ret != -1)
+		printf("%d", ret);
+	else
+		printf("KAKTUS");
+
+	return 0;
+}
