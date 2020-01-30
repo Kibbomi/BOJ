@@ -1,0 +1,32 @@
+#include <stdio.h>
+
+
+int main(void)
+{
+	int l, n;
+	scanf("%d %d", &l, &n);
+	//l->소세지 개수 n->사람 수
+
+	double len = 1;
+	//len -> 소세지 길이
+
+	int ret = 0;
+	while (len > 0)
+	{
+		if (l == n)
+			break;
+		else if (l >= n)
+		{
+			l -= n;
+		}
+		else
+		{
+			ret += l;
+			n -= l;
+			len = len - (double)len / (double)n;
+		}
+	}
+
+	printf("%d", ret);
+	return 0;
+}
