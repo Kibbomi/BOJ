@@ -1,0 +1,32 @@
+#include <cstdio>
+using namespace std;
+int n;
+long long int dp[68];
+long long int koong(long long int val)
+{
+	if (val < 2)
+		return 1;
+	if (val == 2)
+		return 2;
+	if (val == 3)
+		return 4;
+
+	if (dp[val] != -1)
+		return dp[val];
+
+	return dp[val] = koong(val - 1) + koong(val - 2) + koong(val - 3) + koong(val - 4);
+}
+int main(void)
+{
+	int t;
+	scanf("%d", &t);
+	while (t--)
+	{
+		scanf("%d", &n);
+		for (int i = 0; i <= 67; i++)
+			dp[i] = -1;
+
+		printf("%lld\n", koong(n));
+	}
+	return 0;
+}
