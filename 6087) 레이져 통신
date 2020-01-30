@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include <deque>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+char map[100][100];
+
+
+struct COORD {
+	int y, x;
+	int time;
+	int dir;
+};
+vector<COORD>start;
+int r, c;
+const int dx[] = { 0,1,0,-1 };
+const int dy[] = { -1,0,1,0 };
+
+int bfs(int firstdir)
+{
+	deque<COORD>q;
+	bool visited[100][100] = { false, };
+
+	COORD ns;
+	ns.y = start[0].y + dy[firstdir];
+	ns.x = start[0].x + dx[firstdir];
+	ns.dir = firstdir;
+	ns.time = 0;
+
+	if (ns.x < 0 || ns.y < 0 || ns.x >= c || ns.y >= r || map[ns.y][ns.x] == '*')
+		return 0x7fffffff;
+
+	q.push_back(ns);
+	visited[start[0].y][start[0].x] = true;
+	visited[ns.y][ns.x] = true;
+
+	while (!q.empty())
+	{
+		COORD cur = q.front(); q.pop_front();
+		if (cur.y == start[1].y && cur.x == start[1].x)
+		{
+			return cur.time;
+		}
+		for (int dir = 0; dir < 4; dir++)
+		{
+			COORD next;
+			next.y = cur.y + dy[dir];
+			next.x = cur.x + dx[dir];
+			next.dir = dir;
+			
+
+			if (next.y < 0 || next.x < 0 || next.y >= r || next.x >= c || visited[next.y][next.x]
+				||map[next.y][next.x] =='*')
+				continue;
+
+			if (next.dir != cur.dir)
+			{
+				next.y = cur.y;
+				next.x = cur.x;
+				next.time = cur.time + 1;
+				
+				q.push_back(next);
+			}
+			else
+			{
+				next.time = cur.time;
+				visited[next.y][next.x] = true;
+				q.push_front(next);
+			}
+			
+		}
+	}
+	
+}
+int main(void)
+{
+	scanf("%d %d ", &c, &r);
+	for (int i = 0; i < r; i++)
+		for (int j = 0; j < c; j++){
+			scanf("%c", &map[i][j]);
+			if (map[i][j] == '\n'){
+				j--;
+				continue;
+			}
+			if (map[i][j] == 'C'){
+				COORD s;
+				s.y = i, s.x = j;
+				s.time = 0;
+				start.push_back(s);
+			}
+		}
+
+
+	int ret = 0x7fffffff;
+		ret = min(ret, bfs(0));
+		ret = min(ret, bfs(1));
+		ret = min(ret, bfs(2));
+		ret = min(ret, bfs(3));
+	
+
+
+		printf("%d", ret);
+
+
+	return 0;
+}
