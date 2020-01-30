@@ -1,0 +1,32 @@
+#include <cstdio>
+using namespace std;
+
+int n, m, k;
+int dp[31][31];
+
+int main(void)
+{
+	scanf("%d %d %d", &n, &m, &k);
+	
+	dp[0][0] = dp[1][0] = dp[1][1] = 1;
+	for (int i = 2; i <= 30; i++)
+	{
+		dp[i][0] = 1;
+		for (int j = 1; j <= 29; j++)
+			dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+		dp[i][i] = 1;
+	}
+
+	if (k == 0)
+	{
+		printf("%d", dp[n-1 + m-1][n-1]);
+	}
+	else
+	{
+		int kx, ky;
+		kx = (k - 1) % m + 1;
+		ky = (k - 1) / m + 1;
+		printf("%d", dp[kx - 1 + ky - 1][kx - 1] * dp[m - kx + n - ky][m - kx]);
+	}
+	return 0;
+}
