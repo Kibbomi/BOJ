@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+char map[250][250];
+bool visited[250][250];
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+struct COORD {
+	int y, x;
+};
+int sheep, wolf;
+int main(void)
+{
+	int r, c;
+	scanf("%d %d", &r, &c);
+
+	for (int i = 0; i < r; i++)
+		scanf("%s", map[i]);
+
+	for(int i=0;i<r;i++)
+		for (int j = 0; j < c; j++)
+		{
+			if (visited[i][j] == false)
+			{
+				//bfs
+
+				int s=0, w=0;
+				queue<COORD> q;
+				COORD start;
+				start.x = j, start.y = i;
+
+				visited[start.y][start.x] = true;
+				q.push(start);
+
+				while (!q.empty())
+				{
+					COORD cur = q.front(); q.pop();
+					if (map[cur.y][cur.x] == 'v')
+						w++;
+					else if (map[cur.y][cur.x] == 'k')
+						s++;
+
+					for (int dir = 0; dir < 4; dir++)
+					{
+						COORD next;
+						next.y = cur.y + dy[dir];
+						next.x = cur.x + dx[dir];
+
+						if (next.x < 0 || next.y <0 || next.x >c || next.y > r || map[next.y][next.x] == '#')
+							continue;
+
+						if (visited[next.y][next.x] == false)
+						{
+							visited[next.y][next.x] = true;
+							q.push(next);
+						}
+
+					}
+				}
+				//bfs탐색 끝
+				if (s > w)
+					sheep += s;
+				else
+					wolf += w;
+
+			}
+		}
+
+	printf("%d %d", sheep, wolf);
+	return 0;
+}
