@@ -1,0 +1,61 @@
+#include <cstdio>
+#include <stack>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+vector <int> val;
+vector <int> dp;
+vector <pair<int, int>> v;	//<index, val>
+stack <int> ret;
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+	int temp;
+	scanf("%d", &temp);
+
+	val.push_back(temp);
+	dp.push_back(val[0]);
+	v.push_back(make_pair(0, val[0]));
+	
+	for (int i = 1; i < n; i++)
+	{
+		scanf("%d", &temp);
+
+		if (dp.back() < temp)
+		{
+			dp.push_back(temp);
+			v.push_back(make_pair(dp.size() - 1, temp));
+		}
+		else
+		{
+			vector<int> ::iterator iter;
+			iter = lower_bound(dp.begin(), dp.end(), temp);
+			int index = iter - dp.begin();
+			*iter = temp;
+			v.push_back(make_pair(index, temp));
+		}
+	}
+	printf("%d\n", dp.size());
+
+	int cp = dp.size() - 1;
+
+	for (int i = v.size() - 1; i >= 0; i--)
+	{
+		if (v[i].first == cp)
+		{
+			ret.push(v[i].second);
+			cp--;
+		}
+	}
+
+	while (!ret.empty())
+	{
+		printf("%d ", ret.top());
+		ret.pop();
+	}
+
+	return 0;
+}
