@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+
+int cache[10001][3];
+int grape[10001];
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+
+	for (int i = 1; i <= n; i++)
+		scanf("%d", &grape[i]);
+
+	cache[0][0] = 0;
+
+	cache[1][0] = cache[0][0];
+	cache[1][1] = grape[1];
+
+
+	cache[2][0] = max(cache[1][0],cache[1][1]);
+	cache[2][1] = cache[1][0] + grape[2];
+	cache[2][2] = cache[1][1] + grape[2];
+
+	for (int i = 3; i <= n; i++)
+	{
+		cache[i][0] = max(cache[i - 1][0],max(cache[i-1][1],cache[i-1][2]));
+		cache[i][1] = cache[i - 1][0] + grape[i];
+		cache[i][2] = cache[i - 1][1] + grape[i];
+	}
+
+	printf("%d", max(cache[n][0],max(cache[n][1],cache[n][2])));
+
+	return 0;
+}
