@@ -1,0 +1,31 @@
+#include <stdio.h>
+bool num[400000];
+int a[5000];
+
+int main(void)
+{
+	int n;
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++)
+		scanf("%d", &a[i]);
+	
+	int result = 0;
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < i; j++)
+		{
+			if (num[a[i] - a[j] + 200000])
+			{
+				result++;
+				break;
+			}
+		}
+		for (int j = 0; j <= i; j++)
+			num[a[i] + a[j] + 200000] = true;
+	}
+
+	printf("%d", result);
+
+	return 0;
+}
