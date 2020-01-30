@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+
+int n;
+int map[100][100];
+int maxvalue = 0;
+
+int ret = 0;
+
+struct coord {
+	int y, x;
+};
+
+int main(void)
+{
+
+	scanf("%d" , &n);
+
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			scanf("%d", &map[i][j]);
+			if (maxvalue < map[i][j])
+				maxvalue = map[i][j];
+		}
+	}
+
+	for (int h = 0; h < maxvalue; h++)
+	{
+		int num = 0;
+		bool visited[100][100] = { false, };
+
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < n; j++)
+			{
+				if (map[i][j] > h && visited[i][j] == false)
+				{
+					queue<coord> q;
+					
+					
+					
+					coord now;
+					now.y = i;
+					now.x = j;
+
+					q.push(now);
+					visited[i][j] = true;
+
+					while (!q.empty())
+					{
+						coord cur = q.front(); q.pop();
+						
+
+						for (int dir = 0; dir< 4; dir++)
+						{
+							coord next;
+							next.y = cur.y + dy[dir];
+							next.x = cur.x + dx[dir];
+
+							if (next.y < 0 || next.y >= n || next.x < 0 || next.x >= n)
+								continue;
+
+							if (map[next.y][next.x] > h && visited[next.y][next.x] == false)
+							{
+								visited[next.y][next.x] = true;
+								q.push(next);
+							}
+
+						}
+
+					}
+					num += 1;
+					
+				}
+			}
+		}
+		if (ret < num)
+			ret = num;
+	}
+
+
+	printf("%d", ret);
+	
+	return 0;
+}
