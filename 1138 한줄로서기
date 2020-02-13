@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector <int> sol;
+int order[10];
+
+int main()
+{
+	int n;
+
+	cin >> n;
+
+	for (int i = 0; i < n; ++i)
+		cin >> order[i];
+
+	
+
+	for (int i = n - 1; i >= 0; --i)
+	{
+		vector<int>::iterator iter = sol.begin();
+		for (int k = 0; k < order[i]; ++k)
+			iter++;
+
+		sol.insert(iter, i + 1);
+	}
+
+	for (int i = 0; i < sol.size(); ++i)
+		cout << sol[i] << " ";
+	return 0;
+}
