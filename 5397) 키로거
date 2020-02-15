@@ -1,0 +1,59 @@
+#include <cstdio>
+#include <cstring>
+#include <list>
+using namespace std;
+
+int main()
+{
+	int tc;
+	scanf("%d", &tc);
+
+	while (tc--)
+	{
+		char str_input[1000000] = { 0 };
+		scanf("%s", str_input);
+
+		int str_len = strlen(str_input);
+
+		list<char> ret(1);	//header
+		list<char>::iterator head = ret.begin();
+		list<char>::iterator cursor = head;
+
+		for (int i = 0; i < str_len; ++i)
+		{
+			char ch_input = str_input[i];
+
+			if (ch_input == '<')
+			{
+				if (cursor != head)
+				{
+					cursor--;
+				}
+			}
+			else if (ch_input == '>')
+			{
+				if (cursor != --ret.end())
+				{
+					cursor++;
+				}
+			}
+			else if (ch_input == '-')
+			{
+				if (cursor != head)
+				{
+					cursor = ret.erase(cursor);
+					cursor--;
+				}
+			}
+			else
+			{
+				cursor = ret.insert(++cursor, ch_input);
+			}
+		}
+		for (list<char>::iterator iter = ++ret.begin(); iter != ret.end(); iter++)
+			printf("%c", *iter);
+		printf("\n");
+	}
+
+	return 0;
+}     
