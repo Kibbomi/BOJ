@@ -1,0 +1,59 @@
+#include <iostream>
+#include <deque>
+#include<algorithm>
+using namespace std;
+
+int main()
+{
+	deque<int> ret;
+	int sol = 0;
+	int order[50];
+
+	int n, m;
+	cin >> n >> m;
+
+	for (int i = 0; i < m; ++i)
+		cin >> order[i];
+
+	for (int i = 1; i <= n; ++i)
+		ret.push_back(i);
+
+	for (int i = 0; i < m; ++i)
+	{
+		deque<int>::iterator iter;
+		
+		iter = find(ret.begin(), ret.end(), order[i]);
+		
+		int left = 0, right = 0;
+		int len = ret.size();
+
+		left = iter - ret.begin();	//except me
+		right = len - left;	//include me
+
+		if (left < right)
+		{
+			for (int j = 0; j < left; ++j)
+			{
+				int temp = ret.front();
+				ret.pop_front();
+				ret.push_back(temp);
+				sol++;
+			}
+			ret.pop_front();
+		}
+		else
+		{
+			for (int j = 0; j < right;++j)
+			{
+				int temp = ret.back();
+				ret.pop_back();
+				ret.push_front(temp);
+				sol++;
+			}
+			ret.pop_front();
+		}
+	}
+	cout << sol;
+
+	return 0;
+}     1
