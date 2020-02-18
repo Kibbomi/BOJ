@@ -1,0 +1,73 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+using namespace std;
+
+int main()
+{
+	int n;
+	cin >> n;
+
+	int root;
+	vector<vector<int>> v;
+	v.resize(n);
+
+	for (int i = 0; i < n; ++i)
+	{
+		int parent;
+		cin >> parent;
+
+		if (parent == -1)
+		{
+			root = i;
+			continue;
+		}
+		v[parent].push_back(i);
+	}
+	int del;
+	cin >> del;
+
+	for (int i = 0; i < n; ++i)
+	{
+		vector<int> ::iterator iter;
+		iter = find(v[i].begin(), v[i].end(), del);
+		if ( iter != v[i].end())
+			v[i].erase(iter);
+	}
+
+
+	int ret = 0;
+
+	if(del != root)
+	{
+		queue<int> q;
+		bool visited[50] = { false, };
+
+		q.push(root);
+		visited[root] = true;
+
+		while (!q.empty())
+		{
+			int cur = q.front(); q.pop();
+
+			int len = v[cur].size();
+
+			for (int dir = 0; dir < len; ++dir)
+			{
+				int next = v[cur][dir];
+
+				if (!visited[next])
+				{
+					q.push(next);
+					visited[next] = true;
+				}
+			}
+			if (len == 0)
+				ret++;
+		}
+	}
+	
+	cout << ret;
+	return 0;
+}     
