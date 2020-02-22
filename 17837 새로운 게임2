@@ -1,0 +1,292 @@
+#include <iostream>
+#include <deque>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+struct node {
+	int num;
+	int y, x, dir;
+	int pre, post;
+};
+const int dx[] = { 0,1,-1,0,0 };
+const int dy[] = { 0,0,0,-1,1 };
+
+int n, k;
+int map[12][12];
+vector<node> horse;
+vector<int> v[12][12];
+
+int main()
+{
+	cin >> n >> k;
+	for (int i = 0; i < n; ++i)
+		for (int j = 0; j < n; ++j)
+			cin >> map[i][j];
+
+	for (int i = 0; i < k; ++i)
+	{
+		node temp;
+		cin >> temp.y >> temp.x >> temp.dir;
+		temp.post = temp.pre = -1;
+		temp.y--; temp.x--;
+		temp.num = i;
+
+		horse.push_back(temp);
+		v[temp.y][temp.x].push_back(i);
+	}
+
+	bool flag = false;
+
+	int t = 1;
+
+	while (t<=1000)
+	{
+		for (int i = 0; i < k; ++i)
+		{
+			node next;
+			next.y = horse[i].y + dy[horse[i].dir];
+			next.x = horse[i].x + dx[horse[i].dir];
+
+			//만약 맵을 벗어난다면,
+			if (next.x < 0 || next.y < 0 || next.x >= n || next.y >= n)
+			{
+				//방향을 바꾸고 한칸움직이는데
+
+				if (horse[i].dir == 1)
+					horse[i].dir = 2;
+				else if (horse[i].dir == 2)
+					horse[i].dir = 1;
+				else if (horse[i].dir == 3)
+					horse[i].dir = 4;
+				else
+					horse[i].dir = 3;
+
+				int fixnx = horse[i].x + dx[horse[i].dir];
+				int fixny = horse[i].y + dy[horse[i].dir];
+				
+				//파란색이면->종료
+				if (map[fixny][fixnx] == 2)
+					continue;
+				//다른색이면->진행
+				else
+				{
+					next.y = fixny;
+					next.x = fixnx;
+				}
+			}
+			deque<node> dq;
+
+			//내 밑에노드와 연결 끊기.
+			if (horse[i].pre != -1)
+			{
+				//상대방꺼 끊고
+				horse[horse[i].pre].post = -1;
+				//내꺼 끊기
+				horse[i].pre = -1;
+			}
+
+			//나부터 내위에있는거 전부다 들기
+			int count = 0;
+			int nexthorse = i;
+			while (nexthorse != -1)
+			{
+				count++;
+				dq.push_back(horse[nexthorse]);
+
+				nexthorse = horse[nexthorse].post;
+			}
+			//들었던거 없애기
+			for(int j=0;j<count;++j)
+				v[horse[i].y][horse[i].x].pop_back();
+
+			//바닥 체크
+			if (map[next.y][next.x] == 0)
+			{
+				//그냥이동
+				int len = v[next.y][next.x].size();
+
+				//맨위와 연결
+				if (len != 0)
+				{
+					//v[next.y][next.x][len-1] == .back()과 동일.
+					
+					//밑에 있는거가 연결
+					horse[v[next.y][next.x][len - 1]].post = i;
+
+					//내가 연결
+					//dq.front().pre해도 되나?
+					dq[0].pre = v[next.y][next.x][len - 1];
+				}
+
+				while (!dq.empty())
+				{
+					node temp;
+					//옮기기
+					temp = dq.front();
+					dq.pop_front();
+
+					temp.y = next.y;
+					temp.x = next.x;
+
+					horse[temp.num] = temp;
+
+					v[temp.y][temp.x].push_back(temp.num);
+				}
+			}
+			else if (map[next.y][next.x] == 1)
+			{
+				//반대로 이동
+				int len = v[next.y][next.x].size();
+
+				//연결순서 바꾸기
+				for (int j = 0; j < dq.size(); ++j)
+				{
+					int temp;
+					temp = dq[j].post;
+					dq[j].post = dq[j].pre;
+					dq[j].pre = temp;
+				}
+
+				//큐의 맨위와 맵의 맨위 연결.
+				if (len != 0)
+				{
+					//v[next.y][next.x][len-1] == .back()과 동일.
+
+					//밑에 있는거가 연결
+					horse[v[next.y][next.x][len - 1]].post = dq.back().num;
+
+					//내가 연결
+					//dq.back().pre해도 되나?
+					dq[dq.size()-1].pre = v[next.y][next.x][len - 1];
+				}
+
+				while (!dq.empty())
+				{
+					node temp;
+					//옮기기
+					temp = dq.back();
+					dq.pop_back();
+
+					temp.y = next.y;
+					temp.x = next.x;
+
+					horse[temp.num] = temp;
+					
+					v[temp.y][temp.x].push_back(temp.num);
+				}
+			}
+			else
+			{
+				//만약 파란색
+				int fixdir;
+
+				if (horse[i].dir == 1)
+					fixdir = 2;
+				else if (horse[i].dir == 2)
+					fixdir = 1;
+				else if (horse[i].dir == 3)
+					fixdir = 4;
+				else
+					fixdir = 3;
+
+				int fixnx = horse[i].x + dx[fixdir];
+				int fixny = horse[i].y + dy[fixdir];
+			
+
+				if (fixnx < 0 || fixny < 0 || fixnx >= n || fixny >= n || map[fixny][fixnx] == 2)
+				{
+					//내가 가야할곳도 맵 밖이거나 파란색?
+
+					//그냥 방향만바꾸고 놓기.
+					dq[0].dir = fixdir;
+
+					int len = v[horse[i].y][horse[i].x].size();
+
+					//맨위와 연결
+					if (len != 0)
+					{
+						//v[horse[i].y][horse[i].x][len-1] == .back()과 동일.
+
+						//밑에 있는거가 연결
+						horse[v[horse[i].y][horse[i].x][len - 1]].post = i;
+
+						//내가 연결
+						//dq.front().pre해도 되나?
+						dq[0].pre = v[horse[i].y][horse[i].x][len - 1];
+					}
+
+					while (!dq.empty())
+					{
+						node temp;
+						//옮기기
+						temp = dq.front();
+						dq.pop_front();
+
+						horse[temp.num] = temp;
+
+						v[temp.y][temp.x].push_back(temp.num);
+					}
+				}
+				else
+				{
+					//그게아니면 방향만 바꾸고 재실행하기.
+					dq[0].dir = fixdir;
+
+					//들었던거 다시 놓기.
+					int len = v[horse[i].y][horse[i].x].size();
+
+					//맨위와 연결
+					if (len != 0)
+					{
+						//v[horse[i].y][horse[i].x][len-1] == .back()과 동일.
+
+						//밑에 있는거가 연결
+						horse[v[horse[i].y][horse[i].x][len - 1]].post = i;
+
+						//내가 연결
+						//dq.front().pre해도 되나?
+						dq[0].pre = v[horse[i].y][horse[i].x][len - 1];
+					}
+
+					while (!dq.empty())
+					{
+						node temp;
+						//옮기기
+						temp = dq.front();
+						dq.pop_front();
+
+						horse[temp.num] = temp;
+
+						v[temp.y][temp.x].push_back(temp.num);
+					}
+
+					i--;
+					continue;
+				}
+			}
+
+			//내가 놓은자리가 4개이상이라면
+			if (v[horse[i].y][horse[i].x].size() >= 4)
+			{
+				flag = true;
+				break;
+			}
+
+		}
+		if (flag)
+			break;
+		t++;
+	}
+
+	if (flag)
+	{
+		cout << t;
+	}
+	else
+	{
+		cout << "-1";
+	}
+
+	return 0;
+}
