@@ -1,0 +1,31 @@
+#include <cstdio>
+using namespace std;
+
+int main(void)
+{
+	int n, m;
+	scanf("%d %d", &n, &m);
+
+	int ret = 0;
+	int curn = 0, cury = m - 1;
+
+	if (n == 1)
+		printf("1");
+
+	if (n == 2)
+		if (m >= 7)
+			printf("4");
+		else
+			printf("%d", (m-1) / 2 + 1);
+	
+
+	if (n >= 3)
+		if (m <= 4)
+			printf("%d", m);
+		else if (m <= 6)
+			printf("4");
+		else
+			printf("%d", m - 2);
+
+	return 0;
+}
