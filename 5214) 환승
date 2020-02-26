@@ -1,0 +1,74 @@
+#include <cstdio>
+#include <queue>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int n, k, m;
+vector<vector<int>> v;
+vector<vector<int>> group;
+queue<pair<int,int>> q;	
+bool visited[1001] = { false, };
+bool visitednode[100001] = { false, };
+
+int main(void)
+{
+	scanf("%d %d %d", &n, &k, &m);	
+
+	v.resize(n + 1);
+	group.resize(m + 1);
+	for (int i = 1; i <= m; ++i)
+		for (int j = 0; j < k; ++j)
+		{
+			int val;
+			scanf("%d", &val);
+			v[val].push_back(i);
+			group[i].push_back(val);
+		}
+
+	q.push(make_pair(1,1));
+
+	while (!q.empty())
+	{
+		int cur = q.front().first;
+		int ccount = q.front().second;
+		q.pop();
+
+		if (cur == n)
+		{
+			printf("%d", ccount);
+			return 0;
+		}
+
+		int len = v[cur].size();
+		
+		for (int i = 0; i < len; ++i)
+		{
+			int nextgroup = v[cur][i];
+			int ncount = ccount + 1;
+
+			if (!visited[nextgroup])
+			{
+				visited[nextgroup] = true;
+
+				int elenum = group[nextgroup].size();
+
+				for (int j = 0; j < elenum; ++j)
+				{
+					if (group[nextgroup][j] == cur)
+						continue;
+
+					if (!visitednode[group[nextgroup][j]])
+					{
+						q.push(make_pair(group[nextgroup][j], ncount));
+						visitednode[group[nextgroup][j]] = true;
+					}
+				}
+			}
+
+		}
+	}
+	
+	printf("-1");
+	return 0;
+}
