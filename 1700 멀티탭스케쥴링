@@ -1,0 +1,70 @@
+#include <cstdio>
+#include <vector>
+#include <queue>
+#include <set>
+#include <algorithm>
+using namespace std;
+
+int n, k;
+vector<int> v;
+vector<queue<int>> order;
+set<int> plug;
+
+int main()
+{
+	scanf("%d %d", &n, &k);
+
+	order.resize(k + 1);
+	int ret = 0;
+
+	for (int i = 0; i < k; ++i)
+	{
+		int val;
+		scanf("%d", &val);
+		v.push_back(val);
+		order[val].push(i);
+	}
+
+	for (int i = 0; i < k; ++i)
+	{
+		int next = v[i];
+		order[next].pop();
+
+		if (plug.size() < n)
+		{
+			plug.insert(next);
+			continue;
+		}
+		set<int> ::iterator iter;
+		iter = plug.find(next);
+
+		if (iter != plug.end())
+			continue;
+		else
+		{
+			int dist = -1;
+			set<int> ::iterator del;
+
+			for (iter = plug.begin(); iter != plug.end(); iter++)
+			{
+				if (order[*iter].empty())
+				{
+					del = iter;
+					break;
+				}
+
+				if (dist < order[*iter].front())
+				{
+					dist = order[*iter].front();
+					del = iter;
+				}
+			}
+
+			plug.erase(del);
+			plug.insert(next);
+			ret++;
+		}
+	}
+	printf("%d", ret);
+	return 0;
+}
