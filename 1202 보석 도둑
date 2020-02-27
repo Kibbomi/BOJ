@@ -1,0 +1,52 @@
+#include <cstdio>
+#include <algorithm>
+#include <queue>
+#include <set>
+using namespace std;
+
+priority_queue<pair<int, int>> pq;
+multiset<int> bag;
+int n, k;
+
+int main()
+{
+	scanf("%d %d", &n, &k);
+
+	//nlogn
+	for (int i = 0; i < n; ++i) {
+		int weight, value;
+		scanf("%d %d", &weight, &value);
+		pq.push(make_pair(value, weight));
+	}
+
+	for (int i = 0; i < k; ++i)
+	{
+		int c;
+		scanf("%d", &c);
+		bag.insert(c);
+	}
+	long long int ret = 0;
+	
+	//k
+	while (!pq.empty())
+	{
+		int nval = pq.top().first;
+		int nweight = pq.top().second;
+		pq.pop();
+
+		multiset<int>::iterator iter;
+		//logk
+		iter = bag.lower_bound(nweight);
+
+		if (iter != bag.end() && (*iter) != nweight)
+			iter = bag.upper_bound(nweight);
+
+		if (iter != bag.end())
+		{
+			ret += nval;
+			bag.erase(iter);
+		}
+	}
+	printf("%lld", ret);
+	return 0;
+}
