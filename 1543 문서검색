@@ -1,0 +1,31 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+	string dict, s;
+	getline(cin, dict);
+	cin.clear();
+	getline(cin, s);
+
+	int ret = 0;
+	int index = 0;
+	int slen = s.length();
+	int start = dict.find(s, index);
+
+	while ( start != string::npos)
+	{
+		ret++;
+		index = start + slen;
+
+		if (index > dict.length())
+			break;
+
+		start = dict.find(s, index);
+	}
+
+	cout << ret;
+	return 0;
+}
