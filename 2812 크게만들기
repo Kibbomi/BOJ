@@ -1,0 +1,55 @@
+#include <cstdio>
+#include <list>
+using namespace std;
+
+int n, k;
+list<int> str;
+
+int main()
+{
+	scanf("%d %d ", &n, &k);
+	
+	for (int i = 0; i < n; ++i){
+		char c;
+		scanf("%c", &c);
+		str.push_back(c-'0');
+	}
+
+	int delnum = 0;
+
+	list<int>::iterator iter;
+	for (iter = str.begin(); iter != str.end();)
+	{
+		list<int>::iterator next = iter;
+		next++;
+		if (next == str.end())
+			break;
+
+		if (*iter >= *next)
+		{
+			iter++;
+			continue;
+		}
+		else if (*iter < *next)
+		{
+			iter = str.erase(iter); //iter++포함.
+			
+			if(iter != str.begin())
+				--iter;
+			
+			if(++delnum == k)
+				break;
+		}
+	}
+	if (delnum != k)
+		for (int i = 0; i < k; ++i)
+			str.erase(--str.end());
+
+		
+
+	list<int> ::iterator ret;
+	for (ret = str.begin(); ret != str.end(); ret++)
+		printf("%d", *ret);
+
+	return 0;
+}
