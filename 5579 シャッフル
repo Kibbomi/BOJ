@@ -1,0 +1,184 @@
+#include <cstdio>
+#include <vector>
+#include <deque>
+using namespace std;
+
+deque <pair<int, int>> c_dq,ret_dq;
+vector<pair<int, int>>shuf;
+int n, m, p, q, r;
+
+void my_shuffle(int x, int y)
+{
+	//c_dq ->_bot로 섞기.
+	deque <pair<int, int>> _mid, _bot;
+	
+
+	//for x...
+	int len = c_dq.front().second - c_dq.front().first + 1;
+
+	while (x > len) {
+		x -= len; y -= len;
+		_bot.push_back(c_dq.front());
+		c_dq.pop_front();
+
+		len = c_dq.front().second - c_dq.front().first + 1;
+	}
+	if (x < len) {
+		pair<int, int> pre, post, cur;
+		cur = c_dq.front(), c_dq.pop_front();
+
+		pre.first = cur.first;
+		pre.second = pre.first + x - 1;
+
+		post.first = pre.second + 1;
+		post.second = cur.second;
+
+		int pre_len = pre.second - pre.first + 1;
+		y -= pre_len;
+		c_dq.push_front(post);
+
+		_bot.push_back(pre);
+				
+	}
+	else if (x == len) {
+		_bot.push_back(c_dq.front());
+		c_dq.pop_front();
+		y -= len;
+				
+	}
+		
+		
+	len = c_dq.front().second - c_dq.front().first + 1;
+
+	while (y > len) {
+		y -= len;
+		_mid.push_back(c_dq.front());
+		c_dq.pop_front();
+
+		len = c_dq.front().second - c_dq.front().first + 1;
+	}
+	if (y < len) {
+		pair<int, int> pre, post, cur;
+		cur = c_dq.front(), c_dq.pop_front();
+
+		pre.first = cur.first;
+		pre.second = pre.first + y - 1;
+
+		post.first = pre.second + 1;
+		post.second = cur.second;
+
+		int pre_len = pre.second - pre.first + 1;
+		c_dq.push_front(post);
+
+		_mid.push_back(pre);
+				
+	}
+	else if (y == len) {
+		_mid.push_back(c_dq.front());
+		c_dq.pop_front();
+				
+	}
+		
+	
+
+	while (!_mid.empty())
+	{
+		c_dq.push_back(_mid.front());
+		_mid.pop_front();
+	}
+	while (!_bot.empty())
+	{
+		c_dq.push_back(_bot.front());
+		_bot.pop_front();
+	}
+	return;
+}
+
+int main()
+{
+	//FILE *file = fopen("data.txt", "rt");
+	//fscanf(file, "%d", &n);
+	scanf("%d", &n);
+	//fscanf(file, "%d", &m);
+	scanf("%d", &m);
+	//fscanf(file,"%d %d %d", &p, &q, &r);
+	scanf("%d %d %d", &p, &q, &r);
+	c_dq.push_back(make_pair(1, n));
+	for (int i = 0; i < m; ++i) {
+		int from, to;
+		//fscanf(file,"%d %d", &from, &to);
+		scanf("%d %d", &from, &to);
+		shuf.push_back(make_pair(from, to));
+	}
+	
+	for (int i = 0; i < m; ++i)
+	{
+		my_shuffle(shuf[i].first, shuf[i].second);
+	}
+		
+	
+	int len = c_dq.front().second - c_dq.front().first + 1;
+	p--;
+	while (p > len)
+	{
+		p -= len;
+		q -= len;
+		c_dq.pop_front();
+		len = c_dq.front().second - c_dq.front().first + 1;
+	}
+	if (p < len)
+	{
+		pair<int, int> pre, post, cur;
+		cur = c_dq.front(), c_dq.pop_front();
+
+		pre.first = cur.first;
+		pre.second = pre.first + p - 1;
+
+		post.first = pre.second + 1;
+		post.second = cur.second;
+
+		int pre_len = pre.second - pre.first + 1;
+		q -= pre_len;
+		c_dq.push_front(post);
+	}
+	if (p == len)
+	{
+		pair<int, int> cur;
+		cur = c_dq.front(), c_dq.pop_front();
+		int pre_len = cur.second - cur.first + 1;
+		q -= pre_len;
+	}
+
+	len = c_dq.front().second - c_dq.front().first + 1;
+	
+	while (q >= len)
+	{
+		q -= len;
+		ret_dq.push_back(c_dq.front());
+		c_dq.pop_front();
+		len = c_dq.front().second - c_dq.front().first + 1;
+	}
+	if (q < len)
+	{
+		pair<int, int> pre, cur;
+		cur = c_dq.front(), c_dq.pop_front();
+
+		pre.first = cur.first;
+		pre.second = pre.first + q - 1;
+		int pre_len = pre.second - pre.first + 1;
+		ret_dq.push_back(pre);
+	}
+
+	int ans = 0;
+
+	for (int i = 0; i < ret_dq.size(); ++i)
+	{
+		if (ret_dq[i].first <= r && r <= ret_dq[i].second)
+			ans += r - ret_dq[i].first + 1;
+
+		if (ret_dq[i].second < r)
+			ans += ret_dq[i].second - ret_dq[i].first + 1;
+	}
+	printf("%d", ans);
+	return 0;
+}
