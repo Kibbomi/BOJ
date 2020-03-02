@@ -1,0 +1,52 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int root[1000001];
+int n, m;
+
+int find(int x)
+{
+	if (root[x] == x)
+		return x;
+	else
+		return root[x] = find(root[x]);
+
+}
+
+void union_set(int x, int y)
+{
+	int r1, r2;
+
+	x = find(x);
+	y = find(y);
+
+	root[y] = x;
+
+	return ;
+}
+
+int main()
+{
+	scanf("%d %d", &n, &m);
+
+	for (int i = 0; i <= n; ++i)
+		root[i] = i;
+
+	for (int i = 0; i < m; ++i)
+	{
+		int a, b, c;
+		scanf("%d %d %d", &a, &b, &c);
+
+		if (a == 0)
+			union_set(b, c);
+		else if (a == 1)
+		{
+			if (find(b) == find(c))
+				printf("YES\n");
+			else
+				printf("NO\n");
+		}
+	}
+	return 0;
+}
