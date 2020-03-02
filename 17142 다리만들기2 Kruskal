@@ -1,0 +1,241 @@
+#include <cstdio>
+#include <queue>
+#include <vector>
+#include <functional>
+#include <algorithm>
+#define INF 0x7f7f7f7f
+using namespace std;
+
+int map[10][10];
+int group[10][10];
+int dist[7][7]; // use index 1~6
+
+int n, m;
+const int dx[] = { 1,-1,0,0 };
+const int dy[] = { 0,0,1,-1 };
+int g_index = 1;
+int ret = 0;
+
+struct AdjointSet {
+	
+	vector<int> root;
+	vector<int> rank;
+
+	void init_AdjointSet(int g_size)
+	{
+		root.resize(g_size);
+		rank.resize(g_size);
+
+		for (int i = 1; i < g_size; ++i) {
+			root[i] = i;
+			rank[i] = 1;
+		}
+	}
+	int find(int x)
+	{
+		if (root[x] == x)
+			return x;
+		else
+			return  root[x] = find(root[x]);
+	}
+	
+	void union_set(int x, int y)
+	{
+		x = find(x);
+		y = find(y);
+
+		if (rank[x] < rank[y])
+			root[x] = y;
+		else
+		{
+			root[y] = x;
+
+			if (rank[x] == rank[y])
+				rank[x]++;
+		}
+	}
+}AJS;
+
+void grouping()
+{
+	bool g_visited[10][10] = { false, };
+	for (int i = 0; i < n; ++i)
+		for (int j = 0; j < m; ++j)
+		{
+			if (map[i][j] == 1 && !g_visited[i][j])
+			{
+				queue<int> q;
+				g_visited[i][j] = true;
+				q.push(i * 10 + j);	//it is okay to use pair or structure.
+
+				while (!q.empty())
+				{
+					int cur = q.front(); q.pop();
+
+					int cx = cur % 10;
+					int cy = cur / 10;
+					group[cy][cx] = g_index;
+
+					for (int dir = 0; dir < 4; ++dir)
+					{
+						int nx = cx + dx[dir];
+						int ny = cy + dy[dir];
+
+						if (nx < 0 || ny < 0 || nx >= m || ny >= n || map[ny][nx] == 0 || g_visited[ny][nx])
+							continue;
+
+						g_visited[ny][nx] = true;
+						q.push(ny * 10 + nx);
+					}
+				}
+				g_index++;
+			}
+		}
+	return;
+}
+
+void getdistance()
+{
+	//in the group
+	for (int i = 0; i < n; ++i)
+		for (int j = 0; j < m; ++j)
+		{
+			if (group[i][j] != 0)
+			{
+				//north
+				int cx = j;
+				int cy = i - 1;
+				int tdist = 0;
+				while (cy >= 0)
+				{
+					if (group[cy][cx] == group[i][j]) break;
+					if (group[cy][cx] != 0 && group[cy][cx] != group[i][j])
+					{
+						if (tdist < 2)	break;
+						dist[group[i][j]][group[cy][cx]] = min(dist[group[i][j]][group[cy][cx]], tdist);
+						break;
+					}
+					cy--;
+					tdist++;
+				}
+
+				//east
+				cx = j + 1;
+				cy = i;
+				tdist = 0;
+				while (cx <= m - 1)
+				{
+					if (group[cy][cx] == group[i][j]) break;
+					if (group[cy][cx] != 0 && group[cy][cx] != group[i][j])
+					{
+						if (tdist < 2)	break;
+						dist[group[i][j]][group[cy][cx]] = min(dist[group[i][j]][group[cy][cx]], tdist);
+						break;
+					}
+					cx++;
+					tdist++;
+				}
+
+				//south
+				cx = j;
+				cy = i + 1;
+				tdist = 0;
+				while (cy <= n - 1)
+				{
+					if (group[cy][cx] == group[i][j]) break;
+					if (group[cy][cx] != 0 && group[cy][cx] != group[i][j])
+					{
+						if (tdist < 2)	break;
+						dist[group[i][j]][group[cy][cx]] = min(dist[group[i][j]][group[cy][cx]], tdist);
+						break;
+					}
+					cy++;
+					tdist++;
+				}
+
+				//west
+				cx = j - 1;
+				cy = i;
+				tdist = 0;
+				while (cx >= 0)
+				{
+					if (group[cy][cx] == group[i][j]) break;
+					if (group[cy][cx] != 0 && group[cy][cx] != group[i][j])
+					{
+						if (tdist < 2)	break;
+						dist[group[i][j]][group[cy][cx]] = min(dist[group[i][j]][group[cy][cx]], tdist);
+						break;
+					}
+					cx--;
+					tdist++;
+				}
+			}
+		}
+	return;
+}
+void kruskal()
+{
+	AJS.init_AdjointSet(g_index);
+
+	//val,  v -> u
+	priority_queue<pair<int, pair<int, int>>,vector<pair<int, pair<int, int>>>,greater<pair<int, pair<int, int>>>> pq;
+
+	for (int i = 1; i < g_index; ++i)
+		for (int j = i + 1; j < g_index; ++j)
+		{
+			if (dist[i][j] != INF)
+				pq.push(make_pair(dist[i][j], make_pair(i, j)));
+		}
+	
+
+	while (!pq.empty())
+	{
+		int from, to, val;
+
+		val = pq.top().first;
+		from = pq.top().second.first;
+		to = pq.top().second.second;
+
+		pq.pop();
+
+		if (AJS.find(from) != AJS.find(to))
+		{
+			AJS.union_set(from, to);
+			ret += val;
+		}
+	}
+	bool complete = true;
+
+	for (int i = 2; i < g_index; ++i)
+	{
+		if (AJS.find(1) != AJS.find(i))
+			complete = false;
+	}
+	if (!complete)
+		printf("-1");
+	else
+		printf("%d", ret);
+
+	return;
+}
+
+int main()
+{
+	scanf("%d %d", &n, &m);
+
+	for (int i = 0; i < n; ++i)
+		for (int j = 0; j < m; ++j)
+			scanf("%d", &map[i][j]);
+
+	grouping();
+
+	for (int i = 1; i < g_index; ++i)
+		for (int j = 1; j < g_index; ++j)
+			dist[i][j] = INF;
+
+	getdistance();
+
+	kruskal();
+	
+	return 0;
+}
