@@ -1,0 +1,70 @@
+#include <iostream>
+#include <map>
+#include <string>
+using namespace std;
+
+int root[200005];
+int node_count[200005];
+
+int find(int x)
+{
+	if (root[x] == x)
+		return x;
+	else
+		return root[x] = find(root[x]);
+}
+
+int my_union(int x, int y)
+{
+	x = find(x);
+	y = find(y);
+
+	if (x != y)
+	{
+		root[y] = x;
+		node_count[x] += node_count[y];
+		node_count[y] = 1;
+	}
+
+	return node_count[x];
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	cout.tie(0);
+	cin.tie(0);
+
+	int t;
+	cin >> t;
+	while (t--)
+	{
+		int n;
+		cin >> n;
+
+		for (int i = 1; i < 2 * n; ++i)
+		{
+			root[i] = i;
+			node_count[i] = 1;
+		}
+		map<string, int> m;
+		for (int i = 0; i < n; ++i)
+		{
+			string from, to;
+			cin >> from >> to;
+
+			if (!m.count(from)) {
+				m.insert(make_pair(from, m.size() + 1));
+			}
+			if (!m.count(to)) {
+				m.insert(make_pair(to, m.size() + 1));
+			}
+			cout << my_union(m[from], m[to]) << '\n';
+
+		}
+
+	}
+
+
+	return 0;
+}
