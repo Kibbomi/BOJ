@@ -1,0 +1,115 @@
+#include <cstdio>
+#include <queue>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+//source, sink, bridge + 3;
+vector<int> v[2010];
+int n, m, k;
+int src, dest, bridge;
+int f[2010][2010];	//flow
+int c[2010][2010];	//capacity
+int ans = 0;
+
+void edmondkarp()
+{
+	while (1)
+	{
+		queue<int> q;
+		int p[2010] = { 0 }; // 이전 node
+		fill(p, p + 2010, -1);
+
+		q.push(src);
+		p[src] = src;
+
+		while (!q.empty())
+		{
+			int cur = q.front(); q.pop();
+
+			int len = v[cur].size();
+
+			for (int i = 0; i < len; ++i)
+			{
+				int next = v[cur][i];
+
+				//유량이 남아있고 방문하지 않았으면
+				if (c[cur][next] - f[cur][next] > 0 && p[next]== -1)
+				{
+					p[next] = cur;
+					q.push(next);
+
+					if (next == dest)	break;
+				}
+			}
+		}
+		
+		if (p[dest] == -1)	break;
+
+		int minflow = 0x7f7f7f7f;
+		for (int i = dest; i != src; i = p[i])
+			minflow = min(minflow, c[p[i]][i] - f[p[i]][i]);
+
+		for (int i = dest; i != src; i = p[i])
+		{
+			f[p[i]][i] += minflow;
+			f[i][p[i]] -= minflow;
+		}
+		ans += minflow;
+	}
+	return;
+}
+
+int main() 
+{
+	scanf("%d %d %d", &n, &m, &k);
+
+	for (int i = 1; i <= n; ++i)
+	{
+		int t;
+		scanf("%d", &t);
+		for (int j = 0; j < t; ++j)
+		{
+			int val;
+			scanf("%d", &val);
+			v[i].push_back(val+1000);
+			v[val + 1000].push_back(i);
+			c[i][val+1000] = 1;
+		}
+	}
+
+	src = 2001, dest = 2002, bridge = 2003;
+
+	//용량은 없어도 경로는 양뱡향이여야함.
+
+	//src와 bridge connect a line
+	v[src].push_back(bridge);
+	v[bridge].push_back(src);
+	c[src][bridge] = k;
+
+	//src,bridge와 n연결하기
+	for (int i = 1; i <= n; ++i)
+	{
+		v[src].push_back(i);
+		v[i].push_back(src);
+		v[bridge].push_back(i);
+		v[i].push_back(bridge);
+		c[src][i] = 1;
+		c[bridge][i] = k;
+	}
+
+	//m과 sink연결하기
+	for (int i = 1001; i <= m+1000; ++i)
+	{
+		v[i].push_back(dest);
+		v[dest].push_back(i);
+		c[i][dest] = 1;
+	}
+	
+
+	edmondkarp();
+
+	printf("%d", ans);
+
+	return 0;
+}
