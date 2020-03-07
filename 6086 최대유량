@@ -1,0 +1,86 @@
+#include <iostream>
+#include <queue>
+#include <algorithm>
+using namespace std;
+#define SIZE 200
+
+int f[SIZE][SIZE];	//ans
+int c[SIZE][SIZE];	//input
+int parent[SIZE];
+vector<vector<int>> adj_list;
+int src, dest;
+int n, ans = 0;
+
+void edmondkarp()
+{
+	while (1)
+	{
+		for (int i = 0; i < SIZE; ++i)
+			parent[i] = -1;
+
+		queue<int> q;
+		q.push(src);
+		parent[src] = src;
+
+		while (!q.empty())
+		{
+			int cur = q.front(); q.pop();
+			int len = adj_list[cur].size();
+
+			for (int i = 0; i < len; ++i)
+			{
+				int next = adj_list[cur][i];
+
+				if (c[cur][next] - f[cur][next] > 0 && parent[next] == -1)
+				{
+					q.push(next);
+					parent[next] = cur;
+
+					if (next == dest)	break;
+				}
+			}
+		}
+
+		if (parent[dest] == -1)	break;
+		int minflow = 0x7f7f7f7f;
+		
+		for (int i = dest; i != src; i = parent[i])
+			minflow = min(minflow, c[parent[i]][i] - f[parent[i]][i]);
+		
+		for (int i = dest; i != src; i = parent[i])
+		{
+			f[parent[i]][i] += minflow;
+			f[i][parent[i]] -= minflow;
+		}
+		ans += minflow;
+	}
+	return;
+}
+int main()
+{
+	cin.tie(0);
+	ios_base::sync_with_stdio(0);
+
+	cin >> n;
+	adj_list.resize(SIZE);
+
+	for (int i = 0; i < n; ++i)
+	{
+		char from, to;
+		int val;
+
+		cin >> from >> to >> val;
+
+		c[from][to] += val;
+		c[to][from] += val;
+		adj_list[from].push_back(to);
+		adj_list[to].push_back(from);
+	}
+	src = 'A';
+	dest = 'Z';
+	edmondkarp();
+
+	cout << ans;
+
+	return 0;
+}
