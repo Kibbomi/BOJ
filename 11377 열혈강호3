@@ -1,0 +1,72 @@
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int n, m, k;
+vector<int> v[1001];	//use 1~n index
+bool visited[1001] = { false, };
+int matched[1001]; 
+
+bool dfs(int cur)
+{
+	if (visited[cur])
+		return false;
+
+	visited[cur] = true;
+
+	int len = v[cur].size();
+
+	for (int i = 0; i < len; ++i)
+	{
+		int next = v[cur][i];
+
+		if (matched[next] == 0 || dfs(matched[next]))
+		{
+			matched[next] = cur;
+			return true;
+		}
+	}
+	return false;
+}
+
+int main()
+{
+	int ans = 0;
+
+	scanf("%d %d %d", &n, &m, &k);
+
+	for (int i = 1; i <= n; ++i)
+	{
+		int count;
+		scanf("%d", &count);
+
+		for (int j = 0; j < count; ++j)
+		{
+			int to;
+			scanf("%d", &to);
+
+			v[i].push_back(to);
+		}
+	}
+
+	for (int i = 1; i <= n; ++i)
+	{
+		fill(visited, visited + 1001, false);
+		if (dfs(i))
+			ans++;
+	}
+	int count = 0;
+
+	for (int i = 1; i <= n; ++i)
+	{
+		fill(visited, visited + 1001, false);
+		if (dfs(i)) {
+			ans++;
+			count++;
+		}
+		if (count == k)	break;
+	}
+	printf("%d", ans);
+	return 0;
+}
