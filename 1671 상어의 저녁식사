@@ -1,0 +1,58 @@
+//simple bipartite matching
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int n;
+int si[51];
+int sp[51];
+int in[51];
+
+int matched[51];
+bool visited[51];
+//모두 연결됨.
+
+bool dfs(int src)
+{
+	if (visited[src])	return false;
+
+	visited[src] = true;
+
+	for (int i = 1; i <= n; ++i)
+	{
+		if (i == src)	continue;
+		if (si[src] < si[i] || sp[src] < sp[i] || in[src] < in[i])	continue;
+		if (si[src] == si[i] && sp[src] == sp[i] && in[src] == in[i])
+			if (src >= i)	continue;
+
+		if (matched[i] == 0 || dfs(matched[i]))
+		{
+			matched[i] = src;
+			return true;
+		}
+
+
+	}
+	return false;
+}
+
+int main()
+{
+	scanf("%d", &n);
+
+	for (int i = 1; i <= n; ++i)
+		scanf("%d %d %d", &si[i], &sp[i], &in[i]);
+
+	int ans = 0;
+
+	for (int i = 1; i <= n; ++i) {
+		for (int j = 0; j < 2; ++j)
+		{
+			fill(visited, visited + 51, false);
+			if (dfs(i))ans++;
+		}
+	}
+	printf("%d", n - ans);
+	return 0;
+}
