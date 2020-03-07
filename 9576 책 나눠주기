@@ -1,0 +1,66 @@
+//simple bipartite matching
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+vector<int> v[1001];
+int n, m;
+int matched[1001];
+bool visited[1001];
+//모두 연결됨.
+
+bool dfs(int src)
+{
+	if (visited[src])
+		return false;
+
+	visited[src] = true;
+
+	int len = v[src].size();
+
+	for (int i = 0; i < len; ++i)
+	{
+		int next = v[src][i];
+		if (matched[next] == 0 || dfs(matched[next]))
+		{
+			matched[next] = src;
+			return true;
+		}
+	}
+	return false;
+}
+
+int main()
+{
+	int t;
+	scanf("%d", &t);
+	while (t--)
+	{
+		fill(matched, matched + 1001, 0);
+		for (int i = 0; i < 1001; ++i)
+			v[i].clear();
+
+		scanf("%d %d", &n, &m);
+
+		for (int i = 1; i <= m; ++i)
+		{
+			int from, to;
+			scanf("%d %d", &from, &to);
+
+			for (int j = from; j <= to; ++j)
+				v[i].push_back(j);
+		}
+
+		int ans = 0;
+
+		for (int i = 1; i <= m; ++i) {
+
+			fill(visited, visited + 1001, false);
+			if (dfs(i))ans++;
+
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
