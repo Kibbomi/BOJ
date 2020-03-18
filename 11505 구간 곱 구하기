@@ -1,0 +1,85 @@
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+#define MOD 1000000007
+using namespace std;
+
+vector <int> arr;	//store input data.
+
+class Segment_tree {
+public:
+	Segment_tree() {}
+	Segment_tree(int tree_size)
+	{
+		tree.resize(tree_size, 0);
+	}
+	
+	long long int init_tree(int node, int start, int end)
+	{
+		if (start == end)
+			return tree[node] = arr[start];
+
+		int mid = (start + end) / 2;
+		return tree[node] = (init_tree(2 * node, start, mid) % MOD) * (init_tree(2 * node + 1, mid + 1, end)%MOD);
+	}
+
+	long long int multi_tree(int node, int start, int end, int l, int r)
+	{
+		if (end < l || r < start)
+			return 1;
+
+		if (l <= start && end <= r)
+			return tree[node];
+
+		int mid = (start + end) / 2;
+		return (multi_tree(2 * node, start, mid, l, r)%MOD) * (multi_tree(2 * node + 1, mid + 1, end, l, r)%MOD);
+	}
+	long long int update_tree(int node, int start, int end, int target, int val)
+	{
+		if (target < start || end < target)
+			return tree[node];
+		
+		if (start == end)
+			return tree[node] = val;
+
+		int mid = (start + end) / 2;
+		return tree[node] = (update_tree(2 * node, start, mid, target, val)%MOD) * (update_tree(2 * node + 1, mid + 1, end, target, val)%MOD);
+	}
+	vector<long long int> tree;
+};
+
+int main()
+{
+	int n, m, k;
+	scanf("%d %d %d", &n, &m, &k);
+
+	arr.resize(n);
+
+	for (int i = 0; i < n; ++i)
+		scanf("%d", &arr[i]);
+
+	//make tree
+	int h = (int)ceil(log2(n));
+	int tree_size = 1 << (h + 1);
+
+	Segment_tree tree(tree_size);
+	tree.init_tree(1, 0, n - 1);
+
+	for (int i = 0; i < m + k; ++i)
+	{
+		int a, b, c;
+		scanf("%d %d %d", &a, &b, &c);
+
+		if (a == 1)
+		{
+			tree.update_tree(1, 0, n - 1, b - 1, c);
+		}
+		else
+		{
+			printf("%lld\n",tree.multi_tree(1, 0, n - 1, b - 1, c - 1) % MOD);
+		}
+	}
+	
+	return 0;
+}
