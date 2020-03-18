@@ -1,0 +1,80 @@
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+vector <long long int> arr;	//store input data.
+
+class Segment_tree {
+public:
+	Segment_tree() {}
+	Segment_tree(long long int tree_size)
+	{
+		tree.resize(tree_size, 0);
+	}
+	long long int init_tree(int node, long long int start, long long int end)
+	{
+		if (start == end)
+			return tree[node] = arr[start];
+
+		long long int mid = (start + end) / 2;
+		return tree[node] = init_tree(2 * node, start, mid) + init_tree(2 * node + 1, mid + 1, end);
+	}
+
+	long long int find_sum(int node, long long int start, long long int end, long long int l, long long int r)
+	{
+		//[start,end].
+		if (end < l || r < start)
+			return 0;
+		if (l <= start && end <= r)
+			return tree[node];
+
+		long long int mid = (start + end) / 2;
+		return find_sum(2 * node, start, mid, l, r) + find_sum(2 * node + 1, mid + 1, end, l, r);
+	}
+
+	long long int update_tree(int node, long long int start, long long int end, long long int target, long long int val)
+	{
+		if (target < start || end < target)
+			return tree[node];
+		if (start == end)
+			return tree[node] = val;
+
+		long long int mid = (start + end) / 2;
+		return tree[node] = update_tree(2 * node, start, mid, target, val) + update_tree(2 * node + 1, mid + 1, end, target, val);
+	}
+	vector<long long int> tree;
+};
+
+int main()
+{
+	long long int n, q;
+	scanf("%lld %lld", &n, &q);
+
+	arr.resize(n);	//using 0 ~ n-1
+
+	for (int i = 0; i < n; ++i)
+		scanf("%lld", &arr[i]);
+
+	int h = (int)ceil(log2(n));
+	int tree_size = 1 << (h + 1);
+	
+	Segment_tree tree(tree_size);
+	tree.init_tree(1, 0, n - 1);
+
+	for (int i = 0; i < q; ++i)
+	{
+		long long int x, y, a, b;
+		scanf("%lld %lld %lld %lld", &x, &y, &a, &b);
+
+		if (x > y)
+			swap(x, y);
+
+		//[x,y]의 부분합은 배열의 [x-1,y-1]번 index이므로.
+		printf("%lld\n", tree.find_sum(1, 0, n - 1, x - 1, y - 1));
+		// b = arr[a-1] + diff;
+		tree.update_tree(1, 0, n - 1, a - 1, b);
+	}
+	return 0;
+}
