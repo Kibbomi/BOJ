@@ -1,0 +1,119 @@
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int n;
+
+vector <long long int> arr;
+//Time complexity = O(n)
+class Segment_tree {
+public:
+	Segment_tree() {};
+	Segment_tree(int tree_size )
+	{
+		tree.resize(tree_size, 0x7effffff);
+	}
+	int init_tree(int node, int start, int end)
+	{
+		if (start == end)
+		{
+			return tree[node] = start;
+		}
+		else
+		{
+			int mid = (start + end) / 2;
+			int left = init_tree(2 * node, start, mid);
+			int right = init_tree(2 * node + 1, mid + 1, end);
+
+			if (arr[left] <= arr[right])
+				return tree[node] = left;
+			else
+				return tree[node] = right;
+		}
+	}
+	int find_tree(int node, int start, int end, int left, int right)
+	{
+		//left, right는 요청받은 범위
+
+		//start end 는 node의 Coverage
+
+		if (end < left || right < start)
+			return -1;
+		if (left <= start && end <= right)
+			return tree[node];
+		
+		int mid = (start + end) / 2;
+		int left_index = find_tree(2 * node, start, mid, left, right);
+		int right_index = find_tree(2 * node + 1, mid + 1, end, left, right);
+		
+		if (left_index == -1 && right_index == -1)
+			return -1;
+		if (left_index == -1)
+			return right_index;
+		if (right_index == -1)
+			return left_index;
+
+		if (arr[left_index] <= arr[right_index])
+			return left_index;
+		else
+			return right_index;
+	}
+
+	vector<int> tree;
+};
+
+
+//Time Complexity = O(logn)
+long long int cal_area(Segment_tree &index_tree, int start, int end)
+{
+	if (start == end)
+	{
+		long long int val = arr[start];
+		return val;
+	}
+	else
+	{
+		int min_height = index_tree.find_tree(1, 0, n - 1, start, end);
+		long long int val = (end - start + 1)*arr[min_height];
+
+		if (start <= min_height - 1) {
+			long long int left = cal_area(index_tree, start, min_height - 1);
+			val = max(left, val);
+		}
+
+		if (min_height + 1 <= end) {
+			long long int right = cal_area(index_tree, min_height + 1, end);
+			val = max(right, val);
+		}
+
+		return val;
+	}
+}
+
+
+int main()
+{
+
+	scanf("%d", &n);
+
+	while (n != 0)
+	{	 
+		arr.resize(n);
+		//0 ~ n-1
+		for (int i = 0; i < n; ++i)
+			scanf("%lld", &arr[i]);
+
+		int h = (int)ceil(log2(n));
+		int tree_size = 1 << (h + 1);
+		Segment_tree index_tree(tree_size);
+		index_tree.init_tree(1, 0, n - 1);
+
+		printf("%lld\n",cal_area(index_tree,0, n - 1));
+
+		scanf("%d", &n);
+	}
+	
+	return 0;
+}
