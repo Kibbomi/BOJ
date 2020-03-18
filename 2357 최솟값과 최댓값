@@ -1,0 +1,89 @@
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int n, m;
+vector<int> arr;
+
+class SGT {
+	public :
+		SGT() {}
+		SGT(int tree_size) {
+			tree.resize(tree_size);
+			for (int i = 1; i < tree_size; ++i)
+			{
+				tree[i].first = 0x7effffff;
+				tree[i].second = -0x7effffff;
+			}
+		}
+
+		pair<int, int> init_tree(int node, int start, int end)
+		{
+			if (start == end) {
+				tree[node].first = tree[node].second = arr[start];
+				return tree[node];
+			}
+			else
+			{
+				int mid = (start + end) / 2;
+				pair<int, int> left = init_tree(2 * node, start, mid);
+				pair<int, int> right = init_tree(2 * node + 1, mid + 1, end);
+
+				tree[node].first = min(left.first, right.first);
+				tree[node].second = max(left.second, right.second);
+				return tree[node];
+			}
+			
+		}
+
+		//pair <min, max>
+		pair<int, int> find_val(int node, int start, int end, int a, int b)
+		{
+			//a,b는 고정된 값
+			if (end < a || b < start)
+				return make_pair(0x7effffff, -0x7effffff);
+			if (a <= start && end <= b)
+				return tree[node];
+
+			int mid = (start + end) / 2;
+			pair<int, int> left = find_val(2 * node, start, mid, a, b);
+			pair<int, int> right = find_val(2 * node + 1, mid + 1, end, a, b);
+			pair<int, int> ret;
+			ret.first = min(left.first, right.first);
+			ret.second = max(left.second, right.second);
+			return ret;
+		}
+
+		vector<pair<int, int>> tree;
+};
+
+int main()
+{
+	scanf("%d %d", &n, &m);
+	arr.resize(n);
+	//0 ~ n-1
+	for (int i = 0; i < n; ++i)
+		scanf("%d", &arr[i]);
+
+	int tree_h = (int)ceil(log2(n));
+	int tree_size = 1 << (tree_h + 1);
+	SGT sgt_tree(tree_size);
+
+	//convert arr to tree
+	sgt_tree.init_tree(1, 0, n - 1);
+
+	for (int i = 0; i < m; ++i)
+	{
+		int a, b;
+		scanf("%d %d", &a, &b);
+		pair<int, int> ans;
+
+		ans = sgt_tree.find_val(1, 0, n - 1, a-1, b-1);
+
+		printf("%d %d\n", ans.first, ans.second);
+	}
+
+	return 0;
+}
