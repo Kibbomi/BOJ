@@ -1,0 +1,79 @@
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+using namespace std;
+#define INF 0x7f7f7f7f
+
+struct EDGE
+{
+	int src, dest, weight;
+};
+
+int main()
+{
+	int t;
+	scanf("%d", &t);
+
+	while (t--)
+	{
+		int dist[501] = { 0 };
+		vector<EDGE> edge;
+		int n, m, w;
+		scanf("%d %d %d", &n, &m, &w);
+
+		for (int i = 0; i < m; ++i)
+		{
+			EDGE temp;
+			scanf("%d %d %d", &temp.src, &temp.dest, &temp.weight);
+			
+			//bidirectional
+			edge.push_back(temp);
+			swap(temp.src, temp.dest);
+			edge.push_back(temp);
+			
+		}
+		
+		for (int i = 0; i < w; ++i)
+		{
+			EDGE temp;
+			scanf("%d %d %d", &temp.src, &temp.dest, &temp.weight);
+			temp.weight *= -1;
+			//unidirectional
+			edge.push_back(temp);
+		}
+
+		//starting point is 1
+		for (int i = 2; i <= n; ++i)
+			dist[i] = INF;
+
+		//bellman ford
+		for (int i = 0; i < n - 1; ++i)
+		{
+			for (int j = 0; j < edge.size(); ++j)
+			{
+				int s = edge[j].src;
+				int d = edge[j].dest;
+				int w = edge[j].weight;
+
+				if (dist[s] != INF && dist[d] > dist[s] + w)
+					dist[d] = dist[s] + w;
+			}
+		}
+		bool cycle = false;
+		for (int j = 0; j < edge.size(); ++j)
+		{
+			int s = edge[j].src;
+			int d = edge[j].dest;
+			int w = edge[j].weight;
+
+			if (dist[s] != INF && dist[d] > dist[s] + w)
+				cycle = true;
+			
+		}
+		if (cycle)
+			printf("YES\n");
+		else
+			printf("NO\n");
+	}
+	return 0;
+}
