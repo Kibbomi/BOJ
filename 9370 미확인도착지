@@ -1,0 +1,109 @@
+#include <cstdio>
+#include <vector>
+#include <queue>
+#include <functional>
+#include <algorithm>
+using namespace std;
+#define INF 0x7f7f7f7f
+//FILE * file;
+
+int n, m, t;
+vector<pair<int,int>> v[2001];
+
+void dijkstra(int dist[2001],int src)
+{//weight , cur , pre
+	priority_queue <pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+
+	for (int i = 1; i <= n; ++i)
+		dist[i] = INF;
+	dist[src] = 0;
+
+	pq.push(make_pair(0, src));
+
+	while (!pq.empty())
+	{
+		int curd = pq.top().first;
+		int curv = pq.top().second;
+
+		pq.pop();
+
+		if (dist[curv] < curd)	continue;	//최단경로는 최단경로로만 구할수있다...
+
+		int len = v[curv].size();
+		for (int i = 0; i < len; ++i)
+		{
+			int nv = v[curv][i].first;
+			int weight = v[curv][i].second;
+
+			if (dist[nv] > dist[curv] + weight) {
+				dist[nv] = dist[curv] + weight;
+				pq.push(make_pair(dist[nv], nv));
+			}
+		}
+	}
+	return;
+}
+
+int main()
+{
+	//file
+	//file = fopen("data1.txt", "rb");
+	int T;
+	scanf("%d", &T);
+	//fscanf(file,"%d", &T);
+
+	while (T--)
+	{
+		int dist_src[2001] = { 0 };
+		int dist_h[2001] = { 0 };
+		int dist_g[2001] = { 0 };
+		int  src, g, h;
+		
+		scanf("%d %d %d", &n, &m, &t);
+		//fscanf(file, "%d %d %d", &n, &m, &t);
+		scanf("%d %d %d", &src, &g, &h);
+		//fscanf(file, "%d %d %d", &src, &g, &h);
+
+		//init
+		for (int i = 1; i <= n; ++i)
+			v[i].clear();
+		
+		for (int i = 0; i < m; ++i)
+		{
+			int from, to, weight;
+			scanf("%d %d %d", &from, &to, &weight);
+			//fscanf(file, "%d %d %d", &from, &to, &weight);
+			v[from].push_back(make_pair(to, weight));
+			v[to].push_back(make_pair(from, weight));
+		}
+
+		dijkstra(dist_src, src);
+		dijkstra(dist_h, h);
+		dijkstra(dist_g, g);
+		
+		vector<int> candi;
+
+		for (int i = 0; i < t; ++i)
+		{
+			int val;
+			scanf("%d", &val);
+			//fscanf(file,"%d", &val);
+			candi.push_back(val);
+		}
+
+		vector<int> ans;
+		for (int i = 0; i < candi.size(); ++i)
+		{
+			int dest = candi[i];
+			if (dist_src[h] + dist_h[g] + dist_g[dest] == dist_src[dest]
+				|| dist_src[g] + dist_g[h] + dist_h[dest] == dist_src[dest])
+				ans.push_back(dest);
+		}
+		sort(ans.begin(), ans.end());
+		for (int i = 0; i < ans.size(); ++i)
+			printf("%d ", ans[i]);
+		printf("\n");
+	}
+
+	return 0;
+}
