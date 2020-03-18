@@ -1,0 +1,72 @@
+#include <cstdio>
+#include <vector>
+using namespace std;
+#define INF 0x7f7f7f7f
+
+int n, m;
+class EDGE {
+public :
+	EDGE(){}
+	EDGE(int x, int y, int z) :src(x), dest(y), weight(z) {}
+	int src, dest, weight;
+};
+vector<EDGE> edge;
+vector<int> dist;
+
+int main()
+{
+	scanf("%d %d", &n, &m);
+	dist.resize(n + 1);
+
+	for (int i = 0; i < m; ++i)
+	{
+		int from, to, weight;
+		scanf("%d %d %d", &from, &to, &weight);
+		edge.push_back(EDGE(from, to, weight));
+	}
+
+	//bellman ford algorithm
+
+	//starting point is 1
+	for (int i = 2; i <= n; ++i)
+		dist[i] = INF;
+
+	for (int i = 0; i < n - 1; ++i)
+	{
+		//each edge
+		
+		for (int j = 0; j < m; ++j)
+		{
+			int s = edge[j].src;
+			int d = edge[j].dest;
+			int w = edge[j].weight;
+
+			if (dist[s] != INF && dist[d] > dist[s] + w )
+				dist[d] = dist[s] + w ;
+		}
+	}
+
+	// find out a negative cycle 
+	for (int j = 0; j < m; ++j)
+	{
+		int s = edge[j].src;
+		int d = edge[j].dest;
+		int w = edge[j].weight;
+
+		if (dist[s] != INF && dist[d] > dist[s] + w )
+		{
+			printf("-1\n");
+			return 0;
+		}
+	}
+
+	for (int i = 2; i <= n; ++i)
+	{
+		if (dist[i] == INF)
+			printf("-1\n");
+		else
+			printf("%d\n", dist[i]);
+	}
+
+	return 0;
+}
