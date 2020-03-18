@@ -1,0 +1,74 @@
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int n, m;
+vector<int> arr;
+
+class Segment_tree {
+public:
+	Segment_tree() {}
+	Segment_tree(int tree_size)
+	{
+		tree.resize(tree_size, 0x7fffffff);
+	}
+	int init_tree(int node, int start, int end)
+	{
+		if (start == end)
+			return tree[node] = arr[start];
+		else
+		{
+			int mid = (start + end) / 2;
+			int left = init_tree(2 * node, start, mid);
+			int right = init_tree(2 * node + 1, mid + 1, end);
+
+			return tree[node] = min(left, right);
+		}
+	}
+	int find_min(int node, int start, int end, int left, int right)
+	{
+		//node : tree index
+		//node coverage : [start, end]
+		//coverage that we'd like to find out : [left, right]
+
+		if (end < left || right < start)
+			return 0x7fffffff;
+		if (left <= start && end <= right)
+			return tree[node];
+
+		int mid = (start + end) / 2;
+		int leftv = find_min(2 * node, start, mid, left, right);
+		int rightv = find_min(2 * node + 1, mid + 1, end, left, right);
+
+		return min(leftv, rightv);
+
+	}
+
+	vector<int> tree;
+};
+
+int main()
+{
+	scanf("%d %d", &n, &m);
+	arr.resize(n);
+	for (int i = 0; i < n; ++i)
+		scanf("%d", &arr[i]);
+
+	int h = (int)ceil(log2(n));
+	int tree_size = 1 << (h + 1);	//높이가 0부터 시작하니까.
+
+	Segment_tree mintree(tree_size);	//Tree 공간 확보
+	mintree.init_tree(1, 0, n - 1);	//확보한 공간에 데이터 삽입
+
+	for (int i = 0; i < m; ++i)
+	{
+		int from, to;
+		scanf("%d %d", &from, &to);
+		printf("%d\n", mintree.find_min(1, 0, n - 1, from - 1, to - 1));
+	}
+	
+	
+	return 0;
+}
