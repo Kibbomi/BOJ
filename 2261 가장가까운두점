@@ -1,0 +1,86 @@
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <cmath>
+using namespace std;
+
+struct POINT {
+	int x, y;
+	POINT() {}
+	POINT(int x, int y) : x(x), y(y) {}
+
+	bool operator < (const POINT &v)const {
+		if (y == v.y)
+		{
+			return x < v.x;
+		}
+		else
+		{
+			return y < v.y;
+		}
+	}
+};
+
+bool comp(const POINT &a, const POINT &b)
+{
+	return a.x < b.x;
+}
+int dist_2(POINT a, POINT b)
+{
+	return (b.x - a.x)*(b.x - a.x) + (b.y - a.y)*(b.y - a.y);
+}
+vector<POINT> v;
+
+int main()
+{
+	int n;
+	scanf("%d", &n);
+	v.resize(n);
+	for (int i = 0; i < n; ++i)
+		scanf("%d %d", &v[i].x, &v[i].y);
+
+	sort(v.begin(), v.end(), comp);
+
+	set<POINT> candi = { v[0],v[1] };
+
+	int ans = dist_2(v[0], v[1]);
+	int start = 0;
+	for (int i = 2; i < n; ++i)
+	{
+		POINT cur = v[i];
+		
+		while (start < i)
+		{
+			POINT p = v[start];
+			int x = cur.x - p.x;
+
+			if (x*x > ans)
+			{
+				candi.erase(p);
+				start++;
+			}
+			else
+			{
+				break;
+				//갱신해야함.
+			}
+		}
+		int d = (int)sqrt((double)ans) + 1;
+		set<POINT> ::iterator left, right;
+
+		left = candi.lower_bound(POINT(-100000, cur.y - d));
+		right = candi.upper_bound(POINT(-100000, cur.y + d));
+
+		for (; left != right; left++)
+		{
+			int d = dist_2(cur, (*left));
+			if (d < ans)
+				ans = d;
+		}
+		candi.insert(cur);
+
+	}
+	printf("%d\n", ans);
+	return 0;
+}
