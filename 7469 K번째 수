@@ -1,0 +1,94 @@
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+vector<int> arr;
+
+class Segment_tree {
+public:
+	Segment_tree() {}
+	Segment_tree(int tree_size)
+	{
+		tree.resize(tree_size);
+	}
+	//init 하는 과정
+	void add_tree(int node, int start, int end, int target, int val)
+	{
+		if (target < start || end < target)
+			return;
+		tree[node].push_back(val);
+
+		if (start != end)
+		{
+			int mid = (start + end) / 2;
+			add_tree(2 * node, start, mid, target, val);
+			add_tree(2 * node + 1, mid + 1, end, target, val);
+		}
+		return;
+	}
+
+	//val이 [left,right]에서 몇번째인지 반환
+	int find_tree(int node, int start, int end, int left, int right, int val)
+	{
+		if (end < left || right < start)
+			return 0;
+		
+		if (left <= start && end <= right)
+			return upper_bound(tree[node].begin(), tree[node].end(), val) - tree[node].begin();
+		
+
+		int mid = (start + end) / 2;
+		return find_tree(2 * node, start, mid, left, right, val) + find_tree(2 * node + 1, mid + 1, end, left, right, val);
+
+	}
+
+	vector<vector<int>> tree;
+};
+
+int main()
+{
+	int n, m;
+	scanf("%d %d", &n, &m);
+
+	arr.resize(n);
+
+	int h = (int)ceil(log2(n));
+	int tree_size = 1 << (h + 1);
+
+	Segment_tree tree(tree_size);
+	
+	//nlogn
+	for (int i = 0; i < n; ++i)
+	{
+		scanf("%d", &arr[i]);
+		tree.add_tree(1, 0, n - 1, i, arr[i]);
+	}
+	//n = 2*n,,,,nlogn
+	for (int i = 1; i < tree_size; ++i)
+		sort(tree.tree[i].begin(), tree.tree[i].end());
+
+	while (m--)
+	{
+		int i, j, k;
+		scanf("%d %d %d", &i, &j, &k);
+
+		int left = -1e9;
+		int right = 1e9;
+
+		while (left <= right)
+		{
+			//not overflow
+			int mid = (left + right) / 2;
+
+			if (tree.find_tree(1, 0, n - 1, i - 1, j - 1, mid) < k) left = mid + 1;
+			else
+				right = mid - 1;
+		}
+		//여기서 mid는 x-1번째임.
+		printf("%d\n", left);
+	}
+
+	return 0;
+}
