@@ -1,0 +1,74 @@
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+vector <int> arr;
+
+class Segment_tree {
+public:
+	Segment_tree() {}
+
+	Segment_tree(int tree_size)
+	{
+		tree.resize(tree_size, 0);
+	}
+
+	long long int sum_tree(int node, int start, int end, int left, int right)
+	{
+		if (end < left || right < start)
+			return 0;
+		if (left <= start && end <= right)
+			return tree[node];
+
+		int mid = (start + end) / 2;
+
+		return sum_tree(2 * node, start, mid, left, right) + sum_tree(2 * node + 1, mid + 1, end, left, right);
+	}
+
+	long long int modify_tree(int node, int start, int end, int target, int val)
+	{
+		if (end < target || target < start)
+			return tree[node];
+		if (start == end)
+			return tree[node] = val;
+
+		int mid = (start + end) / 2;
+		return tree[node] = modify_tree(2 * node, start, mid, target, val) + modify_tree(2 * node + 1, mid + 1, end, target, val);
+	}
+	vector<long long int> tree;
+};
+
+int main()
+{
+	int n, m;
+	scanf("%d %d", &n, &m);
+
+	arr.resize(n);
+	
+
+	int h = (int)ceil(log2(n));
+	int tree_size = 1 << (h + 1);
+
+	Segment_tree tree(tree_size);
+
+	for (int i = 0; i < m; ++i)
+	{
+		int a, b, c;
+		scanf("%d %d %d", &a, &b, &c);
+
+		if (a == 0)
+		{
+			if (b > c)
+				swap(b, c);
+			printf("%lld\n",tree.sum_tree(1, 0, n - 1, b - 1, c - 1));
+		}
+		else
+		{
+			tree.modify_tree(1, 0, n - 1, b-1, c);
+		}
+	}
+
+	return 0;
+}
