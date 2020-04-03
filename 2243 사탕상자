@@ -1,0 +1,94 @@
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+#define MAX_SIZE 1000000
+
+using namespace std;
+
+vector <long long int> arr;	//store input data.
+
+class Segment_tree {
+public:
+	Segment_tree() {}
+	Segment_tree(int tree_size)
+	{
+		tree.resize(tree_size);
+	}
+
+
+	//index가 튀어 나오기때문에 괜찮음
+	int take_out(int node, int start, int end, long long int target)
+	{
+		tree[node] -= 1;
+
+		if (start == end)
+		{
+			return start;
+		}
+
+		int mid = (start + end) / 2;
+
+		if (target > tree[2 * node])
+		{
+			//right
+			target -= tree[2 * node];
+			return take_out(2 * node + 1, mid + 1, end, target);
+		}
+		else
+		{
+			return take_out(2 * node, start, mid, target);
+		}
+
+	}
+	//update와 비슷
+	long long int put_in(int node, int start, int end, int target, long long int val)
+	{
+		if (target < start || end < target)
+			return tree[node];
+
+		if (start == end)
+			return tree[node] += val;
+
+		int mid = (start + end) / 2;
+		return tree[node] = put_in(2 * node, start, mid, target, val) + put_in(2*node+1, mid + 1, end, target, val);
+	}
+	vector<long long int> tree;
+};
+
+int main()
+{
+	int n;
+	scanf("%d", &n);
+	int h = (int)ceil(log2(MAX_SIZE));
+	int tree_size = 1 << (h + 1);
+
+	Segment_tree tree(tree_size);
+	for (int i = 0; i < n; ++i)
+	{
+		int a;
+		scanf("%d", &a);
+
+		if (a == 1)
+		{
+			//take out
+			long long int b;
+			scanf("%lld", &b);
+			printf("%d\n",tree.take_out(1, 1, MAX_SIZE, b));
+		}
+		else
+		{
+			//input
+			int b;
+			long long int c;
+			scanf("%d %lld", &b, &c);
+
+			if (c == 0)
+				continue;
+
+			tree.put_in(1, 1, MAX_SIZE, b, c);
+		}
+	}
+
+	return 0;
+}
