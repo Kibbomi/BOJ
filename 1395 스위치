@@ -1,0 +1,145 @@
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+vector <int> arr;	//store input data.
+
+class Segment_tree {
+public:
+	Segment_tree() {}
+	Segment_tree(int tree_size)
+	{
+		tree.resize(tree_size);
+		lazy.resize(tree_size);
+	}
+	int init_tree(int node, int start, int end)
+	{
+		if (start == end)
+			return tree[node] = arr[start];
+
+		int mid = (start + end) / 2;
+		return tree[node] = init_tree(2 * node, start, mid) + init_tree(2 * node + 1, mid + 1, end);
+	}
+	void add_lazy_propagation(int node, int start, int end)
+	{
+		//나 이제 방문할거니까
+		//Lazy값 똑바로 갱신해
+
+		//if(lazy[node] != 0)
+		if (lazy[node])
+		{
+			//본인 갱신
+			tree[node] = (end - start + 1) - tree[node];
+			//자식이 있다면 전파
+			if (start != end)
+			{
+				if (lazy[2 * node] == 1)
+					lazy[2 * node] = 0;
+				else
+					lazy[2 * node] = 1;
+
+				if (lazy[2 * node + 1] == 1)
+					lazy[2 * node + 1] = 0;
+				else
+					lazy[2 * node + 1] = 1;
+			}
+			//lazy값을 갱신했으므로 0으로 초기화.
+			lazy[node] = 0;
+		}
+	}
+	void update_tree(int node, int start, int end, int left, int right)
+	{
+		add_lazy_propagation(node, start, end);
+		//지금 본인만큼은 추가할 lazy값이 없음.
+
+		//[left, right]값을 변경해야함.
+		if (end < left || right < start)
+			return ;
+
+		if (left <= start && end <= right)
+		{
+			//자신을 올바른값으로 재 갱신하고,
+			tree[node] = (end - start + 1) - tree[node];
+			//자신이 자식이 있다면
+			//자식들에게 Lazy값을 전파.
+			if (start != end)
+			{
+				if (lazy[2 * node] == 1)
+					lazy[2 * node] = 0;
+				else
+					lazy[2 * node] = 1;
+
+				if (lazy[2 * node + 1] == 1)
+					lazy[2 * node + 1] = 0;
+				else
+					lazy[2 * node + 1] = 1;
+			}
+			return;
+		}
+
+		int mid = (start + end) / 2;
+		update_tree(2 * node, start, mid, left, right);
+		update_tree(2 * node + 1, mid + 1, end, left, right);
+
+		//원래 1개는 더하면서 내려가는데
+		//어느 사이즈의 노드에서 lazy가 될지 모르기때문에
+		//갱신은 돌아오면서 이루어짐.
+		tree[node] = tree[2 * node] + tree[2 * node + 1];
+		return;
+	}
+
+	int sum_tree(int node, int start, int end, int left, int right)
+	{
+		//lazy 값이 있다면 갱신해주어야함. 이제서야..
+		add_lazy_propagation(node, start, end);
+
+		if (end < left || right < start)
+			return 0;
+
+		if (left <= start && end <= right)
+			return tree[node];
+
+		int mid = (start + end) / 2;
+		return sum_tree(2 * node, start, mid, left, right) + sum_tree(2 * node + 1, mid + 1, end, left, right);
+	}
+
+	vector<int> tree;
+	vector<int> lazy;	//for lazy propagation
+};
+
+int main()
+{
+	int n, m;
+	scanf("%d %d", &n, &m);
+
+	int h = (int)ceil(log2(n));
+	int tree_size = 1 << (h + 1);
+
+	arr.resize(n);	//off 
+	Segment_tree tree(tree_size);
+	tree.init_tree(1, 0, n - 1);
+
+
+	for (int i = 0; i < m; ++i)
+	{
+		int o, s, t;
+		scanf("%d %d %d", &o, &s, &t);
+
+		if (o == 0)
+		{
+			//reverse
+			//lazy를 1을 전파. 1이 있다면 반대로 뒤집을것.
+			tree.update_tree(1, 0, n - 1, s - 1, t - 1);
+		}
+		else
+		{
+			//how many
+			printf("%d\n", tree.sum_tree(1, 0, n - 1, s - 1, t - 1));
+		}
+	}
+
+	return 0;
+}
