@@ -1,0 +1,41 @@
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <vector>
+#include <string>
+using namespace std;
+
+map<string, int> list;
+vector<string> v;
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	int n, m;
+	cin >> n >> m;
+	v.resize(n + 1);
+	for (int i = 1; i <= n; ++i)
+	{
+		string s;
+		cin >> s;
+		list.insert(make_pair(s, i));
+		v[i] = s;
+	}
+
+	for (int i = 0; i < m; ++i)
+	{
+		string s;
+		cin >> s;
+		if ('A' <= s[0] && s[0] <= 'Z')
+		{
+			cout << list[s] << '\n';
+		}
+		else
+		{
+			int index = (int)atoi(s.c_str());
+			cout << v[index] << '\n';
+		}
+	}
+	return 0;
+}
