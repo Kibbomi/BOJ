@@ -1,0 +1,43 @@
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+int main()
+{
+	
+	int x;
+	while (scanf("%d", &x) != EOF)
+	{
+		int n;
+		scanf("%d", &n);
+		int goal = x*1e7;
+
+		vector<int> v;
+		v.resize(n);
+		for (int i = 0; i < n; ++i)
+			scanf("%d", &v[i]);
+
+		sort(v.begin(), v.end());
+
+		int len = v.size();
+		bool isfind = false;
+		for (int i = 0; i < len; ++i)
+		{
+			int ans = goal - v[i];
+			vector<int> ::iterator iter = lower_bound(v.begin() + i + 1, v.end(), ans);
+			if (iter != v.end() && (*iter) == ans)
+			{
+				printf("yes %d %d\n", v[i], ans);
+				isfind = true;
+				break;
+			}
+		}
+		if (!isfind)
+			printf("danger\n");
+
+	}
+
+	return 0;
+}
