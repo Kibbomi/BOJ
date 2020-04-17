@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	int n, m;
+	cin >> n >> m;
+
+	vector<int> v;
+	v.resize(n);
+	
+	for (int i = 0; i < n; ++i)
+		cin >> v[i];
+
+	int left = 1, right = 1e9;
+	int ans = 0;
+	while (left <= right)
+	{
+		//not overflow
+		int mid = (left + right) / 2;
+		//is size.
+		int howmany = 0;
+		int sum = 0, index = 0;
+		for (; index < n;)
+		{
+			if (howmany == m)
+				break;
+			if (sum + v[index] > mid)
+			{
+				sum = 0;
+				howmany++;
+				continue;
+			}
+			else
+			{
+				sum += v[index];
+				++index;
+			}
+		}
+
+		if (index == n)
+		{
+			//다넣음.
+			right = mid - 1;
+			ans = mid;
+		}
+		else
+		{
+			left = mid + 1;
+		}
+
+	}
+
+	cout << ans;
+	return 0;
+}
